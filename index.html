@@ -2,9 +2,55 @@
 <html>
 <head>
   <title>Repair Estimator App</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
 </head>
-<body style="font-family: Arial; padding:20px;">
-  <h1>Repair Estimator App</h1>
-  <p>Your app is working.</p>
+
+<body style="font-family: Arial; padding:20px; background:#eff6ff;">
+
+  <h1>Repair Estimator</h1>
+
+  <h3>Enter ZIP Code</h3>
+  <input id="zip" placeholder="Enter ZIP" style="padding:10px; width:200px;" />
+
+  <h3>Select Service</h3>
+  <select id="service" style="padding:10px;">
+    <option value="">Select</option>
+    <option value="room">Room Painting</option>
+    <option value="walls">Wall Painting</option>
+    <option value="ceiling">Ceiling Painting</option>
+  </select>
+
+  <h3>Room Size</h3>
+  <select id="roomSize" style="padding:10px;">
+    <option value="">Select</option>
+    <option value="8x8">8x8 - $410</option>
+    <option value="10x10">10x10 - $490</option>
+    <option value="12x12">12x12 - $615</option>
+    <option value="14x14">14x14 - $695</option>
+  </select>
+
+  <h2>Total: $<span id="total">0</span></h2>
+
+  <button onclick="calculate()" style="padding:12px; margin-top:10px;">
+    Calculate Price
+  </button>
+
+  <script>
+    function calculate() {
+      const size = document.getElementById("roomSize").value;
+
+      let prices = {
+        "8x8": 410,
+        "10x10": 490,
+        "12x12": 615,
+        "14x14": 695
+      };
+
+      let total = prices[size] || 0;
+
+      document.getElementById("total").innerText = total;
+    }
+  </script>
+
 </body>
 </html>
