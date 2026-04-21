@@ -251,8 +251,8 @@
     <div class="card">
       <h2>1. Property ZIP Code</h2>
       <label>ZIP Code</label>
-      <input id="zip" placeholder="Enter property ZIP code" oninput="updateZone()" />
-      <div id="zoneBox" class="zone-box">Enter property ZIP code to detect pricing zone</div>
+     <input id="zip" placeholder="Enter property ZIP code for pricing" oninput="updateZone()" />
+     
     </div>
 
     <div id="serviceCard" class="card hidden">
@@ -684,20 +684,18 @@
 
     function updateZone() {
       const zip = document.getElementById("zip").value;
-      const zoneBox = document.getElementById("zoneBox");
+      
       const serviceCard = document.getElementById("serviceCard");
       const summaryCard = document.getElementById("summaryCard");
 
       currentZone = zipToZone(zip);
 
       if (currentZone) {
-        zoneBox.className = "zone-box active";
-        zoneBox.textContent = "Matched pricing area: " + currentZone.name + " (" + currentZone.label + ")";
+        
         serviceCard.classList.remove("hidden");
         summaryCard.classList.remove("hidden");
       } else {
-        zoneBox.className = "zone-box";
-        zoneBox.textContent = "Enter property ZIP code to detect pricing zone";
+       
         serviceCard.classList.add("hidden");
         document.getElementById("subcategoryCard").classList.add("hidden");
         document.getElementById("detailsCard").classList.add("hidden");
