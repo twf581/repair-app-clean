@@ -503,16 +503,28 @@
         <div class="note-box">Flooring install, repair, vinyl plank, transition strip, and base shoe are quote-required items.</div>
       </div>
 
-      <!-- Exterior -->
-      <div id="exteriorFields" class="hidden">
-        <div class="pill">Exterior</div>
-        <div class="note-box">Exterior quote items remain quote-required. Mold treatment does not show here.</div>
-      </div>
+     <!-- Exterior -->
+<div id="exteriorFields" class="hidden">
+  <div class="pill">Exterior</div>
 
-      <div id="manualFields" class="note-box hidden">
-        This service type is quote-required. The app will still generate a customer-ready summary.
-      </div>
+  <div id="fencingFields" class="hidden">
+    <div class="note-box">
+      1 post and reattached = $150
     </div>
+
+    <label>Extra posts</label>
+    <input id="extraPosts" type="number" min="0" value="0" oninput="calculateEstimate()" />
+
+    <div class="note-box">
+      Extra posts = $100 each<br>
+      Other fencing requests will be quoted.
+    </div>
+  </div>
+
+  <div id="exteriorQuoteNote" class="note-box hidden">
+    This exterior service is quote-required.
+  </div>
+</div>
 
     <div id="summaryCard" class="card hidden">
       <h2>5. Estimate Summary</h2>
@@ -870,20 +882,19 @@ function zipToZone(zip) {
 if (selectedCategory === "exterior") {
   document.getElementById("exteriorFields").classList.remove("hidden");
 
-  const fencingFields = document.getElementById("fencingFields");
-  const exteriorQuoteNote = document.getElementById("exteriorQuoteNote");
-
-  fencingFields.classList.add("hidden");
-  exteriorQuoteNote.classList.add("hidden");
+  document.getElementById("fencingFields").classList.add("hidden");
+  document.getElementById("exteriorQuoteNote").classList.add("hidden");
 
   if (selectedSubcategory === "Fencing / Post Repair / Replacement") {
-    fencingFields.classList.remove("hidden");
+    document.getElementById("fencingFields").classList.remove("hidden");
   }
 
   if (selectedSubcategory.includes("(Quote)")) {
-    exteriorQuoteNote.classList.remove("hidden");
+    document.getElementById("exteriorQuoteNote").classList.remove("hidden");
     document.getElementById("manualFields").classList.remove("hidden");
   }
+
+  return;
 }
     }
 
@@ -1081,7 +1092,7 @@ if (selectedSubcategory === "Window Caulking") base = 125 * zoneMultiplier;
         detail = selectedSubcategory;
       }
 
-   // Exterior
+ // Exterior
 if (selectedCategory === "exterior") {
   if (selectedSubcategory === "Fencing / Post Repair / Replacement") {
     const extraPosts = Number(document.getElementById("extraPosts").value || 0);
@@ -1095,6 +1106,7 @@ if (selectedCategory === "exterior") {
     isQuoted = true;
     detail = selectedSubcategory;
   }
+}
 }
       document.getElementById("basePrice").textContent = isQuoted ? "Quoted" : formatCurrency(base);
       document.getElementById("addOns").textContent = formatCurrency(addOns);
