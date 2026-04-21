@@ -870,14 +870,21 @@ function zipToZone(zip) {
 if (selectedCategory === "exterior") {
   document.getElementById("exteriorFields").classList.remove("hidden");
 
+  const fencingFields = document.getElementById("fencingFields");
+  const exteriorQuoteNote = document.getElementById("exteriorQuoteNote");
+
+  fencingFields.classList.add("hidden");
+  exteriorQuoteNote.classList.add("hidden");
+
   if (selectedSubcategory === "Fencing / Post Repair / Replacement") {
-    document.getElementById("fencingFields").classList.remove("hidden");
+    fencingFields.classList.remove("hidden");
   }
 
   if (selectedSubcategory.includes("(Quote)")) {
+    exteriorQuoteNote.classList.remove("hidden");
     document.getElementById("manualFields").classList.remove("hidden");
   }
-} 
+}
     }
 
     function calculateEstimate() {
@@ -1074,26 +1081,21 @@ if (selectedSubcategory === "Window Caulking") base = 125 * zoneMultiplier;
         detail = selectedSubcategory;
       }
 
-      // Exterior
-    if (selectedCategory === "exterior") {
-
+   // Exterior
+if (selectedCategory === "exterior") {
   if (selectedSubcategory === "Fencing / Post Repair / Replacement") {
-
-    base = 150 * zoneMultiplier;
-
     const extraPosts = Number(document.getElementById("extraPosts").value || 0);
 
+    base = 150 * zoneMultiplier;
     addOns += extraPosts * 100;
-
+    detail = "1 post and reattached";
   }
 
   if (selectedSubcategory === "Pressure Washing (Quote)" || selectedSubcategory === "Junk Removal (Quote)") {
     isQuoted = true;
+    detail = selectedSubcategory;
   }
-
-  detail = selectedSubcategory;
 }
-
       document.getElementById("basePrice").textContent = isQuoted ? "Quoted" : formatCurrency(base);
       document.getElementById("addOns").textContent = formatCurrency(addOns);
       document.getElementById("totalPrice").textContent =
