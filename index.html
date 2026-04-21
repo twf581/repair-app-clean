@@ -628,22 +628,33 @@
       }).format(value || 0);
     }
 
-    function zipToZone(zip) {
-      const digits = (zip || "").replace(/\D/g, "");
-      if (!digits) return null;
+function zipToZone(zip) {
+  const digits = (zip || "").replace(/\D/g, "");
+  if (!digits) return null;
 
-      if (digits.startsWith("925")) return { name: "Zone 1", label: "Budget", adjustment: 0 };
-      if (digits.startsWith("923") || digits.startsWith("928")) return { name: "Zone 2", label: "Standard", adjustment: 20 };
-      if (digits.startsWith("917") || digits.startsWith("922")) return { name: "Zone 3", label: "Premium", adjustment: 45 };
-      if (
-        digits.startsWith("920") ||
-        digits.startsWith("921") ||
-        digits.startsWith("926") ||
-        digits.startsWith("900")
-      ) return { name: "Zone 4", label: "Coastal", adjustment: 95 };
+  if (digits.startsWith("925")) {
+    return { name: "Zone 1", multiplier: 1.00 };
+  }
 
-      return null;
-    }
+  if (digits.startsWith("923") || digits.startsWith("928")) {
+    return { name: "Zone 2", multiplier: 1.10 };
+  }
+
+  if (digits.startsWith("917") || digits.startsWith("922")) {
+    return { name: "Zone 3", multiplier: 1.20 };
+  }
+
+  if (
+    digits.startsWith("920") ||
+    digits.startsWith("921") ||
+    digits.startsWith("926") ||
+    digits.startsWith("900")
+  ) {
+    return { name: "Zone 4", multiplier: 1.30 };
+  }
+
+  return null;
+}
 
     function hideAllDetailSections() {
       [
@@ -865,10 +876,11 @@
     }
 
     function calculateEstimate() {
-      let base = 0;
-      let addOns = 0;
-      let detail = "";
-      let isQuoted = false;
+   let base = 0;
+let addOns = 0;
+let detail = "";
+let isQuoted = false;
+const zoneMultiplier = currentZone ? currentZone.multiplier : 1;
 
       // Painting
       if (selectedCategory === "painting") {
@@ -882,7 +894,7 @@
           const paintMatch = document.getElementById("paintMatch").checked;
           const extraPaintMatches = Number(document.getElementById("extraPaintMatches").value || 0);
 
-          base = roomSize;
+         base = roomSize * zoneMultiplier;
           addOns += doorQty * doorType;
           addOns += baseboardLf * 2;
           addOns += closetStandard ? 95 : 0;
@@ -899,7 +911,7 @@
           const wallPaintMatch = document.getElementById("wallPaintMatch").checked;
 
           document.getElementById("wallSfDisplay").textContent = Math.round(wallSf);
-          base = wallSf * 1.25;
+         base = wallSf * 1.25 * zoneMultiplier;
           addOns += wallPaintMatch ? 75 : 0;
           detail = "Wall painting " + Math.round(wallSf) + " sf";
         }
@@ -907,13 +919,13 @@
         if (selectedSubcategory === "Ceiling Painting") {
           const ceilingSf = Number(document.getElementById("ceilingSf").value || 0);
           const standalone = document.getElementById("ceilingStandalone").checked;
-          base = ceilingSf * (standalone ? 4.5 : 2.2);
+         base = ceilingSf * (standalone ? 4.5 : 2.2) * zoneMultiplier;
           detail = standalone ? "Stand-alone ceiling" : "Ceiling add-on";
         }
 
         if (selectedSubcategory === "Door Painting") {
           const qty = Number(document.getElementById("standaloneDoorQty").value || 0);
-          base = qty * 150;
+         base = qty * 150 * zoneMultiplier;
           detail = "Standalone door painting";
         }
 
@@ -928,9 +940,9 @@
 
       // Drywall
       if (selectedCategory === "drywall") {
-        if (selectedSubcategory === "Small Drywall Repair") base = 150;
-        if (selectedSubcategory === "Medium Drywall Repair") base = 300;
-        if (selectedSubcategory === "Large Drywall Repair") base = 700;
+      if (selectedSubcategory === "Small Drywall Repair") base = 150 * zoneMultiplier;
+if (selectedSubcategory === "Medium Drywall Repair") base = 300 * zoneMultiplier;
+if (selectedSubcategory === "Large Drywall Repair") base = 700 * zoneMultiplier;
 
         if (selectedSubcategory === "Multiple Small Holes (Quote)" || selectedSubcategory === "Ceiling Drywall (Quote)") {
           isQuoted = true;
@@ -961,22 +973,22 @@
 
       // Plumbing
       if (selectedCategory === "plumbing") {
-        if (selectedSubcategory === "Faucet Installation") base = 150;
-        if (selectedSubcategory === "Faucet Installation w/ Disposal or Drainpipe Removal") base = 235;
-        if (selectedSubcategory === "Toilet Replacement") base = 150;
-        if (selectedSubcategory === "Toilet Repair") base = 150;
-        if (selectedSubcategory === "Garbage Disposal Install") base = 160;
-        if (selectedSubcategory === "Garbage Disposal Install w/ 1 1/3 HP Disposal") base = 285;
-        if (selectedSubcategory === "Bathtub / Shower Caulking") base = 125;
+       if (selectedSubcategory === "Faucet Installation") base = 150 * zoneMultiplier;
+if (selectedSubcategory === "Faucet Installation w/ Disposal or Drainpipe Removal") base = 235 * zoneMultiplier;
+if (selectedSubcategory === "Toilet Replacement") base = 150 * zoneMultiplier;
+if (selectedSubcategory === "Toilet Repair") base = 150 * zoneMultiplier;
+if (selectedSubcategory === "Garbage Disposal Install") base = 160 * zoneMultiplier;
+if (selectedSubcategory === "Garbage Disposal Install w/ 1 1/3 HP Disposal") base = 285 * zoneMultiplier;
+if (selectedSubcategory === "Bathtub / Shower Caulking") base = 125 * zoneMultiplier;
 
         if (selectedSubcategory === "Angle Stop Replacement") {
           const qty = Number(document.getElementById("angleStopQty").value || 1);
-          base = qty === 1 ? 75 : qty * 60;
+         base = (qty === 1 ? 75 : qty * 60) * zoneMultiplier;
         }
 
         if (selectedSubcategory === "Supply Line Replacement") {
           const qty = Number(document.getElementById("supplyLineQty").value || 1);
-          base = qty === 1 ? 45 : qty * 30;
+         base = (qty === 1 ? 45 : qty * 30) * zoneMultiplier;
         }
 
         if (selectedSubcategory.includes("(Quote)")) {
@@ -1000,22 +1012,22 @@
 
       // Electrical
       if (selectedCategory === "electrical") {
-        if (selectedSubcategory === "Light Fixture Install") base = 150;
-        if (selectedSubcategory === "Ring Doorbell Install") base = 125;
-
+       if (selectedSubcategory === "Light Fixture Install") base = 150 * zoneMultiplier;
+if (selectedSubcategory === "Ring Doorbell Install") base = 125 * zoneMultiplier;
+        
         if (selectedSubcategory === "Outlet / Switch Replace") {
           const qty = Number(document.getElementById("outletQty").value || 1);
-          base = qty <= 1 ? 150 : 150 + ((qty - 1) * 50);
+         base = (qty <= 1 ? 150 : 150 + ((qty - 1) * 50)) * zoneMultiplier;
         }
 
         if (selectedSubcategory === "Ceiling Fan Install") {
           const qty = Number(document.getElementById("fanQty").value || 1);
-          base = qty <= 1 ? 150 : 150 + ((qty - 1) * 135);
+         base = (qty <= 1 ? 150 : 150 + ((qty - 1) * 135)) * zoneMultiplier;
         }
 
         if (selectedSubcategory === "Ring Flood Light Camera Install") {
           const qty = Number(document.getElementById("floodQty").value || 1);
-          base = qty <= 1 ? 150 : 150 + ((qty - 1) * 135);
+         base = (qty <= 1 ? 150 : 150 + ((qty - 1) * 135)) * zoneMultiplier;
         }
 
         detail = selectedSubcategory;
@@ -1023,9 +1035,9 @@
 
       // Doors / Windows
       if (selectedCategory === "doors") {
-        if (selectedSubcategory === "Interior Door Install") base = 150;
-        if (selectedSubcategory === "Pre-Hung Door Install") base = 495;
-        if (selectedSubcategory === "Window Caulking") base = 125;
+       if (selectedSubcategory === "Interior Door Install") base = 150 * zoneMultiplier;
+if (selectedSubcategory === "Pre-Hung Door Install") base = 495 * zoneMultiplier;
+if (selectedSubcategory === "Window Caulking") base = 125 * zoneMultiplier;
 
         const paintDoorAfterInstall = document.getElementById("paintDoorAfterInstall").checked;
         const doorTrimKitExtra = document.getElementById("doorTrimKitExtra").checked;
@@ -1040,8 +1052,8 @@
       if (selectedCategory === "carpentry") {
         if (selectedSubcategory === "TV Mounting") {
           const qty = Number(document.getElementById("tvQty").value || 1);
-          base = qty <= 1 ? 125 : 125 + ((qty - 1) * 112.5);
-
+         base = (qty <= 1 ? 125 : 125 + ((qty - 1) * 112.5)) * zoneMultiplier;
+          
           const concealedWiring = document.getElementById("concealedWiring").checked;
           if (concealedWiring) isQuoted = true;
         } else {
@@ -1058,17 +1070,24 @@
       }
 
       // Exterior
-      if (selectedCategory === "exterior") {
-        if (selectedSubcategory === "Fencing / Post Repair / Replacement") {
-          base = 150;
-        }
+    if (selectedCategory === "exterior") {
 
-        if (selectedSubcategory === "Pressure Washing (Quote)" || selectedSubcategory === "Junk Removal (Quote)") {
-          isQuoted = true;
-        }
+  if (selectedSubcategory === "Fencing / Post Repair / Replacement") {
 
-        detail = selectedSubcategory;
-      }
+    base = 150 * zoneMultiplier;
+
+    const extraPosts = Number(document.getElementById("extraPosts").value || 0);
+
+    addOns += extraPosts * 100;
+
+  }
+
+  if (selectedSubcategory === "Pressure Washing (Quote)" || selectedSubcategory === "Junk Removal (Quote)") {
+    isQuoted = true;
+  }
+
+  detail = selectedSubcategory;
+}
 
       document.getElementById("basePrice").textContent = isQuoted ? "Quoted" : formatCurrency(base);
       document.getElementById("addOns").textContent = formatCurrency(addOns);
