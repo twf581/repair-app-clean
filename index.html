@@ -867,12 +867,17 @@ function zipToZone(zip) {
         return;
       }
 
-      if (selectedCategory === "exterior") {
-        document.getElementById("exteriorFields").classList.remove("hidden");
-        if (selectedSubcategory.includes("(Quote)")) {
-          document.getElementById("manualFields").classList.remove("hidden");
-        }
-      }
+if (selectedCategory === "exterior") {
+  document.getElementById("exteriorFields").classList.remove("hidden");
+
+  if (selectedSubcategory === "Fencing / Post Repair / Replacement") {
+    document.getElementById("fencingFields").classList.remove("hidden");
+  }
+
+  if (selectedSubcategory.includes("(Quote)")) {
+    document.getElementById("manualFields").classList.remove("hidden");
+  }
+} 
     }
 
     function calculateEstimate() {
