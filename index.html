@@ -1,9 +1,9 @@
-
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Repair Estimator App</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Repairs Estimator</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -14,7 +14,7 @@
     }
 
     .wrap {
-      max-width: 960px;
+      max-width: 980px;
       margin: 0 auto;
     }
 
@@ -53,6 +53,22 @@
       border: 1px solid #dbeafe;
     }
 
+    .hidden {
+      display: none;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
     input, select, button, textarea {
       width: 100%;
       padding: 14px;
@@ -76,35 +92,6 @@
       margin-top: 8px;
     }
 
-    .grid-2 {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 12px;
-    }
-
-    .grid-3 {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
-    }
-
-    .zone-box {
-      margin-top: 12px;
-      border-radius: 14px;
-      padding: 14px;
-      font-size: 14px;
-      font-weight: 600;
-      border: 1px solid #cbd5e1;
-      background: #f8fafc;
-      color: #475569;
-    }
-
-    .zone-box.active {
-      border: 1px solid #93c5fd;
-      background: #dbeafe;
-      color: #1e3a8a;
-    }
-
     .service-btn {
       text-align: left;
       background: white;
@@ -122,6 +109,29 @@
 
     .service-btn:hover {
       border-color: #60a5fa;
+    }
+
+    .note-box {
+      border: 1px solid #e2e8f0;
+      background: #f8fafc;
+      border-radius: 14px;
+      padding: 14px;
+      font-size: 14px;
+      color: #475569;
+      margin-bottom: 10px;
+      line-height: 1.5;
+    }
+
+    .pill {
+      display: inline-block;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      color: #1d4ed8;
+      font-size: 12px;
+      font-weight: 700;
+      margin-bottom: 8px;
     }
 
     .summary-box {
@@ -183,33 +193,6 @@
       font-weight: 700;
     }
 
-    .note-box {
-      border: 1px solid #e2e8f0;
-      background: #f8fafc;
-      border-radius: 14px;
-      padding: 14px;
-      font-size: 14px;
-      color: #475569;
-      margin-bottom: 10px;
-      line-height: 1.5;
-    }
-
-    .hidden {
-      display: none;
-    }
-
-    .pill {
-      display: inline-block;
-      padding: 6px 10px;
-      border-radius: 999px;
-      background: #eff6ff;
-      border: 1px solid #bfdbfe;
-      color: #1d4ed8;
-      font-size: 12px;
-      font-weight: 700;
-      margin-bottom: 8px;
-    }
-
     .inline-check {
       width: auto;
       margin-right: 8px;
@@ -223,14 +206,12 @@
     }
   </style>
 </head>
-
 <body>
   <div class="wrap">
-
     <div class="hero">
-      <div class="hero-kicker">Repair Estimator App</div>
+      <div class="hero-kicker">Repairs Estimator App</div>
       <h1>Mobile Onsite Handyman Services LLC</h1>
-      <p>Repair pricing by service, add-ons, and zip-based area rates. Built for fast quoting on-site.</p>
+      <p>Fast on-site pricing for repairs, installs, and painting.</p>
     </div>
 
     <div class="card">
@@ -251,14 +232,11 @@
 
     <div class="card">
       <h2>1. Property ZIP Code</h2>
-      <label>ZIP Code</label>
-      <input id="zip" placeholder="Enter property ZIP code" oninput="updateZone()" />
-      <div id="zoneBox" class="zone-box">Enter property ZIP code to detect pricing zone</div>
+      <input id="zip" placeholder="Enter property ZIP code for pricing" oninput="handleZipInput()" />
     </div>
 
     <div id="serviceCard" class="card hidden">
       <h2>2. Select Service Category</h2>
-
       <button class="service-btn" id="btn-painting" onclick="selectCategory('painting')">Painting</button>
       <button class="service-btn" id="btn-drywall" onclick="selectCategory('drywall')">Drywall</button>
       <button class="service-btn" id="btn-plumbing" onclick="selectCategory('plumbing')">Plumbing</button>
@@ -270,7 +248,7 @@
     </div>
 
     <div id="subcategoryCard" class="card hidden">
-      <h2>3. Select Service Type</h2>
+      <h2>3. Select Service</h2>
       <div id="categoryNotes" class="note-box hidden"></div>
       <div id="subcategoryWrap"></div>
     </div>
@@ -278,10 +256,9 @@
     <div id="detailsCard" class="card hidden">
       <h2>4. Service Details & Add-Ons</h2>
 
-      <!-- Painting -->
-      <div id="roomPaintingFields" class="hidden">
+      <!-- PAINTING -->
+      <div id="paintingRoomFields" class="hidden">
         <div class="pill">Painting</div>
-
         <label>Room Size</label>
         <select id="roomSize" onchange="calculateEstimate()">
           <option value="">Choose room size</option>
@@ -309,36 +286,35 @@
             </select>
           </div>
           <div>
-            <label>Door Quantity</label>
+            <label>Number of Doors</label>
             <input id="doorQty" type="number" min="0" value="0" oninput="calculateEstimate()" />
           </div>
         </div>
 
-        <label>Baseboards Different Color (LF)</label>
+        <label>Baseboards (different color) – linear feet</label>
         <input id="baseboardLf" type="number" min="0" value="0" oninput="calculateEstimate()" />
 
         <div class="note-box">
-          <label><input id="closetStandard" class="inline-check" type="checkbox" onchange="calculateEstimate()"> Standard Closet 12–18 sf (+$95)</label>
+          <label><input id="closetStandard" class="inline-check" type="checkbox" onchange="calculateEstimate()"> Standard closet 12–18 sf (+$95)</label>
         </div>
 
         <div class="note-box">
-          <label><input id="closet48" class="inline-check" type="checkbox" onchange="calculateEstimate()"> Large Closet 48 sf (+$150)</label>
+          <label><input id="closet48" class="inline-check" type="checkbox" onchange="calculateEstimate()"> Large closet 48 sf (+$150)</label>
         </div>
 
         <div class="note-box">
-          <label><input id="paintMatch" class="inline-check" type="checkbox" onchange="calculateEstimate()"> Paint match extra (+$75)</label>
+          <label><input id="paintMatch" class="inline-check" type="checkbox" onchange="calculateEstimate()"> Paint color matching (+$75)</label>
           <label>Additional paint matches after first ($25 each)</label>
           <input id="extraPaintMatches" type="number" min="0" value="0" oninput="calculateEstimate()" />
         </div>
 
         <div class="note-box">
-          Moving furniture to complete job is an extra charge. When painting, furniture is often moved 2–3 times for one room.
+          Furniture moving required to complete painting may incur additional charges. When painting, furniture is often moved 2–3 times for one room.
         </div>
       </div>
 
-      <div id="wallPaintingFields" class="hidden">
+      <div id="paintingWallFields" class="hidden">
         <div class="pill">Painting</div>
-
         <div class="grid-2">
           <div>
             <label>Wall Length</label>
@@ -355,74 +331,49 @@
         </div>
 
         <div class="note-box">
-          <label><input id="wallPaintMatch" class="inline-check" type="checkbox" onchange="calculateEstimate()"> Paint match extra (+$75)</label>
+          <label><input id="wallPaintMatch" class="inline-check" type="checkbox" onchange="calculateEstimate()"> Paint color matching (+$75)</label>
         </div>
       </div>
 
-      <div id="ceilingPaintingFields" class="hidden">
+      <div id="paintingCeilingFields" class="hidden">
         <div class="pill">Painting</div>
-
         <label>Ceiling Square Feet</label>
         <input id="ceilingSf" type="number" min="0" value="0" oninput="calculateEstimate()" />
-
         <div class="note-box">
           <label><input id="ceilingStandalone" class="inline-check" type="checkbox" onchange="calculateEstimate()"> Stand-alone ceiling pricing ($4.50/sf). Leave unchecked for add-on rate ($2.20/sf)</label>
         </div>
       </div>
 
-      <div id="doorPaintingFields" class="hidden">
+      <div id="paintingDoorFields" class="hidden">
         <div class="pill">Painting</div>
-
         <label>Standalone Door Painting Quantity</label>
         <input id="standaloneDoorQty" type="number" min="1" value="1" oninput="calculateEstimate()" />
-
-        <div class="note-box">
-          Standalone door painting = $150 each.
-        </div>
+        <div class="note-box">Standalone door painting = $150 each.</div>
       </div>
 
-      <div id="paintAddonFields" class="hidden">
-        <div class="pill">Doors / Windows Add-On</div>
-
-        <div class="note-box">
-          <label><input id="paintDoorAfterInstall" class="inline-check" type="checkbox" onchange="calculateEstimate()"> Paint door after install, includes white paint (+$65)</label>
-        </div>
-
-        <div class="note-box">
-          <label><input id="doorTrimKitExtra" class="inline-check" type="checkbox" onchange="calculateEstimate()"> Door trim kit extra (quote)</label>
-        </div>
-      </div>
-
-      <div id="touchupFields" class="hidden">
+      <div id="paintingTouchupFields" class="hidden">
         <div class="pill">Painting</div>
-        <div class="note-box">Touch-up painting will usually require a custom review. Use this app to capture customer info and generate a quote summary.</div>
+        <div class="note-box">Touch-up painting is quote-reviewed. Use the app to capture customer info and send a clean estimate summary.</div>
       </div>
 
-      <!-- Drywall -->
+      <!-- DRYWALL -->
       <div id="drywallFields" class="hidden">
         <div class="pill">Drywall</div>
-
-        <div class="note-box">
-          IAC2 Certified — Cert# IAC2-94278
-        </div>
-
+        <div class="note-box">IAC2 Certified (Certification #IAC2-94278)</div>
         <div class="note-box">
           <label><input id="textureMatch" class="inline-check" type="checkbox" onchange="calculateEstimate()"> Texture match (+$75)</label>
-          <label><input id="drywallPaintMatch" class="inline-check" type="checkbox" onchange="calculateEstimate()"> Paint match extra (+$75)</label>
-          <label><input id="emergencyAddOn" class="inline-check" type="checkbox" onchange="calculateEstimate()"> Emergency / same day (+25%)</label>
+          <label><input id="drywallPaintMatch" class="inline-check" type="checkbox" onchange="calculateEstimate()"> Paint color matching (+$75)</label>
+          <label><input id="emergencyAddOn" class="inline-check" type="checkbox" onchange="calculateEstimate()"> Priority / same-day service (+25%)</label>
           <label><input id="drywallLightTreatment" class="inline-check" type="checkbox" onchange="calculateEstimate()"> Light mild treatment (+$100)</label>
           <label><input id="drywallModerateTreatment" class="inline-check" type="checkbox" onchange="calculateEstimate()"> Moderate treatment (+$225)</label>
-          <label><input id="drywallHeavyContainment" class="inline-check" type="checkbox" onchange="calculateEstimate()"> Heavy containment (quote)</label>
+          <label><input id="drywallHeavyContainment" class="inline-check" type="checkbox" onchange="calculateEstimate()"> Heavy containment (quoted)</label>
         </div>
       </div>
 
-      <!-- Plumbing -->
+      <!-- PLUMBING -->
       <div id="plumbingFields" class="hidden">
         <div class="pill">Plumbing</div>
-
-        <div class="note-box">
-          Plumbing prices are labor only unless otherwise stated.
-        </div>
+        <div class="note-box">Plumbing pricing is labor only unless noted otherwise.</div>
 
         <div id="angleStopQtyWrap" class="hidden">
           <label>Angle Stop Quantity</label>
@@ -436,8 +387,8 @@
 
         <div id="toiletAddOnWrap" class="hidden">
           <div class="note-box">
-            <label><input id="toiletPickup" class="inline-check" type="checkbox" onchange="calculateEstimate()"> Toilet material pickup fee (+$65)</label>
-            <label><input id="toiletDisposal" class="inline-check" type="checkbox" onchange="calculateEstimate()"> Toilet disposal fee (+$30)</label>
+            <label><input id="toiletPickup" class="inline-check" type="checkbox" onchange="calculateEstimate()"> Material pickup fee (+$65)</label>
+            <label><input id="toiletDisposal" class="inline-check" type="checkbox" onchange="calculateEstimate()"> Disposal fee (+$30)</label>
           </div>
         </div>
 
@@ -448,7 +399,7 @@
         </div>
       </div>
 
-      <!-- Electrical -->
+      <!-- ELECTRICAL -->
       <div id="electricalFields" class="hidden">
         <div class="pill">Electrical</div>
 
@@ -471,16 +422,23 @@
         </div>
       </div>
 
-      <!-- Doors / Windows -->
+      <!-- DOORS/WINDOWS -->
       <div id="doorsFields" class="hidden">
         <div class="pill">Doors / Windows</div>
+
+        <div id="doorInstallAddons" class="hidden">
+          <div class="note-box">
+            <label><input id="paintDoorAfterInstall" class="inline-check" type="checkbox" onchange="calculateEstimate()"> Paint door after install, includes white paint (+$65)</label>
+            <label><input id="doorTrimKitExtra" class="inline-check" type="checkbox" onchange="calculateEstimate()"> Door trim kit extra (quoted)</label>
+          </div>
+        </div>
 
         <div id="windowCaulkNote" class="note-box hidden">
           Window caulking = $125 up to 48”x48” window. Anything larger is quoted.
         </div>
       </div>
 
-      <!-- Carpentry -->
+      <!-- CARPENTRY -->
       <div id="carpentryFields" class="hidden">
         <div class="pill">Carpentry / Repairs</div>
 
@@ -492,46 +450,44 @@
 
         <div id="tvAddonWrap" class="hidden">
           <div class="note-box">
-            <label><input id="concealedWiring" class="inline-check" type="checkbox" onchange="calculateEstimate()"> Concealed wiring / in-wall cable = quoted</label>
+            <label><input id="concealedWiring" class="inline-check" type="checkbox" onchange="calculateEstimate()"> Concealed wiring / in-wall cable (quoted)</label>
           </div>
         </div>
       </div>
 
-      <!-- Flooring -->
+      <!-- FLOORING -->
       <div id="flooringFields" class="hidden">
         <div class="pill">Flooring</div>
-        <div class="note-box">Flooring install, repair, vinyl plank, transition strip, and base shoe are quote-required items.</div>
+        <div class="note-box">Flooring install, repair, vinyl plank, transition strip, and base shoe are quoted items.</div>
       </div>
 
-     <!-- Exterior -->
-<div id="exteriorFields" class="hidden">
-  <div class="pill">Exterior</div>
+      <!-- EXTERIOR -->
+      <div id="exteriorFields" class="hidden">
+        <div class="pill">Exterior</div>
 
-  <div id="fencingFields" class="hidden">
-    <div class="note-box">
-      1 post and reattached = $150
+        <div id="fencingFields" class="hidden">
+          <div class="note-box">1 post and reattached = $150</div>
+          <label>Extra Posts</label>
+          <input id="extraPosts" type="number" min="0" value="0" oninput="calculateEstimate()" />
+          <div class="note-box">Extra posts = $100 each. Other fencing requests will be quoted.</div>
+        </div>
+
+        <div id="exteriorQuoteNote" class="note-box hidden">
+          This exterior service is quote-required.
+        </div>
+      </div>
+
+      <div id="manualFields" class="note-box hidden">
+        This service is quoted. The app will still generate a customer-ready summary.
+      </div>
     </div>
-
-    <label>Extra posts</label>
-    <input id="extraPosts" type="number" min="0" value="0" oninput="calculateEstimate()" />
-
-    <div class="note-box">
-      Extra posts = $100 each<br>
-      Other fencing requests will be quoted.
-    </div>
-  </div>
-
-  <div id="exteriorQuoteNote" class="note-box hidden">
-    This exterior service is quote-required.
-  </div>
-</div>
 
     <div id="summaryCard" class="card hidden">
-      <h2>5. Estimate Summary</h2>
+      <h2>5. Estimate</h2>
 
       <div class="grid-3">
         <div class="summary-box">
-          <div class="muted">Base Price</div>
+          <div class="muted">Base</div>
           <div class="big" id="basePrice">$0.00</div>
         </div>
 
@@ -547,7 +503,7 @@
       </div>
 
       <div class="note-box" id="summaryDetails">
-        Pricing Zone: Not matched
+        Service: Not selected
       </div>
 
       <button class="primary-btn" onclick="generateQuote()">Generate Quote Text</button>
@@ -562,7 +518,6 @@
 
       <div id="copyStatus" style="margin-top:8px; font-size:14px; font-weight:700; color:#1d4ed8;"></div>
     </div>
-
   </div>
 
   <script>
@@ -575,7 +530,7 @@
         "Room Painting",
         "Wall Painting",
         "Ceiling Painting",
-        "Trim / Baseboard Painting (Quote)",
+        "Trim / Baseboard Painting (Quoted)",
         "Door Painting",
         "Touch-Up Painting"
       ],
@@ -583,8 +538,8 @@
         "Small Drywall Repair",
         "Medium Drywall Repair",
         "Large Drywall Repair",
-        "Multiple Small Holes (Quote)",
-        "Ceiling Drywall (Quote)",
+        "Multiple Small Holes (Quoted)",
+        "Ceiling Drywall (Quoted)",
         "Paint Repair Area (Paint Not Included)",
         "Full Wall (Paint Not Included)"
       ],
@@ -595,9 +550,9 @@
         "Toilet Repair",
         "Angle Stop Replacement",
         "Supply Line Replacement",
-        "Vanity Install (Quote)",
-        "Kitchen Sink Install (Quote)",
-        "Bathroom Sink Install (Quote)",
+        "Vanity Install (Quoted)",
+        "Kitchen Sink Install (Quoted)",
+        "Bathroom Sink Install (Quoted)",
         "Garbage Disposal Install",
         "Garbage Disposal Install w/ 1 1/3 HP Disposal",
         "Bathtub / Shower Caulking"
@@ -615,23 +570,57 @@
         "Window Caulking"
       ],
       carpentry: [
-        "Closet Rack / Shelving Repair or Install (Quote)",
-        "Baseboard Install (Quote)",
-        "Cabinet Repair (Quote)",
+        "Closet Rack / Shelving Repair or Install (Quoted)",
+        "Baseboard Install (Quoted)",
+        "Cabinet Repair (Quoted)",
         "TV Mounting"
       ],
       flooring: [
-        "Flooring Install (Quote)",
-        "Flooring Repair (Quote)",
-        "Vinyl Plank Flooring (Quote)",
-        "Transition Strip / Base Shoe Install (Quote)"
+        "Flooring Install (Quoted)",
+        "Flooring Repair (Quoted)",
+        "Vinyl Plank Flooring (Quoted)",
+        "Transition Strip / Base Shoe Install (Quoted)"
       ],
       exterior: [
         "Fencing / Post Repair / Replacement",
-        "Pressure Washing (Quote)",
-        "Junk Removal (Quote)"
+        "Pressure Washing (Quoted)",
+        "Junk Removal (Quoted)"
       ]
     };
+
+    function handleZipInput() {
+      const zip = document.getElementById("zip").value.trim();
+      currentZone = zipToZone(zip);
+
+      if (currentZone) {
+        document.getElementById("serviceCard").classList.remove("hidden");
+        document.getElementById("summaryCard").classList.remove("hidden");
+      } else {
+        document.getElementById("serviceCard").classList.add("hidden");
+        document.getElementById("subcategoryCard").classList.add("hidden");
+        document.getElementById("detailsCard").classList.add("hidden");
+        document.getElementById("summaryCard").classList.add("hidden");
+      }
+
+      calculateEstimate();
+    }
+
+    function zipToZone(zip) {
+      const digits = (zip || "").replace(/\D/g, "");
+      if (digits.length < 5) return null;
+
+      if (digits.startsWith("925")) return { multiplier: 1.00 };
+      if (digits.startsWith("923") || digits.startsWith("928")) return { multiplier: 1.10 };
+      if (digits.startsWith("917") || digits.startsWith("922")) return { multiplier: 1.20 };
+      if (
+        digits.startsWith("920") ||
+        digits.startsWith("921") ||
+        digits.startsWith("926") ||
+        digits.startsWith("900")
+      ) return { multiplier: 1.30 };
+
+      return { multiplier: 1.00 };
+    }
 
     function formatCurrency(value) {
       return new Intl.NumberFormat("en-US", {
@@ -640,116 +629,25 @@
       }).format(value || 0);
     }
 
-function zipToZone(zip) {
-  const digits = (zip || "").replace(/\D/g, "");
-  if (!digits) return null;
-
-  if (digits.startsWith("925")) {
-    return { name: "Zone 1", multiplier: 1.00 };
-  }
-
-  if (digits.startsWith("923") || digits.startsWith("928")) {
-    return { name: "Zone 2", multiplier: 1.10 };
-  }
-
-  if (digits.startsWith("917") || digits.startsWith("922")) {
-    return { name: "Zone 3", multiplier: 1.20 };
-  }
-
-  if (
-    digits.startsWith("920") ||
-    digits.startsWith("921") ||
-    digits.startsWith("926") ||
-    digits.startsWith("900")
-  ) {
-    return { name: "Zone 4", multiplier: 1.30 };
-  }
-
-  return null;
-}
-
-    function hideAllDetailSections() {
-      [
-        "roomPaintingFields",
-        "wallPaintingFields",
-        "ceilingPaintingFields",
-        "doorPaintingFields",
-        "paintAddonFields",
-        "touchupFields",
-        "drywallFields",
-        "plumbingFields",
-        "electricalFields",
-        "doorsFields",
-        "carpentryFields",
-        "flooringFields",
-        "exteriorFields",
-        "manualFields"
-      ].forEach(id => {
-        const el = document.getElementById(id);
-        if (el) el.classList.add("hidden");
-      });
-
-      [
-        "angleStopQtyWrap",
-        "supplyLineQtyWrap",
-        "outletQtyWrap",
-        "fanQtyWrap",
-        "floodQtyWrap",
-        "tvQtyWrap",
-        "tvAddonWrap",
-        "windowCaulkNote",
-        "toiletAddOnWrap",
-        "caulkingAddOnWrap"
-      ].forEach(id => {
-        const el = document.getElementById(id);
-        if (el) el.classList.add("hidden");
-      });
-    }
-
-    function updateZone() {
-      const zip = document.getElementById("zip").value;
-      const zoneBox = document.getElementById("zoneBox");
-      const serviceCard = document.getElementById("serviceCard");
-      const summaryCard = document.getElementById("summaryCard");
-
-      currentZone = zipToZone(zip);
-
-      if (currentZone) {
-        zoneBox.className = "zone-box active";
-        zoneBox.textContent = "Matched pricing area: " + currentZone.name + " (" + currentZone.label + ")";
-        serviceCard.classList.remove("hidden");
-        summaryCard.classList.remove("hidden");
-      } else {
-        zoneBox.className = "zone-box";
-        zoneBox.textContent = "Enter property ZIP code to detect pricing zone";
-        serviceCard.classList.add("hidden");
-        document.getElementById("subcategoryCard").classList.add("hidden");
-        document.getElementById("detailsCard").classList.add("hidden");
-        summaryCard.classList.add("hidden");
-      }
-
-      calculateEstimate();
-    }
-
     function selectCategory(category) {
       selectedCategory = category;
       selectedSubcategory = "";
 
       document.querySelectorAll("#serviceCard .service-btn").forEach(btn => btn.classList.remove("active"));
-      const activeBtn = document.getElementById("btn-" + category);
-      if (activeBtn) activeBtn.classList.add("active");
+      const active = document.getElementById("btn-" + category);
+      if (active) active.classList.add("active");
 
       const wrap = document.getElementById("subcategoryWrap");
       wrap.innerHTML = "";
 
-      (subcategories[category] || []).forEach(sub => {
+      (subcategories[category] || []).forEach(item => {
         const btn = document.createElement("button");
         btn.className = "service-btn";
-        btn.textContent = sub;
+        btn.textContent = item;
         btn.onclick = function () {
           document.querySelectorAll("#subcategoryWrap .service-btn").forEach(b => b.classList.remove("active"));
           btn.classList.add("active");
-          selectedSubcategory = sub;
+          selectedSubcategory = item;
           showDetailFields();
           calculateEstimate();
         };
@@ -760,17 +658,14 @@ function zipToZone(zip) {
       notes.classList.remove("hidden");
 
       if (category === "painting") {
-        notes.innerHTML =
-          "Painting prices include Sherwin-Williams paint. Moving furniture to complete job is an extra charge. When painting, furniture is often moved 2–3 times for one room.";
+        notes.innerHTML = "Painting prices include Sherwin-Williams paint. Furniture moving required to complete painting may incur additional charges.";
       } else if (category === "drywall") {
-        notes.innerHTML = "Drywall Repairs — IAC2 Certified, Cert# IAC2-94278.";
+        notes.innerHTML = "Drywall repairs — IAC2 Certified (Certification #IAC2-94278)";
       } else if (category === "plumbing") {
-        notes.innerHTML = "Plumbing prices are labor only unless otherwise stated.";
-      } else if (category === "electrical") {
-        notes.innerHTML = "Electrical pricing includes standard installations where noted. Extra units and discounts apply where shown.";
+        notes.innerHTML = "Plumbing pricing is labor only unless noted otherwise.";
       } else {
-        notes.innerHTML = "";
         notes.classList.add("hidden");
+        notes.innerHTML = "";
       }
 
       document.getElementById("subcategoryCard").classList.remove("hidden");
@@ -778,20 +673,54 @@ function zipToZone(zip) {
       hideAllDetailSections();
     }
 
+    function hideAllDetailSections() {
+      [
+        "paintingRoomFields",
+        "paintingWallFields",
+        "paintingCeilingFields",
+        "paintingDoorFields",
+        "paintingTouchupFields",
+        "drywallFields",
+        "plumbingFields",
+        "electricalFields",
+        "doorsFields",
+        "carpentryFields",
+        "flooringFields",
+        "exteriorFields",
+        "manualFields",
+        "doorInstallAddons",
+        "windowCaulkNote",
+        "angleStopQtyWrap",
+        "supplyLineQtyWrap",
+        "toiletAddOnWrap",
+        "caulkingAddOnWrap",
+        "outletQtyWrap",
+        "fanQtyWrap",
+        "floodQtyWrap",
+        "tvQtyWrap",
+        "tvAddonWrap",
+        "fencingFields",
+        "exteriorQuoteNote"
+      ].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.classList.add("hidden");
+      });
+    }
+
     function showDetailFields() {
       hideAllDetailSections();
 
       if (selectedCategory === "painting") {
         if (selectedSubcategory === "Room Painting") {
-          document.getElementById("roomPaintingFields").classList.remove("hidden");
+          document.getElementById("paintingRoomFields").classList.remove("hidden");
         } else if (selectedSubcategory === "Wall Painting") {
-          document.getElementById("wallPaintingFields").classList.remove("hidden");
+          document.getElementById("paintingWallFields").classList.remove("hidden");
         } else if (selectedSubcategory === "Ceiling Painting") {
-          document.getElementById("ceilingPaintingFields").classList.remove("hidden");
+          document.getElementById("paintingCeilingFields").classList.remove("hidden");
         } else if (selectedSubcategory === "Door Painting") {
-          document.getElementById("doorPaintingFields").classList.remove("hidden");
+          document.getElementById("paintingDoorFields").classList.remove("hidden");
         } else if (selectedSubcategory === "Touch-Up Painting") {
-          document.getElementById("touchupFields").classList.remove("hidden");
+          document.getElementById("paintingTouchupFields").classList.remove("hidden");
         } else {
           document.getElementById("manualFields").classList.remove("hidden");
         }
@@ -800,7 +729,7 @@ function zipToZone(zip) {
 
       if (selectedCategory === "drywall") {
         document.getElementById("drywallFields").classList.remove("hidden");
-        if (selectedSubcategory.includes("(Quote)")) {
+        if (selectedSubcategory.includes("(Quoted)")) {
           document.getElementById("manualFields").classList.remove("hidden");
         }
         return;
@@ -825,9 +754,10 @@ function zipToZone(zip) {
           document.getElementById("caulkingAddOnWrap").classList.remove("hidden");
         }
 
-        if (selectedSubcategory.includes("(Quote)")) {
+        if (selectedSubcategory.includes("(Quoted)")) {
           document.getElementById("manualFields").classList.remove("hidden");
         }
+
         return;
       }
 
@@ -845,19 +775,24 @@ function zipToZone(zip) {
         if (selectedSubcategory === "Ring Flood Light Camera Install") {
           document.getElementById("floodQtyWrap").classList.remove("hidden");
         }
+
         return;
       }
 
       if (selectedCategory === "doors") {
         document.getElementById("doorsFields").classList.remove("hidden");
 
-        if (selectedSubcategory === "Interior Door Install" || selectedSubcategory === "Pre-Hung Door Install") {
-          document.getElementById("paintAddonFields").classList.remove("hidden");
+        if (
+          selectedSubcategory === "Interior Door Install" ||
+          selectedSubcategory === "Pre-Hung Door Install"
+        ) {
+          document.getElementById("doorInstallAddons").classList.remove("hidden");
         }
 
         if (selectedSubcategory === "Window Caulking") {
           document.getElementById("windowCaulkNote").classList.remove("hidden");
         }
+
         return;
       }
 
@@ -870,6 +805,7 @@ function zipToZone(zip) {
         } else {
           document.getElementById("manualFields").classList.remove("hidden");
         }
+
         return;
       }
 
@@ -879,31 +815,26 @@ function zipToZone(zip) {
         return;
       }
 
-if (selectedCategory === "exterior") {
-  document.getElementById("exteriorFields").classList.remove("hidden");
+      if (selectedCategory === "exterior") {
+        document.getElementById("exteriorFields").classList.remove("hidden");
 
-  document.getElementById("fencingFields").classList.add("hidden");
-  document.getElementById("exteriorQuoteNote").classList.add("hidden");
+        if (selectedSubcategory === "Fencing / Post Repair / Replacement") {
+          document.getElementById("fencingFields").classList.remove("hidden");
+        }
 
-  if (selectedSubcategory === "Fencing / Post Repair / Replacement") {
-    document.getElementById("fencingFields").classList.remove("hidden");
-  }
-
-  if (selectedSubcategory.includes("(Quote)")) {
-    document.getElementById("exteriorQuoteNote").classList.remove("hidden");
-    document.getElementById("manualFields").classList.remove("hidden");
-  }
-
-  return;
-}
+        if (selectedSubcategory.includes("(Quoted)")) {
+          document.getElementById("exteriorQuoteNote").classList.remove("hidden");
+          document.getElementById("manualFields").classList.remove("hidden");
+        }
+      }
     }
 
     function calculateEstimate() {
-   let base = 0;
-let addOns = 0;
-let detail = "";
-let isQuoted = false;
-const zoneMultiplier = currentZone ? currentZone.multiplier : 1;
+      let base = 0;
+      let addOns = 0;
+      let detail = "";
+      let isQuoted = false;
+      const zoneMultiplier = currentZone ? currentZone.multiplier : 1;
 
       // Painting
       if (selectedCategory === "painting") {
@@ -917,7 +848,7 @@ const zoneMultiplier = currentZone ? currentZone.multiplier : 1;
           const paintMatch = document.getElementById("paintMatch").checked;
           const extraPaintMatches = Number(document.getElementById("extraPaintMatches").value || 0);
 
-         base = roomSize * zoneMultiplier;
+          base = roomSize * zoneMultiplier;
           addOns += doorQty * doorType;
           addOns += baseboardLf * 2;
           addOns += closetStandard ? 95 : 0;
@@ -934,7 +865,7 @@ const zoneMultiplier = currentZone ? currentZone.multiplier : 1;
           const wallPaintMatch = document.getElementById("wallPaintMatch").checked;
 
           document.getElementById("wallSfDisplay").textContent = Math.round(wallSf);
-         base = wallSf * 1.25 * zoneMultiplier;
+          base = wallSf * 1.25 * zoneMultiplier;
           addOns += wallPaintMatch ? 75 : 0;
           detail = "Wall painting " + Math.round(wallSf) + " sf";
         }
@@ -942,20 +873,17 @@ const zoneMultiplier = currentZone ? currentZone.multiplier : 1;
         if (selectedSubcategory === "Ceiling Painting") {
           const ceilingSf = Number(document.getElementById("ceilingSf").value || 0);
           const standalone = document.getElementById("ceilingStandalone").checked;
-         base = ceilingSf * (standalone ? 4.5 : 2.2) * zoneMultiplier;
+          base = ceilingSf * (standalone ? 4.5 : 2.2) * zoneMultiplier;
           detail = standalone ? "Stand-alone ceiling" : "Ceiling add-on";
         }
 
         if (selectedSubcategory === "Door Painting") {
           const qty = Number(document.getElementById("standaloneDoorQty").value || 0);
-         base = qty * 150 * zoneMultiplier;
+          base = qty * 150 * zoneMultiplier;
           detail = "Standalone door painting";
         }
 
-        if (
-          selectedSubcategory === "Trim / Baseboard Painting (Quote)" ||
-          selectedSubcategory === "Touch-Up Painting"
-        ) {
+        if (selectedSubcategory === "Trim / Baseboard Painting (Quoted)" || selectedSubcategory === "Touch-Up Painting") {
           isQuoted = true;
           detail = selectedSubcategory;
         }
@@ -963,11 +891,11 @@ const zoneMultiplier = currentZone ? currentZone.multiplier : 1;
 
       // Drywall
       if (selectedCategory === "drywall") {
-      if (selectedSubcategory === "Small Drywall Repair") base = 150 * zoneMultiplier;
-if (selectedSubcategory === "Medium Drywall Repair") base = 300 * zoneMultiplier;
-if (selectedSubcategory === "Large Drywall Repair") base = 700 * zoneMultiplier;
+        if (selectedSubcategory === "Small Drywall Repair") base = 150 * zoneMultiplier;
+        if (selectedSubcategory === "Medium Drywall Repair") base = 300 * zoneMultiplier;
+        if (selectedSubcategory === "Large Drywall Repair") base = 700 * zoneMultiplier;
 
-        if (selectedSubcategory === "Multiple Small Holes (Quote)" || selectedSubcategory === "Ceiling Drywall (Quote)") {
+        if (selectedSubcategory === "Multiple Small Holes (Quoted)" || selectedSubcategory === "Ceiling Drywall (Quoted)") {
           isQuoted = true;
         }
 
@@ -996,38 +924,35 @@ if (selectedSubcategory === "Large Drywall Repair") base = 700 * zoneMultiplier;
 
       // Plumbing
       if (selectedCategory === "plumbing") {
-       if (selectedSubcategory === "Faucet Installation") base = 150 * zoneMultiplier;
-if (selectedSubcategory === "Faucet Installation w/ Disposal or Drainpipe Removal") base = 235 * zoneMultiplier;
-if (selectedSubcategory === "Toilet Replacement") base = 150 * zoneMultiplier;
-if (selectedSubcategory === "Toilet Repair") base = 150 * zoneMultiplier;
-if (selectedSubcategory === "Garbage Disposal Install") base = 160 * zoneMultiplier;
-if (selectedSubcategory === "Garbage Disposal Install w/ 1 1/3 HP Disposal") base = 285 * zoneMultiplier;
-if (selectedSubcategory === "Bathtub / Shower Caulking") base = 125 * zoneMultiplier;
+        if (selectedSubcategory === "Faucet Installation") base = 150 * zoneMultiplier;
+        if (selectedSubcategory === "Faucet Installation w/ Disposal or Drainpipe Removal") base = 235 * zoneMultiplier;
+        if (selectedSubcategory === "Toilet Replacement") base = 150 * zoneMultiplier;
+        if (selectedSubcategory === "Toilet Repair") base = 150 * zoneMultiplier;
+        if (selectedSubcategory === "Garbage Disposal Install") base = 160 * zoneMultiplier;
+        if (selectedSubcategory === "Garbage Disposal Install w/ 1 1/3 HP Disposal") base = 285 * zoneMultiplier;
+        if (selectedSubcategory === "Bathtub / Shower Caulking") base = 125 * zoneMultiplier;
 
         if (selectedSubcategory === "Angle Stop Replacement") {
           const qty = Number(document.getElementById("angleStopQty").value || 1);
-         base = (qty === 1 ? 75 : qty * 60) * zoneMultiplier;
+          base = (qty === 1 ? 75 : qty * 60) * zoneMultiplier;
         }
 
         if (selectedSubcategory === "Supply Line Replacement") {
           const qty = Number(document.getElementById("supplyLineQty").value || 1);
-         base = (qty === 1 ? 45 : qty * 30) * zoneMultiplier;
+          base = (qty === 1 ? 45 : qty * 30) * zoneMultiplier;
         }
 
-        if (selectedSubcategory.includes("(Quote)")) {
+        if (selectedSubcategory.includes("(Quoted)")) {
           isQuoted = true;
         }
 
-        if (selectedSubcategory === "ToiletReplacement" || selectedSubcategory === "Toilet Replacement") {
-          const toiletPickup = document.getElementById("toiletPickup").checked;
-          const toiletDisposal = document.getElementById("toiletDisposal").checked;
-          addOns += toiletPickup ? 65 : 0;
-          addOns += toiletDisposal ? 30 : 0;
+        if (selectedSubcategory === "Toilet Replacement") {
+          addOns += document.getElementById("toiletPickup").checked ? 65 : 0;
+          addOns += document.getElementById("toiletDisposal").checked ? 30 : 0;
         }
 
         if (selectedSubcategory === "Bathtub / Shower Caulking") {
-          const moldTreatment50 = document.getElementById("moldTreatment50").checked;
-          addOns += moldTreatment50 ? 50 : 0;
+          addOns += document.getElementById("moldTreatment50").checked ? 50 : 0;
         }
 
         detail = selectedSubcategory;
@@ -1035,38 +960,35 @@ if (selectedSubcategory === "Bathtub / Shower Caulking") base = 125 * zoneMultip
 
       // Electrical
       if (selectedCategory === "electrical") {
-       if (selectedSubcategory === "Light Fixture Install") base = 150 * zoneMultiplier;
-if (selectedSubcategory === "Ring Doorbell Install") base = 125 * zoneMultiplier;
-        
+        if (selectedSubcategory === "Light Fixture Install") base = 150 * zoneMultiplier;
+        if (selectedSubcategory === "Ring Doorbell Install") base = 125 * zoneMultiplier;
+
         if (selectedSubcategory === "Outlet / Switch Replace") {
           const qty = Number(document.getElementById("outletQty").value || 1);
-         base = (qty <= 1 ? 150 : 150 + ((qty - 1) * 50)) * zoneMultiplier;
+          base = (qty <= 1 ? 150 : 150 + ((qty - 1) * 50)) * zoneMultiplier;
         }
 
         if (selectedSubcategory === "Ceiling Fan Install") {
           const qty = Number(document.getElementById("fanQty").value || 1);
-         base = (qty <= 1 ? 150 : 150 + ((qty - 1) * 135)) * zoneMultiplier;
+          base = (qty <= 1 ? 150 : 150 + ((qty - 1) * 135)) * zoneMultiplier;
         }
 
         if (selectedSubcategory === "Ring Flood Light Camera Install") {
           const qty = Number(document.getElementById("floodQty").value || 1);
-         base = (qty <= 1 ? 150 : 150 + ((qty - 1) * 135)) * zoneMultiplier;
+          base = (qty <= 1 ? 150 : 150 + ((qty - 1) * 135)) * zoneMultiplier;
         }
 
         detail = selectedSubcategory;
       }
 
-      // Doors / Windows
+      // Doors/Windows
       if (selectedCategory === "doors") {
-       if (selectedSubcategory === "Interior Door Install") base = 150 * zoneMultiplier;
-if (selectedSubcategory === "Pre-Hung Door Install") base = 495 * zoneMultiplier;
-if (selectedSubcategory === "Window Caulking") base = 125 * zoneMultiplier;
+        if (selectedSubcategory === "Interior Door Install") base = 150 * zoneMultiplier;
+        if (selectedSubcategory === "Pre-Hung Door Install") base = 495 * zoneMultiplier;
+        if (selectedSubcategory === "Window Caulking") base = 125 * zoneMultiplier;
 
-        const paintDoorAfterInstall = document.getElementById("paintDoorAfterInstall").checked;
-        const doorTrimKitExtra = document.getElementById("doorTrimKitExtra").checked;
-
-        addOns += paintDoorAfterInstall ? 65 : 0;
-        if (doorTrimKitExtra) isQuoted = true;
+        addOns += document.getElementById("paintDoorAfterInstall").checked ? 65 : 0;
+        if (document.getElementById("doorTrimKitExtra").checked) isQuoted = true;
 
         detail = selectedSubcategory;
       }
@@ -1075,10 +997,11 @@ if (selectedSubcategory === "Window Caulking") base = 125 * zoneMultiplier;
       if (selectedCategory === "carpentry") {
         if (selectedSubcategory === "TV Mounting") {
           const qty = Number(document.getElementById("tvQty").value || 1);
-         base = (qty <= 1 ? 125 : 125 + ((qty - 1) * 112.5)) * zoneMultiplier;
-          
-          const concealedWiring = document.getElementById("concealedWiring").checked;
-          if (concealedWiring) isQuoted = true;
+          base = (qty <= 1 ? 125 : 125 + ((qty - 1) * 112.5)) * zoneMultiplier;
+
+          if (document.getElementById("concealedWiring").checked) {
+            isQuoted = true;
+          }
         } else {
           isQuoted = true;
         }
@@ -1092,36 +1015,33 @@ if (selectedSubcategory === "Window Caulking") base = 125 * zoneMultiplier;
         detail = selectedSubcategory;
       }
 
- // Exterior
-if (selectedCategory === "exterior") {
-  if (selectedSubcategory === "Fencing / Post Repair / Replacement") {
-    const extraPosts = Number(document.getElementById("extraPosts").value || 0);
+      // Exterior
+      if (selectedCategory === "exterior") {
+        if (selectedSubcategory === "Fencing / Post Repair / Replacement") {
+          const extraPosts = Number(document.getElementById("extraPosts").value || 0);
+          base = 150 * zoneMultiplier;
+          addOns += extraPosts * 100;
+          detail = "1 post and reattached";
+        }
 
-    base = 150 * zoneMultiplier;
-    addOns += extraPosts * 100;
-    detail = "1 post and reattached";
-  }
+        if (selectedSubcategory === "Pressure Washing (Quoted)" || selectedSubcategory === "Junk Removal (Quoted)") {
+          isQuoted = true;
+          detail = selectedSubcategory;
+        }
+      }
 
-  if (selectedSubcategory === "Pressure Washing (Quote)" || selectedSubcategory === "Junk Removal (Quote)") {
-    isQuoted = true;
-    detail = selectedSubcategory;
-  }
-}
-}
       document.getElementById("basePrice").textContent = isQuoted ? "Quoted" : formatCurrency(base);
       document.getElementById("addOns").textContent = formatCurrency(addOns);
-      document.getElementById("totalPrice").textContent =
-        isQuoted ? (addOns > 0 ? "Quoted +" : "Quoted") : formatCurrency(base + addOns);
+      document.getElementById("totalPrice").textContent = isQuoted ? (addOns > 0 ? "Quoted +" : "Quoted") : formatCurrency(base + addOns);
 
       let detailsText =
-        "Pricing Zone: " + (currentZone ? currentZone.name + " (" + currentZone.label + ")" : "Not matched") +
-        "<br>Service: " + (selectedCategory || "Not selected") +
+        "Service: " + (selectedCategory || "Not selected") +
         "<br>Type: " + (selectedSubcategory || "Not selected");
 
       if (detail) detailsText += "<br>Details: " + detail;
-      if (selectedCategory === "painting") detailsText += "<br>Furniture moving to complete painting is an extra charge.";
-      if (selectedCategory === "drywall") detailsText += "<br>IAC2 Certified — Cert# IAC2-94278";
-      if (selectedCategory === "plumbing") detailsText += "<br>Plumbing pricing is labor only unless otherwise stated.";
+      if (selectedCategory === "painting") detailsText += "<br>Furniture moving required to complete painting may incur additional charges.";
+      if (selectedCategory === "drywall") detailsText += "<br>IAC2 Certified (Certification #IAC2-94278)";
+      if (selectedCategory === "plumbing") detailsText += "<br>Plumbing pricing is labor only unless noted otherwise.";
 
       document.getElementById("summaryDetails").innerHTML = detailsText;
     }
@@ -1134,27 +1054,26 @@ if (selectedCategory === "exterior") {
 
       let noteBlock = "";
       if (selectedCategory === "painting") {
-        noteBlock += "\nFurniture moving to complete painting is an extra charge. When painting, furniture is often moved 2–3 times for one room.";
+        noteBlock += "\nFurniture moving required to complete painting may incur additional charges.";
       }
       if (selectedCategory === "drywall") {
-        noteBlock += "\nIAC2 Certified — Cert# IAC2-94278.";
+        noteBlock += "\nIAC2 Certified (Certification #IAC2-94278).";
       }
       if (selectedCategory === "plumbing") {
-        noteBlock += "\nPlumbing pricing is labor only unless otherwise stated.";
+        noteBlock += "\nPlumbing pricing is labor only unless noted otherwise.";
       }
 
       const text =
         "Hi " + customerName + ",\n\n" +
         "This is Tim with Mobile Onsite Handyman Services.\n\n" +
-        "Here is your repair estimate:\n\n" +
+        "Here is your estimated repair cost:\n\n" +
         "Service: " + (selectedCategory || "Not selected") + "\n" +
         "Type: " + (selectedSubcategory || "Not selected") + "\n" +
         "Property: " + customerAddress + "\n" +
-        "Phone: " + customerPhone + "\n" +
-        "ZIP Pricing Zone: " + (currentZone ? currentZone.name + " (" + currentZone.label + ")" : "Not matched") + "\n\n" +
+        "Phone: " + customerPhone + "\n\n" +
         "Estimated Total: " + total + "\n" +
         noteBlock + "\n\n" +
-        "Final pricing may be confirmed on-site if hidden conditions, access issues, material needs, or quoted items apply.\n\n" +
+        "Final pricing may be adjusted on-site based on conditions, access, or additional work requested.\n\n" +
         "Thanks,\nTim\nMobile Onsite Handyman\n951-388-4744";
 
       document.getElementById("quoteOutput").value = text;
@@ -1174,7 +1093,6 @@ if (selectedCategory === "exterior") {
         document.getElementById("copyStatus").textContent = "Generate the quote first.";
         return;
       }
-
       navigator.clipboard.writeText(text);
       document.getElementById("copyStatus").textContent = "Quote copied";
     }
