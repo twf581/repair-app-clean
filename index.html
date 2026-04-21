@@ -279,11 +279,11 @@
 
         <div class="grid-2">
           <div>
-            <label>Door Type</label>
-            <select id="doorType" onchange="calculateEstimate()">
-              <option value="55">Room side of door + trim ($55)</option>
-              <option value="110">Both sides of door ($110)</option>
-            </select>
+         <label>Door Type</label>
+<select id="doorType" onchange="calculateEstimate()">
+  <option value="50">Room side of door + trim</option>
+  <option value="95">Both sides of door</option>
+</select>  
           </div>
           <div>
             <label>Number of Doors</label>
@@ -295,11 +295,11 @@
         <input id="baseboardLf" type="number" min="0" value="0" oninput="calculateEstimate()" />
 
         <div class="note-box">
-          <label><input id="closetStandard" class="inline-check" type="checkbox" onchange="calculateEstimate()"> Standard closet 12–18 sf (+$95)</label>
+         <label><input id="closetStandard" class="inline-check" type="checkbox" onchange="calculateEstimate()"> Standard closet 12–18 sf (+$85)</label>
         </div>
 
         <div class="note-box">
-          <label><input id="closet48" class="inline-check" type="checkbox" onchange="calculateEstimate()"> Large closet 48 sf (+$150)</label>
+         <label><input id="closet48" class="inline-check" type="checkbox" onchange="calculateEstimate()"> Large closet 48 sf (+$135)</label>
         </div>
 
         <div class="note-box">
@@ -851,8 +851,8 @@
           base = roomSize * zoneMultiplier;
           addOns += doorQty * doorType;
           addOns += baseboardLf * 2;
-          addOns += closetStandard ? 95 : 0;
-          addOns += closet48 ? 150 : 0;
+         addOns += closetStandard ? 85 : 0;
+addOns += closet48 ? 135 : 0;
           addOns += paintMatch ? 75 : 0;
           addOns += extraPaintMatches * 25;
           detail = "Room painting";
@@ -879,7 +879,7 @@
 
         if (selectedSubcategory === "Door Painting") {
           const qty = Number(document.getElementById("standaloneDoorQty").value || 0);
-          base = qty * 150 * zoneMultiplier;
+        base = qty * 145 * zoneMultiplier; 
           detail = "Standalone door painting";
         }
 
