@@ -297,7 +297,20 @@
         <div class="note-box">
          <label><input id="closetStandard" class="inline-check" type="checkbox" onchange="calculateEstimate()"> Standard closet 12–18 sf (+$85)</label>
         </div>
+<div class="note-box">
+  <label><input id="heavyPrep" class="inline-check" type="checkbox" onchange="calculateEstimate()"> Heavy prep (+$0.20 / sf)</label>
+  <label><input id="darkToLight" class="inline-check" type="checkbox" onchange="calculateEstimate()"> Dark to light / major color change (+$0.15 / sf)</label>
+  <label><input id="occupiedHome" class="inline-check" type="checkbox" onchange="calculateEstimate()"> Occupied / furniture heavy (+$0.10 / sf)</label>
+  <label><input id="smokeStain" class="inline-check" type="checkbox" onchange="calculateEstimate()"> Smoke / nicotine staining (+$0.20 / sf)</label>
+  <label><input id="premiumPaint" class="inline-check" type="checkbox" onchange="calculateEstimate()"> Premium paint upgrade (+$0.15 / sf)</label>
+</div>
 
+<label>Wall Height</label>
+<select id="wallHeightWhole" onchange="calculateEstimate()">
+  <option value="0">Standard 8–9 ft</option>
+  <option value="0.15">10–12 ft (+$0.15 / sf)</option>
+  <option value="0.30">Vaulted / high walls (+$0.30 / sf)</option>
+</select>
         <div class="note-box">
          <label><input id="closet48" class="inline-check" type="checkbox" onchange="calculateEstimate()"> Large closet 48 sf (+$135)</label>
         </div>
@@ -856,6 +869,35 @@ function handleZipInput() {
       let detail = "";
       let isQuoted = false;
       const zoneMultiplier = currentZone ? currentZone.multiplier : 1;
+              if (selectedSubcategory === "Whole Interior Painting") {
+          const houseSf = Number(document.getElementById("houseSf").value || 0);
+          const includeCeilings = document.getElementById("includeCeilings").checked;
+
+          const heavyPrep = document.getElementById("heavyPrep").checked;
+          const darkToLight = document.getElementById("darkToLight").checked;
+          const occupiedHome = document.getElementById("occupiedHome").checked;
+          const smokeStain = document.getElementById("smokeStain").checked;
+          const premiumPaint = document.getElementById("premiumPaint").checked;
+          const wallHeightWhole = Number(document.getElementById("wallHeightWhole").value || 0);
+
+          let perSfRate = 1.50;
+          let ceilingRate = 0.70;
+
+          if (heavyPrep) perSfRate += 0.15;
+          if (darkToLight) perSfRate += 0.10;
+          if (occupiedHome) perSfRate += 0.08;
+          if (smokeStain) perSfRate += 0.15;
+          if (premiumPaint) perSfRate += 0.10;
+          perSfRate += wallHeightWhole;
+
+          base = houseSf * perSfRate * zoneMultiplier;
+
+          if (includeCeilings) {
+        addOns += houseSf * ceilingRate * zoneMultiplier;
+          }
+
+          detail = "Whole interior painting";
+        }
 
       // Painting
       if (selectedCategory === "painting") {
