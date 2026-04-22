@@ -587,40 +587,58 @@
         "Junk Removal (Quoted)"
       ]
     };
+const zoneExactZips = {
+  1: ["92543","92544","92545","92551","92552","92553","92554","92555","92556","92557","92570","92571"],
+  2: ["92313","92324","92335","92336","92337","92346","92373","92376","92401","92403","92404","92405","92407","92408","92501","92503","92504","92505","92506","92507","92508","92509","92584","92585","92586","92595","92879","92880","92881","92882","92883"],
+  3: ["91709","91730","91737","91739","91761","91762","91764","91784","91786","92028","92220","92223","92234","92260","92262","92264","92270","92307","92308","92344","92345","92392","92394","92395","92562","92563","92564","92590","92591","92592","92593","92860"],
+  4: ["92008","92009","92014","92024","92025","92026","92027","92037","92054","92056","92057","92064","92069","92078","92083","92084","92101","92102","92103","92104","92105","92109","92110","92111","92117","92120","92122","92123","92127","92602","92603","92604","92606","92612","92614","92618","92620","92626","92627","92629","92630","92637","92646","92647","92648","92649","92651","92652","92653","92657","92660","92661","92662","92663","92672","92673","92691","92692"]
+};
 
-    function handleZipInput() {
-      const zip = document.getElementById("zip").value.trim();
-      currentZone = zipToZone(zip);
+const zonePrefixRanges = {
+  4: ["900","901","902","903","904","905","906","907","908","910","911","912","913","914","915","916","917","918"]
+};
 
-      if (currentZone) {
-        document.getElementById("serviceCard").classList.remove("hidden");
-        document.getElementById("summaryCard").classList.remove("hidden");
-      } else {
-        document.getElementById("serviceCard").classList.add("hidden");
-        document.getElementById("subcategoryCard").classList.add("hidden");
-        document.getElementById("detailsCard").classList.add("hidden");
-        document.getElementById("summaryCard").classList.add("hidden");
+function zipToZone(zip) {
+  const digits = (zip || "").replace(/\D/g, "");
+  if (digits.length < 5) return null;
+
+  for (const zone in zoneExactZips) {
+    if (zoneExactZips[zone].includes(digits)) {
+      if (zone === "1") return { multiplier: 1.00 };
+      if (zone === "2") return { multiplier: 1.10 };
+      if (zone === "3") return { multiplier: 1.20 };
+      if (zone === "4") return { multiplier: 1.30 };
+    }
+  }
+
+  for (const zone in zonePrefixRanges) {
+    for (const prefix of zonePrefixRanges[zone]) {
+      if (digits.startsWith(prefix)) {
+        if (zone === "4") return { multiplier: 1.30 };
       }
-
-      calculateEstimate();
     }
+  }
 
-    function zipToZone(zip) {
-      const digits = (zip || "").replace(/\D/g, "");
-      if (digits.length < 5) return null;
+  return { multiplier: 1.00 };
+}
+function handleZipInput() {
+  const zip = document.getElementById("zip").value.trim();
+  currentZone = zipToZone(zip);
 
-      if (digits.startsWith("925")) return { multiplier: 1.00 };
-      if (digits.startsWith("923") || digits.startsWith("928")) return { multiplier: 1.10 };
-      if (digits.startsWith("917") || digits.startsWith("922")) return { multiplier: 1.20 };
-      if (
-        digits.startsWith("920") ||
-        digits.startsWith("921") ||
-        digits.startsWith("926") ||
-        digits.startsWith("900")
-      ) return { multiplier: 1.30 };
+  if (currentZone) {
+    document.getElementById("serviceCard").classList.remove("hidden");
+    document.getElementById("summaryCard").classList.remove("hidden");
+  } else {
+    document.getElementById("serviceCard").classList.add("hidden");
+    document.getElementById("subcategoryCard").classList.add("hidden");
+    document.getElementById("detailsCard").classList.add("hidden");
+    document.getElementById("summaryCard").classList.add("hidden");
+  }
 
-      return { multiplier: 1.00 };
-    }
+  calculateEstimate();
+}
+
+ 
 
     function formatCurrency(value) {
       return new Intl.NumberFormat("en-US", {
