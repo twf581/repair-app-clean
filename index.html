@@ -622,7 +622,7 @@ function zipToZone(zip) {
   }
 
   // Unknown ZIP = no pricing
-  return null;
+return { multiplier: 1.00 };
 }
 
 function handleZipInput() {
