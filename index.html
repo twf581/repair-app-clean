@@ -606,22 +606,54 @@
     }
 
     function zipToZone(zip) {
-      const digits = (zip || "").replace(/\D/g, "");
-      if (digits.length < 5) return null;
+  const digits = (zip || "").replace(/\D/g, "");
+  if (digits.length < 5) return null;
 
-      if (digits.startsWith("925")) return { multiplier: 1.00 };
-      if (digits.startsWith("923") || digits.startsWith("928")) return { multiplier: 1.10 };
-      if (digits.startsWith("917") || digits.startsWith("922")) return { multiplier: 1.20 };
-      if (
-        digits.startsWith("920") ||
-        digits.startsWith("921") ||
-        digits.startsWith("926") ||
-        digits.startsWith("900")
-      ) return { multiplier: 1.30 };
+  // Zone 1
+  if (
+    digits.startsWith("925") ||
+    digits.startsWith("924")
+  ) return { multiplier: 1.00 };
 
-      return { multiplier: 1.00 };
-    }
+  // Zone 2
+  if (
+    digits.startsWith("923") ||
+    digits.startsWith("928") ||
+    digits.startsWith("922")
+  ) return { multiplier: 1.10 };
 
+  // Zone 3
+  if (
+    digits.startsWith("917") ||
+    digits.startsWith("918") ||
+    digits.startsWith("910") ||
+    digits.startsWith("911") ||
+    digits.startsWith("912")
+  ) return { multiplier: 1.20 };
+
+  // Zone 4
+  if (
+    digits.startsWith("900") ||
+    digits.startsWith("901") ||
+    digits.startsWith("902") ||
+    digits.startsWith("903") ||
+    digits.startsWith("904") ||
+    digits.startsWith("905") ||
+    digits.startsWith("906") ||
+    digits.startsWith("907") ||
+    digits.startsWith("908") ||
+    digits.startsWith("913") ||
+    digits.startsWith("914") ||
+    digits.startsWith("915") ||
+    digits.startsWith("916") ||
+    digits.startsWith("920") ||
+    digits.startsWith("921") ||
+    digits.startsWith("926") ||
+    digits.startsWith("927")
+  ) return { multiplier: 1.30 };
+
+  return { multiplier: 1.00 };
+}
     function formatCurrency(value) {
       return new Intl.NumberFormat("en-US", {
         style: "currency",
