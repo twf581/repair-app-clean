@@ -206,8 +206,10 @@
     }
   </style>
 </head>
+
 <body>
   <div class="wrap">
+
     <div class="hero">
       <div class="hero-kicker">Repairs Estimator App</div>
       <h1>Mobile Onsite Handyman Services LLC</h1>
@@ -429,6 +431,20 @@
             <label><input id="moldTreatment50" class="inline-check" type="checkbox" onchange="calculateEstimate()"> Mold / unsanitary treatment (+$50)</label>
           </div>
         </div>
+
+        <div id="vanityFields" class="hidden">
+          <div class="note-box">
+            Includes removal, disposal, installation, caulking, and standard materials required to complete installation.
+          </div>
+
+          <div class="note-box">
+            <strong>Not included:</strong> mirror removal, plumbing modifications, new shut-off valves, wall or floor repairs, or missing parts.
+          </div>
+
+          <div class="note-box">
+            <strong>Mirror disclaimer:</strong> Removal of wall-mounted mirrors is not included. Mirrors left in place are at homeowner’s risk. Contractor is not responsible for cracks, chips, breakage, or damage to mirrors, walls, or surrounding finishes during removal or installation.
+          </div>
+        </div>
       </div>
 
       <!-- Electrical -->
@@ -583,9 +599,10 @@
         "Toilet Repair",
         "Angle Stop Replacement",
         "Supply Line Replacement",
-        "Vanity Install (Quoted)",
+        "Pedestal Sink Install",
+        "Vanity Install 24–36",
+        "Vanity Install 37–48",
         "Kitchen Sink Install (Quoted)",
-        "Bathroom Sink Install (Quoted)",
         "Garbage Disposal Install",
         "Garbage Disposal Install w/ 1 1/3 HP Disposal",
         "Bathtub / Shower Caulking"
@@ -746,6 +763,7 @@
         "supplyLineQtyWrap",
         "toiletAddOnWrap",
         "caulkingAddOnWrap",
+        "vanityFields",
         "outletQtyWrap",
         "fanQtyWrap",
         "floodQtyWrap",
@@ -806,6 +824,14 @@
 
         if (selectedSubcategory === "Bathtub / Shower Caulking") {
           document.getElementById("caulkingAddOnWrap").classList.remove("hidden");
+        }
+
+        if (
+          selectedSubcategory === "Pedestal Sink Install" ||
+          selectedSubcategory === "Vanity Install 24–36" ||
+          selectedSubcategory === "Vanity Install 37–48"
+        ) {
+          document.getElementById("vanityFields").classList.remove("hidden");
         }
 
         if (selectedSubcategory.includes("(Quoted)")) {
@@ -1008,6 +1034,10 @@
         if (selectedSubcategory === "Garbage Disposal Install w/ 1 1/3 HP Disposal") base = 285 * zoneMultiplier;
         if (selectedSubcategory === "Bathtub / Shower Caulking") base = 125 * zoneMultiplier;
 
+        if (selectedSubcategory === "Pedestal Sink Install") base = 245 * zoneMultiplier;
+        if (selectedSubcategory === "Vanity Install 24–36") base = 295 * zoneMultiplier;
+        if (selectedSubcategory === "Vanity Install 37–48") base = 385 * zoneMultiplier;
+
         if (selectedSubcategory === "Angle Stop Replacement") {
           const qty = Number(document.getElementById("angleStopQty").value || 1);
           base = (qty === 1 ? 75 : qty * 60) * zoneMultiplier;
@@ -1019,10 +1049,12 @@
         }
 
         if (selectedSubcategory.includes("(Quoted)")) isQuoted = true;
+
         if (selectedSubcategory === "Toilet Replacement") {
           addOns += document.getElementById("toiletPickup").checked ? 60 : 0;
           addOns += document.getElementById("toiletDisposal").checked ? 35 : 0;
         }
+
         if (selectedSubcategory === "Bathtub / Shower Caulking") {
           addOns += document.getElementById("moldTreatment50").checked ? 50 : 0;
         }
@@ -1117,9 +1149,31 @@
       const total = document.getElementById("totalPrice").textContent;
 
       let noteBlock = "";
-      if (selectedCategory === "painting") noteBlock += "\nFurniture moving required to complete painting may incur additional charges.";
-      if (selectedCategory === "drywall") noteBlock += "\nIAC2 Certified (Certification #IAC2-94278).";
-      if (selectedCategory === "plumbing") noteBlock += "\nPlumbing pricing is labor only unless noted otherwise.";
+
+      if (selectedCategory === "painting") {
+        noteBlock += "\nFurniture moving required to complete painting may incur additional charges.";
+      }
+
+      if (selectedCategory === "drywall") {
+        noteBlock += "\nIAC2 Certified (Certification #IAC2-94278).";
+      }
+
+      if (selectedCategory === "plumbing") {
+        noteBlock += "\nPlumbing pricing is labor only unless noted otherwise.";
+      }
+
+      if (
+        selectedCategory === "plumbing" &&
+        (
+          selectedSubcategory === "Pedestal Sink Install" ||
+          selectedSubcategory === "Vanity Install 24–36" ||
+          selectedSubcategory === "Vanity Install 37–48"
+        )
+      ) {
+        noteBlock += "\nIncludes removal, disposal, installation, caulking, and standard materials required to complete installation.";
+        noteBlock += "\nNot included: mirror removal, plumbing modifications, new shut-off valves, wall or floor repairs, or missing parts.";
+        noteBlock += "\nMirror disclaimer: mirrors left in place are at homeowner’s risk. Contractor is not responsible for cracks, chips, breakage, or damage to mirrors, walls, or surrounding finishes during removal or installation.";
+      }
 
       const text =
         "Hi " + customerName + ",\n\n" +
@@ -1151,6 +1205,7 @@
         document.getElementById("copyStatus").textContent = "Generate the quote first.";
         return;
       }
+
       navigator.clipboard.writeText(text);
       document.getElementById("copyStatus").textContent = "Quote copied";
     }
