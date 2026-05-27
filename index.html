@@ -184,6 +184,7 @@
       width: 100%;
       box-sizing: border-box;
       margin-top: 10px;
+      margin-bottom: 10px;
       padding: 14px;
       background: linear-gradient(135deg, #2563eb, #60a5fa);
       color: white;
@@ -212,8 +213,8 @@
 
     <div class="hero">
       <div class="hero-kicker">Repairs Estimator App</div>
-      <h1>Mobile Onsite Handyman Service LLC</h1>
-      <p>Fast on-site pricing for repairs, installs, and painting.</p>
+      <h1>Mobile Onsite Handyman Services LLC</h1>
+      <p>Fast on-site pricing for repairs, installs, painting, invoices, and booking.</p>
     </div>
 
     <div class="card">
@@ -258,7 +259,6 @@
     <div id="detailsCard" class="card hidden">
       <h2>4. Service Details & Add-Ons</h2>
 
-      <!-- Painting -->
       <div id="paintingRoomFields" class="hidden">
         <div class="pill">Painting</div>
 
@@ -311,9 +311,7 @@
           <input id="extraPaintMatches" type="number" min="0" value="0" oninput="calculateEstimate()" />
         </div>
 
-        <div class="note-box">
-          Furniture moving required to complete painting may incur additional charges.
-        </div>
+        <div class="note-box">Furniture moving required to complete painting may incur additional charges.</div>
       </div>
 
       <div id="paintingWallFields" class="hidden">
@@ -330,9 +328,7 @@
           </div>
         </div>
 
-        <div class="note-box">
-          Calculated Paintable SF: <strong id="wallSfDisplay">0</strong>
-        </div>
+        <div class="note-box">Calculated Paintable SF: <strong id="wallSfDisplay">0</strong></div>
 
         <div class="note-box">
           <label><input id="wallPaintMatch" class="inline-check" type="checkbox" onchange="calculateEstimate()"> Paint color matching (+$75)</label>
@@ -373,9 +369,7 @@
           <option value="0.20">Vaulted / high walls (+$0.20 / sf)</option>
         </select>
 
-        <div class="note-box">
-          Furniture moving required to complete painting may incur additional charges.
-        </div>
+        <div class="note-box">Furniture moving required to complete painting may incur additional charges.</div>
       </div>
 
       <div id="paintingDoorFields" class="hidden">
@@ -390,7 +384,6 @@
         <div class="note-box">Touch-up painting is quote-reviewed.</div>
       </div>
 
-      <!-- Drywall -->
       <div id="drywallFields" class="hidden">
         <div class="pill">Drywall</div>
         <div class="note-box">IAC2 Certified (Certification #IAC2-94278)</div>
@@ -404,7 +397,6 @@
         </div>
       </div>
 
-      <!-- Plumbing -->
       <div id="plumbingFields" class="hidden">
         <div class="pill">Plumbing</div>
         <div class="note-box">Plumbing pricing is labor only unless noted otherwise.</div>
@@ -433,21 +425,12 @@
         </div>
 
         <div id="vanityFields" class="hidden">
-          <div class="note-box">
-            Includes removal, disposal, installation, caulking, and standard materials required to complete installation.
-          </div>
-
-          <div class="note-box">
-            <strong>Not included:</strong> mirror removal, plumbing modifications, new shut-off valves, wall or floor repairs, or missing parts.
-          </div>
-
-          <div class="note-box">
-            <strong>Mirror disclaimer:</strong> Removal of wall-mounted mirrors is not included. Mirrors left in place are at homeowner’s risk. Contractor is not responsible for cracks, chips, breakage, or damage to mirrors, walls, or surrounding finishes during removal or installation.
-          </div>
+          <div class="note-box">Includes removal, disposal, installation, caulking, and standard materials required to complete installation.</div>
+          <div class="note-box"><strong>Not included:</strong> mirror removal, plumbing modifications, new shut-off valves, wall or floor repairs, or missing parts.</div>
+          <div class="note-box"><strong>Mirror disclaimer:</strong> Removal of wall-mounted mirrors is not included. Mirrors left in place are at homeowner’s risk. Contractor is not responsible for cracks, chips, breakage, or damage to mirrors, walls, or surrounding finishes during removal or installation.</div>
         </div>
       </div>
 
-      <!-- Electrical -->
       <div id="electricalFields" class="hidden">
         <div class="pill">Electrical</div>
 
@@ -470,7 +453,6 @@
         </div>
       </div>
 
-      <!-- Doors/Windows -->
       <div id="doorsFields" class="hidden">
         <div class="pill">Doors / Windows</div>
 
@@ -481,12 +463,9 @@
           </div>
         </div>
 
-        <div id="windowCaulkNote" class="note-box hidden">
-          Window caulking = $125 up to 48”x48” window. Anything larger is quoted.
-        </div>
+        <div id="windowCaulkNote" class="note-box hidden">Window caulking = $125 up to 48”x48” window. Anything larger is quoted.</div>
       </div>
 
-      <!-- Carpentry -->
       <div id="carpentryFields" class="hidden">
         <div class="pill">Carpentry / Repairs</div>
 
@@ -503,13 +482,11 @@
         </div>
       </div>
 
-      <!-- Flooring -->
       <div id="flooringFields" class="hidden">
         <div class="pill">Flooring</div>
         <div class="note-box">Flooring install, repair, vinyl plank, transition strip, and base shoe are quoted items.</div>
       </div>
 
-      <!-- Exterior -->
       <div id="exteriorFields" class="hidden">
         <div class="pill">Exterior</div>
 
@@ -520,9 +497,7 @@
           <div class="note-box">Extra posts = $100 each. Other fencing requests will be quoted.</div>
         </div>
 
-        <div id="exteriorQuoteNote" class="note-box hidden">
-          This exterior service is quote-required.
-        </div>
+        <div id="exteriorQuoteNote" class="note-box hidden">This exterior service is quote-required.</div>
       </div>
 
       <div id="manualFields" class="note-box hidden">
@@ -550,9 +525,7 @@
         </div>
       </div>
 
-      <div class="note-box" id="summaryDetails">
-        Service: Not selected
-      </div>
+      <div class="note-box" id="summaryDetails">Service: Not selected</div>
 
       <button class="primary-btn" onclick="generateQuote()">Generate Quote Text</button>
       <textarea id="quoteOutput" rows="10" placeholder="Quote text will appear here"></textarea>
@@ -563,7 +536,10 @@
       </div>
 
       <a class="book-btn" href="https://calendly.com/mobileonsitehandyman/handyman-service-appointment" target="_blank">Book Appointment</a>
+
       <button class="primary-btn" onclick="generateInvoice()">Generate Invoice</button>
+      <button class="secondary-btn" onclick="downloadInvoice()">Download Invoice</button>
+      <button class="dark-btn" onclick="saveInvoice()">Save Invoice to Database</button>
 
       <div id="copyStatus" style="margin-top:8px; font-size:14px; font-weight:700; color:#1d4ed8;"></div>
     </div>
@@ -811,21 +787,10 @@
       if (selectedCategory === "plumbing") {
         document.getElementById("plumbingFields").classList.remove("hidden");
 
-        if (selectedSubcategory === "Angle Stop Replacement") {
-          document.getElementById("angleStopQtyWrap").classList.remove("hidden");
-        }
-
-        if (selectedSubcategory === "Supply Line Replacement") {
-          document.getElementById("supplyLineQtyWrap").classList.remove("hidden");
-        }
-
-        if (selectedSubcategory === "Toilet Replacement") {
-          document.getElementById("toiletAddOnWrap").classList.remove("hidden");
-        }
-
-        if (selectedSubcategory === "Bathtub / Shower Caulking") {
-          document.getElementById("caulkingAddOnWrap").classList.remove("hidden");
-        }
+        if (selectedSubcategory === "Angle Stop Replacement") document.getElementById("angleStopQtyWrap").classList.remove("hidden");
+        if (selectedSubcategory === "Supply Line Replacement") document.getElementById("supplyLineQtyWrap").classList.remove("hidden");
+        if (selectedSubcategory === "Toilet Replacement") document.getElementById("toiletAddOnWrap").classList.remove("hidden");
+        if (selectedSubcategory === "Bathtub / Shower Caulking") document.getElementById("caulkingAddOnWrap").classList.remove("hidden");
 
         if (
           selectedSubcategory === "Pedestal Sink Install" ||
@@ -835,28 +800,16 @@
           document.getElementById("vanityFields").classList.remove("hidden");
         }
 
-        if (selectedSubcategory.includes("(Quoted)")) {
-          document.getElementById("manualFields").classList.remove("hidden");
-        }
+        if (selectedSubcategory.includes("(Quoted)")) document.getElementById("manualFields").classList.remove("hidden");
 
         return;
       }
 
       if (selectedCategory === "electrical") {
         document.getElementById("electricalFields").classList.remove("hidden");
-
-        if (selectedSubcategory === "Outlet / Switch Replace") {
-          document.getElementById("outletQtyWrap").classList.remove("hidden");
-        }
-
-        if (selectedSubcategory === "Ceiling Fan Install") {
-          document.getElementById("fanQtyWrap").classList.remove("hidden");
-        }
-
-        if (selectedSubcategory === "Ring Flood Light Camera Install") {
-          document.getElementById("floodQtyWrap").classList.remove("hidden");
-        }
-
+        if (selectedSubcategory === "Outlet / Switch Replace") document.getElementById("outletQtyWrap").classList.remove("hidden");
+        if (selectedSubcategory === "Ceiling Fan Install") document.getElementById("fanQtyWrap").classList.remove("hidden");
+        if (selectedSubcategory === "Ring Flood Light Camera Install") document.getElementById("floodQtyWrap").classList.remove("hidden");
         return;
       }
 
@@ -870,9 +823,7 @@
           document.getElementById("doorInstallAddons").classList.remove("hidden");
         }
 
-        if (selectedSubcategory === "Window Caulking") {
-          document.getElementById("windowCaulkNote").classList.remove("hidden");
-        }
+        if (selectedSubcategory === "Window Caulking") document.getElementById("windowCaulkNote").classList.remove("hidden");
 
         return;
       }
@@ -899,9 +850,7 @@
       if (selectedCategory === "exterior") {
         document.getElementById("exteriorFields").classList.remove("hidden");
 
-        if (selectedSubcategory === "Fencing / Post Repair / Replacement") {
-          document.getElementById("fencingFields").classList.remove("hidden");
-        }
+        if (selectedSubcategory === "Fencing / Post Repair / Replacement") document.getElementById("fencingFields").classList.remove("hidden");
 
         if (selectedSubcategory.includes("(Quoted)")) {
           document.getElementById("exteriorQuoteNote").classList.remove("hidden");
@@ -960,7 +909,6 @@
         if (selectedSubcategory === "Whole Interior Painting") {
           const houseSf = Number(document.getElementById("houseSf").value || 0);
           const includeCeilings = document.getElementById("includeCeilings").checked;
-
           const heavyPrep = document.getElementById("heavyPrep").checked;
           const darkToLight = document.getElementById("darkToLight").checked;
           const occupiedHome = document.getElementById("occupiedHome").checked;
@@ -969,7 +917,7 @@
           const wallHeightWhole = Number(document.getElementById("wallHeightWhole").value || 0);
 
           let perSfRate = 1.50;
-          let ceilingRate = 0.70;
+          const ceilingRate = 0.70;
 
           if (heavyPrep) perSfRate += 0.15;
           if (darkToLight) perSfRate += 0.10;
@@ -1004,9 +952,7 @@
         if (selectedSubcategory === "Medium Drywall Repair") base = 300 * zoneMultiplier;
         if (selectedSubcategory === "Large Drywall Repair") base = 700 * zoneMultiplier;
 
-        if (selectedSubcategory === "Multiple Small Holes (Quoted)" || selectedSubcategory === "Ceiling Drywall (Quoted)") {
-          isQuoted = true;
-        }
+        if (selectedSubcategory === "Multiple Small Holes (Quoted)" || selectedSubcategory === "Ceiling Drywall (Quoted)") isQuoted = true;
 
         const textureMatch = document.getElementById("textureMatch").checked;
         const drywallPaintMatch = document.getElementById("drywallPaintMatch").checked;
@@ -1034,7 +980,6 @@
         if (selectedSubcategory === "Garbage Disposal Install") base = 160 * zoneMultiplier;
         if (selectedSubcategory === "Garbage Disposal Install w/ 1 1/3 HP Disposal") base = 285 * zoneMultiplier;
         if (selectedSubcategory === "Bathtub / Shower Caulking") base = 125 * zoneMultiplier;
-
         if (selectedSubcategory === "Pedestal Sink Install") base = 245 * zoneMultiplier;
         if (selectedSubcategory === "Vanity Install 24–36") base = 295 * zoneMultiplier;
         if (selectedSubcategory === "Vanity Install 37–48") base = 385 * zoneMultiplier;
@@ -1151,17 +1096,9 @@
 
       let noteBlock = "";
 
-      if (selectedCategory === "painting") {
-        noteBlock += "\nFurniture moving required to complete painting may incur additional charges.";
-      }
-
-      if (selectedCategory === "drywall") {
-        noteBlock += "\nIAC2 Certified (Certification #IAC2-94278).";
-      }
-
-      if (selectedCategory === "plumbing") {
-        noteBlock += "\nPlumbing pricing is labor only unless noted otherwise.";
-      }
+      if (selectedCategory === "painting") noteBlock += "\nFurniture moving required to complete painting may incur additional charges.";
+      if (selectedCategory === "drywall") noteBlock += "\nIAC2 Certified (Certification #IAC2-94278).";
+      if (selectedCategory === "plumbing") noteBlock += "\nPlumbing pricing is labor only unless noted otherwise.";
 
       if (
         selectedCategory === "plumbing" &&
@@ -1191,36 +1128,100 @@
 
       document.getElementById("quoteOutput").value = text;
     }
-function generateInvoice() {
-  const customerName = document.getElementById("customerName").value || "Customer";
-  const customerPhone = document.getElementById("customerPhone").value || "";
-  const customerAddress = document.getElementById("customerAddress").value || "";
-  const total = document.getElementById("totalPrice").textContent;
 
-  const text =
-    "INVOICE\n\n" +
-    "Mobile Onsite Handyman Services LLC\n" +
-    "Phone: 951-388-4744\n\n" +
-    "Bill To: " + customerName + "\n" +
-    "Phone: " + customerPhone + "\n" +
-    "Property: " + customerAddress + "\n\n" +
-    "Work Completed:\n" +
-    "Service: " + (selectedCategory || "Not selected") + "\n" +
-    "Type: " + (selectedSubcategory || "Not selected") + "\n\n" +
-   "Amount Due: " + total + "\n\n" +
-"Accepted Payment Methods:\n" +
-"- Cash\n" +
-"- Zelle\n" +
-"- Venmo\n" +
-"- Cash App\n" +
-"- Credit / Debit Card\n\n" +
-"Payment Status: Due upon completion\n\n" +
-    "Thank you,\n" +
-    "Tim\n" +
-    "Mobile Onsite Handyman Services LLC";
+    function generateInvoice() {
+      const customerName = document.getElementById("customerName").value || "Customer";
+      const customerPhone = document.getElementById("customerPhone").value || "";
+      const customerAddress = document.getElementById("customerAddress").value || "";
+      const total = document.getElementById("totalPrice").textContent;
 
-  document.getElementById("quoteOutput").value = text;
-}
+      const text =
+        "INVOICE\n\n" +
+        "Mobile Onsite Handyman Services LLC\n" +
+        "Phone: 951-388-4744\n\n" +
+        "Bill To: " + customerName + "\n" +
+        "Phone: " + customerPhone + "\n" +
+        "Property: " + customerAddress + "\n\n" +
+        "Work Completed:\n" +
+        "Service: " + (selectedCategory || "Not selected") + "\n" +
+        "Type: " + (selectedSubcategory || "Not selected") + "\n\n" +
+        "Amount Due: " + total + "\n\n" +
+        "Accepted Payment Methods:\n" +
+        "- Cash\n" +
+        "- Zelle\n" +
+        "- Venmo\n" +
+        "- Cash App\n" +
+        "- Credit / Debit Card\n\n" +
+        "Payment Status: Due upon completion\n\n" +
+        "Thank you,\n" +
+        "Tim\n" +
+        "Mobile Onsite Handyman Services LLC";
+
+      document.getElementById("quoteOutput").value = text;
+    }
+
+    function downloadInvoice() {
+      const text = document.getElementById("quoteOutput").value;
+
+      if (!text) {
+        document.getElementById("copyStatus").textContent = "Generate the invoice first.";
+        return;
+      }
+
+      const customerName = document.getElementById("customerName").value || "customer";
+      const safeName = customerName.replace(/[^a-z0-9]/gi, "_").toLowerCase();
+      const date = new Date().toISOString().slice(0, 10);
+
+      const fileName = "invoice_" + safeName + "_" + date + ".txt";
+      const blob = new Blob([text], { type: "text/plain" });
+      const url = URL.createObjectURL(blob);
+
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = fileName;
+      link.click();
+
+      URL.revokeObjectURL(url);
+
+      document.getElementById("copyStatus").textContent = "Invoice downloaded.";
+    }
+
+    async function saveInvoice() {
+      const data = {
+        invoiceNumber: "INV-" + Date.now(),
+        customerName: document.getElementById("customerName").value || "",
+        phone: document.getElementById("customerPhone").value || "",
+        address: document.getElementById("customerAddress").value || "",
+        service: selectedCategory || "",
+        type: selectedSubcategory || "",
+        total: document.getElementById("totalPrice").textContent || "",
+        paymentStatus: "Due upon completion",
+        paymentMethod: "Cash / Zelle / Venmo / Cash App / Card",
+        notes: document.getElementById("quoteOutput").value || ""
+      };
+
+      try {
+        const response = await fetch("https://script.google.com/macros/s/AKfycbzpAvHREQwQRzolPg2KGiAIN86c5x7T6we86_NmKt7bMfIU90X4Wd3mXux19R05w4EtnQ/exec", {
+          method: "POST",
+          body: JSON.stringify(data),
+          headers: {
+            "Content-Type": "application/json"
+          }
+        });
+
+        const result = await response.json();
+
+        if (result.result === "success") {
+          document.getElementById("copyStatus").textContent = "Invoice saved to database.";
+        } else {
+          document.getElementById("copyStatus").textContent = "Save failed.";
+        }
+      } catch (error) {
+        console.error(error);
+        document.getElementById("copyStatus").textContent = "Connection error.";
+      }
+    }
+
     function openTextMessage() {
       const customerPhone = document.getElementById("customerPhone").value || "";
       const quoteText = document.getElementById("quoteOutput").value || "";
@@ -1232,12 +1233,12 @@ function generateInvoice() {
     function copyQuote() {
       const text = document.getElementById("quoteOutput").value;
       if (!text) {
-        document.getElementById("copyStatus").textContent = "Generate the quote first.";
+        document.getElementById("copyStatus").textContent = "Generate the quote or invoice first.";
         return;
       }
 
       navigator.clipboard.writeText(text);
-      document.getElementById("copyStatus").textContent = "Quote copied";
+      document.getElementById("copyStatus").textContent = "Copied.";
     }
   </script>
 </body>
