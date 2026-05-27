@@ -1191,7 +1191,30 @@
 
       document.getElementById("quoteOutput").value = text;
     }
+function generateInvoice() {
+  const customerName = document.getElementById("customerName").value || "Customer";
+  const customerPhone = document.getElementById("customerPhone").value || "";
+  const customerAddress = document.getElementById("customerAddress").value || "";
+  const total = document.getElementById("totalPrice").textContent;
 
+  const text =
+    "INVOICE\n\n" +
+    "Mobile Onsite Handyman Services LLC\n" +
+    "Phone: 951-388-4744\n\n" +
+    "Bill To: " + customerName + "\n" +
+    "Phone: " + customerPhone + "\n" +
+    "Property: " + customerAddress + "\n\n" +
+    "Work Completed:\n" +
+    "Service: " + (selectedCategory || "Not selected") + "\n" +
+    "Type: " + (selectedSubcategory || "Not selected") + "\n\n" +
+    "Amount Due: " + total + "\n\n" +
+    "Payment Status: Due upon completion\n\n" +
+    "Thank you,\n" +
+    "Tim\n" +
+    "Mobile Onsite Handyman Services LLC";
+
+  document.getElementById("quoteOutput").value = text;
+}
     function openTextMessage() {
       const customerPhone = document.getElementById("customerPhone").value || "";
       const quoteText = document.getElementById("quoteOutput").value || "";
