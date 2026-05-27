@@ -5,11 +5,31 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mobile Onsite Handyman Repairs App</title>
 <style>
-body{font-family:Arial,sans-serif;background:#eff6ff;margin:0;padding:20px;color:#0f172a}.container{max-width:900px;margin:auto}.card{background:#fff;padding:20px;border-radius:18px;margin-bottom:18px;box-shadow:0 4px 14px rgba(0,0,0,.08)}h1,h2{margin-top:0}label{display:block;margin-top:12px;font-weight:700}input,select,textarea,button{width:100%;padding:14px;border-radius:12px;border:1px solid #cbd5e1;margin-top:6px;margin-bottom:10px;box-sizing:border-box;font-size:16px}button{cursor:pointer;border:none}.primary-btn{background:#2563eb;color:white;font-weight:700}.secondary-btn{background:#64748b;color:white;font-weight:700}.dark-btn{background:#0f172a;color:white;font-weight:700}.book-btn{display:block;text-align:center;text-decoration:none;background:#1d4ed8;color:white;padding:14px;border-radius:12px;font-weight:700;margin-bottom:10px}.hidden{display:none}.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:12px}.service-btn{background:white;border:1px solid #cbd5e1;text-align:left}.summary{background:#dbeafe;border-radius:14px;padding:18px;margin-bottom:12px}.total{font-size:32px;font-weight:700}.note-box{border:1px solid #e2e8f0;background:#f8fafc;border-radius:14px;padding:14px;font-size:14px;color:#475569;margin-bottom:10px;line-height:1.5}@media(max-width:700px){.grid-2{grid-template-columns:1fr}}
+  body {
+  font-family: Arial, sans-serif;
+  background:
+    linear-gradient(
+      135deg,
+      #0f172a 0%,
+      #1d4ed8 45%,
+      #60a5fa 100%
+    );
+  margin: 0;
+  padding: 20px;
+  color: #0f172a;
+  min-height: 100vh;
+}
+
+  
 </style>
 </head>
 <body>
 <div class="container">
+  .container {
+  max-width: 900px;
+  margin: auto;
+  backdrop-filter: blur(2px);
+}
 <div class="card"><h1>Mobile Onsite Handyman Services LLC</h1><p>Repairs Estimator + Invoice System</p></div>
 <div class="card"><h2>Customer Information</h2><div class="grid-2"><div><label>Customer Name</label><input id="customerName" placeholder="Enter customer name"></div><div><label>Phone Number</label><input id="customerPhone" placeholder="Enter phone number"></div></div><label>Email Address</label><input id="customerEmail" type="email" placeholder="Enter customer email"><label>Property Address</label><input id="customerAddress" placeholder="Enter property address"></div>
 <div class="card"><h2>1. Property ZIP Code</h2><input id="zip" placeholder="Enter property ZIP code for pricing" oninput="handleZipInput()"></div>
