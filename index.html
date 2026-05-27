@@ -219,18 +219,22 @@
 
     <div class="card">
       <h2>Customer Information</h2>
-      <div class="grid-2">
-        <div>
-          <label>Customer Name</label>
-          <input id="customerName" placeholder="Enter customer name" />
-        </div>
-        <div>
-          <label>Phone Number</label>
-          <input id="customerPhone" placeholder="Enter phone number" />
-        </div>
-      </div>
-      <label>Property Address</label>
-      <input id="customerAddress" placeholder="Enter property address" />
+    <div class="grid-2">
+  <div>
+    <label>Customer Name</label>
+    <input id="customerName" placeholder="Enter customer name" />
+  </div>
+  <div>
+    <label>Phone Number</label>
+    <input id="customerPhone" placeholder="Enter phone number" />
+  </div>
+</div>
+
+<label>Email Address</label>
+<input id="customerEmail" type="email" placeholder="Enter customer email" />
+
+<label>Property Address</label>
+<input id="customerAddress" placeholder="Enter property address" />
     </div>
 
     <div class="card">
@@ -1132,6 +1136,7 @@
     function generateInvoice() {
       const customerName = document.getElementById("customerName").value || "Customer";
       const customerPhone = document.getElementById("customerPhone").value || "";
+      const customerEmail = document.getElementById("customerEmail").value || "";
       const customerAddress = document.getElementById("customerAddress").value || "";
       const total = document.getElementById("totalPrice").textContent;
 
@@ -1141,6 +1146,7 @@
         "Phone: 951-388-4744\n\n" +
         "Bill To: " + customerName + "\n" +
         "Phone: " + customerPhone + "\n" +
+        "Email: " + customerEmail + "\n" +
         "Property: " + customerAddress + "\n\n" +
         "Work Completed:\n" +
         "Service: " + (selectedCategory || "Not selected") + "\n" +
@@ -1188,11 +1194,13 @@
 
     async function saveInvoice() {
       const data = {
-        invoiceNumber: "INV-" + Date.now(),
-        customerName: document.getElementById("customerName").value || "",
-        phone: document.getElementById("customerPhone").value || "",
-        address: document.getElementById("customerAddress").value || "",
-        service: selectedCategory || "",
+      const data = {
+  invoiceNumber: "INV-" + Date.now(),
+  customerName: document.getElementById("customerName").value || "",
+  phone: document.getElementById("customerPhone").value || "",
+  email: document.getElementById("customerEmail").value || "",
+  address: document.getElementById("customerAddress").value || "",
+  service: selectedCategory || "",
         type: selectedSubcategory || "",
         total: document.getElementById("totalPrice").textContent || "",
         paymentStatus: "Due upon completion",
