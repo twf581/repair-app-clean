@@ -482,34 +482,32 @@
         </div>
       </div>
 
-  <div id="plumbingFields" class="hidden">
-  <div class="pill">Plumbing</div>
+      <div id="plumbingFields" class="hidden">
+        <div class="pill">Plumbing</div>
 
-  <div class="note-box">
-    Plumbing pricing is labor only unless noted otherwise.
-  </div>
+        <div class="note-box">Plumbing pricing is labor only unless noted otherwise.</div>
 
-  <div class="note-box">
-    Pricing shown reflects service area, travel, and local market conditions.
-  </div>   
-        
-<div id="popupQtyWrap" class="hidden">
-  <label>Number of Pop-Up Strainers</label>
-  <input id="popupQty" type="number" min="1" value="1" oninput="calculateEstimate()" />
-
-  <div class="note-box">
-    Labor only. Parts are additional if supplied by Mobile Onsite Handyman.
-  </div>
-</div>
-        
         <div id="angleStopQtyWrap" class="hidden">
           <label>Angle Stop Quantity</label>
           <input id="angleStopQty" type="number" min="1" value="1" oninput="calculateEstimate()" />
+
+          <div class="note-box">
+            Standard angle stop replacement starts at $150 labor. Price may be reduced when added to other plumbing fixture replacement work during the same service call.
+          </div>
         </div>
 
         <div id="supplyLineQtyWrap" class="hidden">
           <label>Supply Line Quantity</label>
           <input id="supplyLineQty" type="number" min="1" value="1" oninput="calculateEstimate()" />
+        </div>
+
+        <div id="popupQtyWrap" class="hidden">
+          <label>Number of Bathroom Sink Pop-Up Strainers</label>
+          <input id="popupQty" type="number" min="1" value="1" oninput="calculateEstimate()" />
+
+          <div class="note-box">
+            Labor only. Parts are additional if supplied by Mobile Onsite Handyman.
+          </div>
         </div>
 
         <div id="toiletAddOnWrap" class="hidden">
@@ -709,9 +707,9 @@
         "Toilet Replacement",
         "Toilet Repair",
         "Angle Stop Replacement",
-"Supply Line Replacement",
-"Bathroom Sink Pop-Up Strainer Replacement",
-"Pedestal Sink Install",
+        "Supply Line Replacement",
+        "Bathroom Sink Pop-Up Strainer Replacement",
+        "Pedestal Sink Install",
         "Vanity Install 24-36",
         "Vanity Install 37-48",
         "Kitchen Sink Install (Quoted)",
@@ -1051,9 +1049,9 @@
         "manualFields",
         "doorInstallAddons",
         "windowCaulkNote",
-        "popupQtyWrap",
         "angleStopQtyWrap",
         "supplyLineQtyWrap",
+        "popupQtyWrap",
         "toiletAddOnWrap",
         "caulkingAddOnWrap",
         "vanityFields",
@@ -1108,32 +1106,17 @@
 
       if (selectedCategory === "plumbing") {
         document.getElementById("plumbingFields").classList.remove("hidden");
-        
-if (selectedSubcategory === "Bathroom Sink Pop-Up Strainer Replacement") {
-  const qty = Number(document.getElementById("popupQty").value || 1);
 
-  if (qty === 1) {
-    base = 150 * zoneMultiplier;
-  } else if (qty === 2) {
-    base = 250 * zoneMultiplier;
-  } else if (qty === 3) {
-    base = 325 * zoneMultiplier;
-  } else if (qty === 4) {
-    base = 400 * zoneMultiplier;
-  } else {
-    base = (400 + ((qty - 4) * 75)) * zoneMultiplier;
-  }
-}
-        
-   if (selectedSubcategory === "Bathroom Sink Pop-Up Strainer Replacement") {
-  document.getElementById("popupQtyWrap").classList.remove("hidden");
-}     
         if (selectedSubcategory === "Angle Stop Replacement") {
           document.getElementById("angleStopQtyWrap").classList.remove("hidden");
         }
 
         if (selectedSubcategory === "Supply Line Replacement") {
           document.getElementById("supplyLineQtyWrap").classList.remove("hidden");
+        }
+
+        if (selectedSubcategory === "Bathroom Sink Pop-Up Strainer Replacement") {
+          document.getElementById("popupQtyWrap").classList.remove("hidden");
         }
 
         if (selectedSubcategory === "Toilet Replacement") {
@@ -1370,29 +1353,35 @@ if (selectedSubcategory === "Bathroom Sink Pop-Up Strainer Replacement") {
         if (selectedSubcategory === "Pedestal Sink Install") base = 245 * zoneMultiplier;
         if (selectedSubcategory === "Vanity Install 24-36") base = 295 * zoneMultiplier;
         if (selectedSubcategory === "Vanity Install 37-48") base = 385 * zoneMultiplier;
-        
-if (selectedSubcategory === "Bathroom Sink Pop-Up Strainer Replacement") {
-  const qty = Number(document.getElementById("popupQty").value || 1);
 
-  if (qty === 1) {
-    base = 150 * zoneMultiplier;
-  } else if (qty === 2) {
-    base = 250 * zoneMultiplier;
-  } else if (qty === 3) {
-    base = 325 * zoneMultiplier;
-  } else if (qty === 4) {
-    base = 400 * zoneMultiplier;
-  } else {
-    base = (400 + ((qty - 4) * 75)) * zoneMultiplier;
-  }
-
-  detail = "Bathroom sink pop-up strainer replacement - labor only, parts additional";
-}
-        
         if (selectedSubcategory === "Angle Stop Replacement") {
           const qty = Number(document.getElementById("angleStopQty").value || 1);
 
-          base = (qty === 1 ? 75 : qty * 60) * zoneMultiplier;
+          if (qty === 1) {
+            base = 150 * zoneMultiplier;
+          } else {
+            base = (150 + ((qty - 1) * 75)) * zoneMultiplier;
+          }
+
+          detail = "Angle stop replacement. Price may be reduced when added to other plumbing fixture replacement work during the same service call.";
+        }
+
+        if (selectedSubcategory === "Bathroom Sink Pop-Up Strainer Replacement") {
+          const qty = Number(document.getElementById("popupQty").value || 1);
+
+          if (qty === 1) {
+            base = 150 * zoneMultiplier;
+          } else if (qty === 2) {
+            base = 250 * zoneMultiplier;
+          } else if (qty === 3) {
+            base = 325 * zoneMultiplier;
+          } else if (qty === 4) {
+            base = 400 * zoneMultiplier;
+          } else {
+            base = (400 + ((qty - 4) * 75)) * zoneMultiplier;
+          }
+
+          detail = "Bathroom sink pop-up strainer replacement - labor only, parts additional";
         }
 
         if (selectedSubcategory === "Supply Line Replacement") {
@@ -1414,7 +1403,9 @@ if (selectedSubcategory === "Bathroom Sink Pop-Up Strainer Replacement") {
           addOns += document.getElementById("moldTreatment50").checked ? 50 : 0;
         }
 
-        detail = selectedSubcategory;
+        if (!detail) {
+          detail = selectedSubcategory;
+        }
       }
 
       if (selectedCategory === "electrical") {
@@ -1543,6 +1534,20 @@ if (selectedSubcategory === "Bathroom Sink Pop-Up Strainer Replacement") {
         noteBlock += "\nIncludes removal, disposal, installation, caulking, and standard materials required to complete installation.";
         noteBlock += "\nNot included: mirror removal, plumbing modifications, new shut-off valves, wall or floor repairs, or missing parts.";
         noteBlock += "\nMirror disclaimer: mirrors left in place are at homeowner’s risk.";
+      }
+
+      if (
+        selectedCategory === "plumbing" &&
+        selectedSubcategory === "Bathroom Sink Pop-Up Strainer Replacement"
+      ) {
+        noteBlock += "\nLabor only. Parts are additional if supplied by Mobile Onsite Handyman.";
+      }
+
+      if (
+        selectedCategory === "plumbing" &&
+        selectedSubcategory === "Angle Stop Replacement"
+      ) {
+        noteBlock += "\nStandard angle stop replacement starts at $150 labor. Price may be reduced when added to other plumbing fixture replacement work during the same service call.";
       }
 
       const text =
