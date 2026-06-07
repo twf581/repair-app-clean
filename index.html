@@ -482,11 +482,22 @@
         </div>
       </div>
 
-      <div id="plumbingFields" class="hidden">
-        <div class="pill">Plumbing</div>
+  <div id="plumbingFields" class="hidden">
+  <div class="pill">Plumbing</div>
 
-        <div class="note-box">Plumbing pricing is labor only unless noted otherwise.</div>
+  <div class="note-box">
+    Plumbing pricing is labor only unless noted otherwise.
+  </div>
 
+  <div class="note-box">
+    Pricing shown reflects service area, travel, and local market conditions.
+  </div>   
+        
+<div id="popupQtyWrap" class="hidden">
+  <label>Number of Pop-Up Strainers</label>
+  <input id="popupQty" type="number" min="1" value="1" oninput="calculateEstimate()" />
+</div>
+        
         <div id="angleStopQtyWrap" class="hidden">
           <label>Angle Stop Quantity</label>
           <input id="angleStopQty" type="number" min="1" value="1" oninput="calculateEstimate()" />
@@ -694,8 +705,9 @@
         "Toilet Replacement",
         "Toilet Repair",
         "Angle Stop Replacement",
-        "Supply Line Replacement",
-        "Pedestal Sink Install",
+"Supply Line Replacement",
+"Bathroom Sink Pop-Up Strainer Replacement",
+"Pedestal Sink Install",
         "Vanity Install 24-36",
         "Vanity Install 37-48",
         "Kitchen Sink Install (Quoted)",
@@ -1035,6 +1047,7 @@
         "manualFields",
         "doorInstallAddons",
         "windowCaulkNote",
+        "popupQtyWrap",
         "angleStopQtyWrap",
         "supplyLineQtyWrap",
         "toiletAddOnWrap",
@@ -1091,7 +1104,26 @@
 
       if (selectedCategory === "plumbing") {
         document.getElementById("plumbingFields").classList.remove("hidden");
+        
+if (selectedSubcategory === "Bathroom Sink Pop-Up Strainer Replacement") {
+  const qty = Number(document.getElementById("popupQty").value || 1);
 
+  if (qty === 1) {
+    base = 150 * zoneMultiplier;
+  } else if (qty === 2) {
+    base = 250 * zoneMultiplier;
+  } else if (qty === 3) {
+    base = 325 * zoneMultiplier;
+  } else if (qty === 4) {
+    base = 400 * zoneMultiplier;
+  } else {
+    base = (400 + ((qty - 4) * 75)) * zoneMultiplier;
+  }
+}
+        
+   if (selectedSubcategory === "Bathroom Sink Pop-Up Strainer Replacement") {
+  document.getElementById("popupQtyWrap").classList.remove("hidden");
+}     
         if (selectedSubcategory === "Angle Stop Replacement") {
           document.getElementById("angleStopQtyWrap").classList.remove("hidden");
         }
