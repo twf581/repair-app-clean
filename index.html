@@ -496,6 +496,10 @@
 <div id="popupQtyWrap" class="hidden">
   <label>Number of Pop-Up Strainers</label>
   <input id="popupQty" type="number" min="1" value="1" oninput="calculateEstimate()" />
+
+  <div class="note-box">
+    Labor only. Parts are additional if supplied by Mobile Onsite Handyman.
+  </div>
 </div>
         
         <div id="angleStopQtyWrap" class="hidden">
@@ -1366,7 +1370,25 @@ if (selectedSubcategory === "Bathroom Sink Pop-Up Strainer Replacement") {
         if (selectedSubcategory === "Pedestal Sink Install") base = 245 * zoneMultiplier;
         if (selectedSubcategory === "Vanity Install 24-36") base = 295 * zoneMultiplier;
         if (selectedSubcategory === "Vanity Install 37-48") base = 385 * zoneMultiplier;
+        
+if (selectedSubcategory === "Bathroom Sink Pop-Up Strainer Replacement") {
+  const qty = Number(document.getElementById("popupQty").value || 1);
 
+  if (qty === 1) {
+    base = 150 * zoneMultiplier;
+  } else if (qty === 2) {
+    base = 250 * zoneMultiplier;
+  } else if (qty === 3) {
+    base = 325 * zoneMultiplier;
+  } else if (qty === 4) {
+    base = 400 * zoneMultiplier;
+  } else {
+    base = (400 + ((qty - 4) * 75)) * zoneMultiplier;
+  }
+
+  detail = "Bathroom sink pop-up strainer replacement - labor only, parts additional";
+}
+        
         if (selectedSubcategory === "Angle Stop Replacement") {
           const qty = Number(document.getElementById("angleStopQty").value || 1);
 
