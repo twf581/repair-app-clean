@@ -510,6 +510,47 @@
           </div>
         </div>
 
+        <div id="pTrapQtyWrap" class="hidden">
+          <label>Number of P-Traps</label>
+          <input id="pTrapQty" type="number" min="1" value="1" oninput="calculateEstimate()" />
+
+          <div class="note-box">
+            Labor only. Parts are additional if supplied by Mobile Onsite Handyman.
+          </div>
+        </div>
+
+        <div id="lavDrainQtyWrap" class="hidden">
+          <label>Number of Lavatory Drain Assemblies</label>
+          <input id="lavDrainQty" type="number" min="1" value="1" oninput="calculateEstimate()" />
+
+          <div class="note-box">
+            Labor only. Parts are additional if supplied by Mobile Onsite Handyman.
+          </div>
+        </div>
+
+        <div id="basketStrainerQtyWrap" class="hidden">
+          <label>Number of Kitchen Basket Strainers</label>
+          <input id="basketStrainerQty" type="number" min="1" value="1" oninput="calculateEstimate()" />
+
+          <div class="note-box">
+            Labor only. Parts are additional if supplied by Mobile Onsite Handyman.
+          </div>
+        </div>
+
+        <div id="simplePlumbingQtyWrap" class="hidden">
+          <label>Quantity</label>
+          <input id="simplePlumbingQty" type="number" min="1" value="1" oninput="calculateEstimate()" />
+        </div>
+
+        <div id="plumbingFixtureDiscountWrap" class="hidden">
+          <div class="note-box">
+            <label>
+              <input id="plumbingFixtureDiscount" class="inline-check" type="checkbox" onchange="calculateEstimate()" />
+              Additional plumbing fixture discount - use only when added to another plumbing fixture replacement during the same service call.
+            </label>
+          </div>
+        </div>
+
         <div id="toiletAddOnWrap" class="hidden">
           <div class="note-box">
             <label>
@@ -709,6 +750,16 @@
         "Angle Stop Replacement",
         "Supply Line Replacement",
         "Bathroom Sink Pop-Up Strainer Replacement",
+        "P-Trap Replacement (Labor Only)",
+        "Lavatory Drain Assembly Replacement",
+        "Basket Strainer Replacement (Kitchen Sink)",
+        "Garbage Disposal Removal Only",
+        "Toilet Wax Ring Replacement",
+        "Fill Valve Replacement",
+        "Flapper Replacement",
+        "Tub Spout Replacement",
+        "Shower Head Replacement",
+        "Dishwasher Supply Line Replacement",
         "Pedestal Sink Install",
         "Vanity Install 24-36",
         "Vanity Install 37-48",
@@ -1052,6 +1103,11 @@
         "angleStopQtyWrap",
         "supplyLineQtyWrap",
         "popupQtyWrap",
+        "pTrapQtyWrap",
+        "lavDrainQtyWrap",
+        "basketStrainerQtyWrap",
+        "simplePlumbingQtyWrap",
+        "plumbingFixtureDiscountWrap",
         "toiletAddOnWrap",
         "caulkingAddOnWrap",
         "vanityFields",
@@ -1105,41 +1161,123 @@
       }
 
       if (selectedCategory === "plumbing") {
-        document.getElementById("plumbingFields").classList.remove("hidden");
+        if (selectedSubcategory === "Faucet Installation") base = 150 * zoneMultiplier;
+        if (selectedSubcategory === "Faucet Installation w/ Disposal or Drainpipe Removal") base = 235 * zoneMultiplier;
+        if (selectedSubcategory === "Toilet Replacement") base = 150 * zoneMultiplier;
+        if (selectedSubcategory === "Toilet Repair") base = 150 * zoneMultiplier;
+        if (selectedSubcategory === "Garbage Disposal Install") base = 160 * zoneMultiplier;
+        if (selectedSubcategory === "Garbage Disposal Install w/ 1 1/3 HP Disposal") base = 285 * zoneMultiplier;
+        if (selectedSubcategory === "Bathtub / Shower Caulking") base = 125 * zoneMultiplier;
+        if (selectedSubcategory === "Pedestal Sink Install") base = 245 * zoneMultiplier;
+        if (selectedSubcategory === "Vanity Install 24-36") base = 295 * zoneMultiplier;
+        if (selectedSubcategory === "Vanity Install 37-48") base = 385 * zoneMultiplier;
 
         if (selectedSubcategory === "Angle Stop Replacement") {
-          document.getElementById("angleStopQtyWrap").classList.remove("hidden");
+          const qty = Number(document.getElementById("angleStopQty").value || 1);
+          base = multiFixturePrice(qty, 150, 75, 75) * zoneMultiplier;
+          base = applyPlumbingFixtureDiscount(base);
+          detail = "Angle stop replacement. Price may be reduced when added to other plumbing fixture replacement work during the same service call.";
         }
 
         if (selectedSubcategory === "Supply Line Replacement") {
-          document.getElementById("supplyLineQtyWrap").classList.remove("hidden");
+          const qty = Number(document.getElementById("supplyLineQty").value || 1);
+          base = multiFixturePrice(qty, 75, 45, 35) * zoneMultiplier;
+          base = applyPlumbingFixtureDiscount(base);
+          detail = "Supply line replacement - labor only, parts additional if supplied.";
         }
 
         if (selectedSubcategory === "Bathroom Sink Pop-Up Strainer Replacement") {
-          document.getElementById("popupQtyWrap").classList.remove("hidden");
+          const qty = Number(document.getElementById("popupQty").value || 1);
+          base = multiFixturePrice(qty, 150, 100, 75) * zoneMultiplier;
+          base = applyPlumbingFixtureDiscount(base);
+          detail = "Bathroom sink pop-up strainer replacement - labor only, parts additional";
         }
 
-        if (selectedSubcategory === "Toilet Replacement") {
-          document.getElementById("toiletAddOnWrap").classList.remove("hidden");
+        if (selectedSubcategory === "P-Trap Replacement (Labor Only)") {
+          const qty = Number(document.getElementById("pTrapQty").value || 1);
+          base = multiFixturePrice(qty, 150, 100, 75) * zoneMultiplier;
+          base = applyPlumbingFixtureDiscount(base);
+          detail = "P-Trap replacement - labor only, parts additional";
         }
 
-        if (selectedSubcategory === "Bathtub / Shower Caulking") {
-          document.getElementById("caulkingAddOnWrap").classList.remove("hidden");
+        if (selectedSubcategory === "Lavatory Drain Assembly Replacement") {
+          const qty = Number(document.getElementById("lavDrainQty").value || 1);
+          base = multiFixturePrice(qty, 175, 125, 85) * zoneMultiplier;
+          base = applyPlumbingFixtureDiscount(base);
+          detail = "Lavatory drain assembly replacement - labor only, parts additional";
         }
 
-        if (
-          selectedSubcategory === "Pedestal Sink Install" ||
-          selectedSubcategory === "Vanity Install 24-36" ||
-          selectedSubcategory === "Vanity Install 37-48"
-        ) {
-          document.getElementById("vanityFields").classList.remove("hidden");
+        if (selectedSubcategory === "Basket Strainer Replacement (Kitchen Sink)") {
+          const qty = Number(document.getElementById("basketStrainerQty").value || 1);
+          base = multiFixturePrice(qty, 175, 125, 85) * zoneMultiplier;
+          base = applyPlumbingFixtureDiscount(base);
+          detail = "Kitchen basket strainer replacement - labor only, parts additional";
+        }
+
+        if (selectedSubcategory === "Garbage Disposal Removal Only") {
+          const qty = Number(document.getElementById("simplePlumbingQty").value || 1);
+          base = (qty * 95) * zoneMultiplier;
+          detail = "Garbage disposal removal only - labor only";
+        }
+
+        if (selectedSubcategory === "Toilet Wax Ring Replacement") {
+          const qty = Number(document.getElementById("simplePlumbingQty").value || 1);
+          base = multiFixturePrice(qty, 185, 125, 95) * zoneMultiplier;
+          base = applyPlumbingFixtureDiscount(base);
+          detail = "Toilet wax ring replacement - labor only, parts additional";
+        }
+
+        if (selectedSubcategory === "Fill Valve Replacement") {
+          const qty = Number(document.getElementById("simplePlumbingQty").value || 1);
+          base = multiFixturePrice(qty, 125, 85, 65) * zoneMultiplier;
+          base = applyPlumbingFixtureDiscount(base);
+          detail = "Fill valve replacement - labor only, parts additional";
+        }
+
+        if (selectedSubcategory === "Flapper Replacement") {
+          const qty = Number(document.getElementById("simplePlumbingQty").value || 1);
+          base = multiFixturePrice(qty, 95, 60, 45) * zoneMultiplier;
+          base = applyPlumbingFixtureDiscount(base);
+          detail = "Flapper replacement - labor only, parts additional";
+        }
+
+        if (selectedSubcategory === "Tub Spout Replacement") {
+          const qty = Number(document.getElementById("simplePlumbingQty").value || 1);
+          base = multiFixturePrice(qty, 125, 85, 65) * zoneMultiplier;
+          base = applyPlumbingFixtureDiscount(base);
+          detail = "Tub spout replacement - labor only, parts additional";
+        }
+
+        if (selectedSubcategory === "Shower Head Replacement") {
+          const qty = Number(document.getElementById("simplePlumbingQty").value || 1);
+          base = multiFixturePrice(qty, 95, 60, 45) * zoneMultiplier;
+          base = applyPlumbingFixtureDiscount(base);
+          detail = "Shower head replacement - labor only, parts additional";
+        }
+
+        if (selectedSubcategory === "Dishwasher Supply Line Replacement") {
+          const qty = Number(document.getElementById("simplePlumbingQty").value || 1);
+          base = multiFixturePrice(qty, 150, 100, 75) * zoneMultiplier;
+          base = applyPlumbingFixtureDiscount(base);
+          detail = "Dishwasher supply line replacement - labor only, parts additional";
         }
 
         if (selectedSubcategory.includes("(Quoted)")) {
-          document.getElementById("manualFields").classList.remove("hidden");
+          isQuoted = true;
         }
 
-        return;
+        if (selectedSubcategory === "Toilet Replacement") {
+          addOns += document.getElementById("toiletPickup").checked ? 60 : 0;
+          addOns += document.getElementById("toiletDisposal").checked ? 35 : 0;
+        }
+
+        if (selectedSubcategory === "Bathtub / Shower Caulking") {
+          addOns += document.getElementById("moldTreatment50").checked ? 50 : 0;
+        }
+
+        if (!detail) {
+          detail = selectedSubcategory;
+        }
       }
 
       if (selectedCategory === "electrical") {
@@ -1208,6 +1346,23 @@
           document.getElementById("manualFields").classList.remove("hidden");
         }
       }
+    }
+
+
+    function applyPlumbingFixtureDiscount(amount) {
+      const discountBox = document.getElementById("plumbingFixtureDiscount");
+
+      if (discountBox && discountBox.checked) {
+        return amount * 0.85;
+      }
+
+      return amount;
+    }
+
+    function multiFixturePrice(qty, first, second, additional) {
+      if (qty <= 1) return first;
+      if (qty === 2) return first + second;
+      return first + second + ((qty - 2) * additional);
     }
 
     function calculateEstimate() {
@@ -1550,6 +1705,24 @@
         noteBlock += "\nStandard angle stop replacement starts at $150 labor. Price may be reduced when added to other plumbing fixture replacement work during the same service call.";
       }
 
+      if (
+        selectedCategory === "plumbing" &&
+        (
+          selectedSubcategory === "P-Trap Replacement (Labor Only)" ||
+          selectedSubcategory === "Lavatory Drain Assembly Replacement" ||
+          selectedSubcategory === "Basket Strainer Replacement (Kitchen Sink)" ||
+          selectedSubcategory === "Garbage Disposal Removal Only" ||
+          selectedSubcategory === "Toilet Wax Ring Replacement" ||
+          selectedSubcategory === "Fill Valve Replacement" ||
+          selectedSubcategory === "Flapper Replacement" ||
+          selectedSubcategory === "Tub Spout Replacement" ||
+          selectedSubcategory === "Shower Head Replacement" ||
+          selectedSubcategory === "Dishwasher Supply Line Replacement"
+        )
+      ) {
+        noteBlock += "\nLabor only. Parts are additional if supplied by Mobile Onsite Handyman.";
+      }
+
       const text =
         "Hi " + customerName + ",\n\n" +
         "This is Tim with Mobile Onsite Handyman Services.\n\n" +
@@ -1628,7 +1801,8 @@
 
     async function saveInvoice() {
       const data = {
-        invoiceNumber: "INV-" + Date.now(),
+        invoiceNumber: "REP-INV-" + Date.now(),
+        sourceApp: "Repairs App",
         customerName: document.getElementById("customerName").value || "",
         phone: document.getElementById("customerPhone").value || "",
         email: document.getElementById("customerEmail").value || "",
