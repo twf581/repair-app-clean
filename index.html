@@ -540,6 +540,10 @@
         <div id="simplePlumbingQtyWrap" class="hidden">
           <label>Quantity</label>
           <input id="simplePlumbingQty" type="number" min="1" value="1" oninput="calculateEstimate()" />
+
+          <div class="note-box">
+            Labor only. Parts are additional if supplied by Mobile Onsite Handyman.
+          </div>
         </div>
 
         <div id="plumbingFixtureDiscountWrap" class="hidden">
@@ -1174,6 +1178,7 @@
 
         if (selectedSubcategory === "Angle Stop Replacement") {
           const qty = Number(document.getElementById("angleStopQty").value || 1);
+
           base = multiFixturePrice(qty, 150, 75, 75) * zoneMultiplier;
           base = applyPlumbingFixtureDiscount(base);
           detail = "Angle stop replacement. Price may be reduced when added to other plumbing fixture replacement work during the same service call.";
@@ -1181,6 +1186,7 @@
 
         if (selectedSubcategory === "Supply Line Replacement") {
           const qty = Number(document.getElementById("supplyLineQty").value || 1);
+
           base = multiFixturePrice(qty, 75, 45, 35) * zoneMultiplier;
           base = applyPlumbingFixtureDiscount(base);
           detail = "Supply line replacement - labor only, parts additional if supplied.";
@@ -1188,6 +1194,7 @@
 
         if (selectedSubcategory === "Bathroom Sink Pop-Up Strainer Replacement") {
           const qty = Number(document.getElementById("popupQty").value || 1);
+
           base = multiFixturePrice(qty, 150, 100, 75) * zoneMultiplier;
           base = applyPlumbingFixtureDiscount(base);
           detail = "Bathroom sink pop-up strainer replacement - labor only, parts additional";
@@ -1195,6 +1202,7 @@
 
         if (selectedSubcategory === "P-Trap Replacement (Labor Only)") {
           const qty = Number(document.getElementById("pTrapQty").value || 1);
+
           base = multiFixturePrice(qty, 150, 100, 75) * zoneMultiplier;
           base = applyPlumbingFixtureDiscount(base);
           detail = "P-Trap replacement - labor only, parts additional";
@@ -1202,6 +1210,7 @@
 
         if (selectedSubcategory === "Lavatory Drain Assembly Replacement") {
           const qty = Number(document.getElementById("lavDrainQty").value || 1);
+
           base = multiFixturePrice(qty, 175, 125, 85) * zoneMultiplier;
           base = applyPlumbingFixtureDiscount(base);
           detail = "Lavatory drain assembly replacement - labor only, parts additional";
@@ -1209,6 +1218,7 @@
 
         if (selectedSubcategory === "Basket Strainer Replacement (Kitchen Sink)") {
           const qty = Number(document.getElementById("basketStrainerQty").value || 1);
+
           base = multiFixturePrice(qty, 175, 125, 85) * zoneMultiplier;
           base = applyPlumbingFixtureDiscount(base);
           detail = "Kitchen basket strainer replacement - labor only, parts additional";
@@ -1216,12 +1226,14 @@
 
         if (selectedSubcategory === "Garbage Disposal Removal Only") {
           const qty = Number(document.getElementById("simplePlumbingQty").value || 1);
+
           base = (qty * 95) * zoneMultiplier;
           detail = "Garbage disposal removal only - labor only";
         }
 
         if (selectedSubcategory === "Toilet Wax Ring Replacement") {
           const qty = Number(document.getElementById("simplePlumbingQty").value || 1);
+
           base = multiFixturePrice(qty, 185, 125, 95) * zoneMultiplier;
           base = applyPlumbingFixtureDiscount(base);
           detail = "Toilet wax ring replacement - labor only, parts additional";
@@ -1229,6 +1241,7 @@
 
         if (selectedSubcategory === "Fill Valve Replacement") {
           const qty = Number(document.getElementById("simplePlumbingQty").value || 1);
+
           base = multiFixturePrice(qty, 125, 85, 65) * zoneMultiplier;
           base = applyPlumbingFixtureDiscount(base);
           detail = "Fill valve replacement - labor only, parts additional";
@@ -1236,6 +1249,7 @@
 
         if (selectedSubcategory === "Flapper Replacement") {
           const qty = Number(document.getElementById("simplePlumbingQty").value || 1);
+
           base = multiFixturePrice(qty, 95, 60, 45) * zoneMultiplier;
           base = applyPlumbingFixtureDiscount(base);
           detail = "Flapper replacement - labor only, parts additional";
@@ -1243,6 +1257,7 @@
 
         if (selectedSubcategory === "Tub Spout Replacement") {
           const qty = Number(document.getElementById("simplePlumbingQty").value || 1);
+
           base = multiFixturePrice(qty, 125, 85, 65) * zoneMultiplier;
           base = applyPlumbingFixtureDiscount(base);
           detail = "Tub spout replacement - labor only, parts additional";
@@ -1250,6 +1265,7 @@
 
         if (selectedSubcategory === "Shower Head Replacement") {
           const qty = Number(document.getElementById("simplePlumbingQty").value || 1);
+
           base = multiFixturePrice(qty, 95, 60, 45) * zoneMultiplier;
           base = applyPlumbingFixtureDiscount(base);
           detail = "Shower head replacement - labor only, parts additional";
@@ -1257,6 +1273,7 @@
 
         if (selectedSubcategory === "Dishwasher Supply Line Replacement") {
           const qty = Number(document.getElementById("simplePlumbingQty").value || 1);
+
           base = multiFixturePrice(qty, 150, 100, 75) * zoneMultiplier;
           base = applyPlumbingFixtureDiscount(base);
           detail = "Dishwasher supply line replacement - labor only, parts additional";
@@ -1347,7 +1364,6 @@
         }
       }
     }
-
 
     function applyPlumbingFixtureDiscount(amount) {
       const discountBox = document.getElementById("plumbingFixtureDiscount");
