@@ -707,8 +707,25 @@
 
       <button class="primary-btn" onclick="generateQuote()">Generate Quote Text</button>
 
-      <textarea id="quoteOutput" rows="10" placeholder="Quote or invoice text will appear here"></textarea>
+<label>Payment Status</label>
+<select id="paymentStatus">
+  <option value="Due upon completion">Due upon completion</option>
+  <option value="Paid">Paid</option>
+  <option value="Partial Payment">Partial Payment</option>
+</select>
 
+<label>Payment Method</label>
+<select id="paymentMethod">
+  <option value="">Select payment method</option>
+  <option value="Cash">Cash</option>
+  <option value="Zelle">Zelle</option>
+  <option value="Venmo">Venmo</option>
+  <option value="Cash App">Cash App</option>
+  <option value="Credit / Debit Card">Credit / Debit Card</option>
+  <option value="Check">Check</option>
+</select>
+
+<textarea id="quoteOutput" rows="10" placeholder="Quote or invoice text will appear here"></textarea>
       <div class="grid-2">
         <button class="dark-btn" onclick="openTextMessage()">Open Text Message</button>
         <button class="secondary-btn" onclick="copyQuote()">Copy Quote</button>
@@ -1824,8 +1841,8 @@
         service: selectedCategory || "",
         type: selectedSubcategory || "",
         total: document.getElementById("totalPrice").textContent || "",
-        paymentStatus: "Due upon completion",
-        paymentMethod: "Cash / Zelle / Venmo / Cash App / Card",
+       paymentStatus: document.getElementById("paymentStatus").value || "Due upon completion",
+       paymentMethod: document.getElementById("paymentMethod").value || "",
        notes: selectedSubcategory || ""
       };
 
