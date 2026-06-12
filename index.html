@@ -703,29 +703,37 @@
         </div>
       </div>
 
-
       <div class="note-box" id="summaryDetails">Service: Not selected</div>
 
-      <div class="note-box">
-        <div class="pill">Manual / Quoted Price Override</div>
-
-        <label>Quoted Price Override</label>
-        <input id="manualQuotedPrice" type="text" inputmode="decimal" placeholder="Example: 475" oninput="calculateEstimate()" />
+      <div id="quotedPriceBox" class="note-box hidden">
+        <label>Quoted Price</label>
+        <input id="manualQuotedPrice" type="number" min="0" step="0.01" placeholder="Enter quoted amount" oninput="calculateEstimate()" />
 
         <label>Quoted Work Description</label>
-        <input id="manualQuotedDescription" placeholder="Example: Custom kitchen sink install" oninput="calculateEstimate()" />
-
-        <button class="secondary-btn" type="button" onclick="applyManualQuotedPrice()">Apply Manual Price</button>
-
-        <div class="note-box">
-          Leave this blank for normal app pricing. Use it only when you need to enter a quoted price manually.
-        </div>
+        <input id="manualQuotedDescription" placeholder="Describe quoted work" oninput="calculateEstimate()" />
       </div>
 
       <button class="primary-btn" onclick="generateQuote()">Generate Quote Text</button>
 
-      <textarea id="quoteOutput" rows="10" placeholder="Quote or invoice text will appear here"></textarea>
+<label>Payment Status</label>
+<select id="paymentStatus">
+  <option value="Due upon completion">Due upon completion</option>
+  <option value="Paid">Paid</option>
+  <option value="Partial Payment">Partial Payment</option>
+</select>
 
+<label>Payment Method</label>
+<select id="paymentMethod">
+  <option value="">Select payment method</option>
+  <option value="Cash">Cash</option>
+  <option value="Zelle">Zelle</option>
+  <option value="Venmo">Venmo</option>
+  <option value="Cash App">Cash App</option>
+  <option value="Credit / Debit Card">Credit / Debit Card</option>
+  <option value="Check">Check</option>
+</select>
+
+<textarea id="quoteOutput" rows="10" placeholder="Quote or invoice text will appear here"></textarea>
       <div class="grid-2">
         <button class="dark-btn" onclick="openTextMessage()">Open Text Message</button>
         <button class="secondary-btn" onclick="copyQuote()">Copy Quote</button>
@@ -1123,6 +1131,7 @@
         "flooringFields",
         "exteriorFields",
         "manualFields",
+        "quotedPriceBox",
         "doorInstallAddons",
         "windowCaulkNote",
         "angleStopQtyWrap",
@@ -1180,6 +1189,7 @@
 
         if (selectedSubcategory.includes("(Quoted)")) {
           document.getElementById("manualFields").classList.remove("hidden");
+          document.getElementById("quotedPriceBox").classList.remove("hidden");
         }
 
         return;
@@ -1259,6 +1269,7 @@
 
         if (selectedSubcategory.includes("(Quoted)")) {
           document.getElementById("manualFields").classList.remove("hidden");
+          document.getElementById("quotedPriceBox").classList.remove("hidden");
         }
 
         return;
@@ -1346,53 +1357,6 @@
       if (qty <= 1) return first;
       if (qty === 2) return first + second;
       return first + second + ((qty - 2) * additional);
-    }
-
-
-    function getManualQuotedPrice() {
-      const field = document.getElementById("manualQuotedPrice");
-
-      if (!field) {
-        return 0;
-      }
-
-      const cleaned = String(field.value || "").replace(/[^0-9.]/g, "");
-      return Number(cleaned || 0);
-    }
-
-    function getManualQuotedDescription() {
-      const field = document.getElementById("manualQuotedDescription");
-
-      if (!field) {
-        return "";
-      }
-
-      return field.value.trim();
-    }
-
-    function getDisplayServiceType() {
-      const manualPrice = getManualQuotedPrice();
-      const manualDescription = getManualQuotedDescription();
-
-      if (manualPrice > 0 && manualDescription) {
-        return manualDescription;
-      }
-
-      return selectedSubcategory || "Not selected";
-    }
-
-    function applyManualQuotedPrice() {
-      calculateEstimate();
-
-      const manualPrice = getManualQuotedPrice();
-
-      if (manualPrice > 0) {
-        document.getElementById("copyStatus").textContent =
-          "Manual quoted price applied.";
-      } else {
-        document.getElementById("copyStatus").textContent =
-          "Enter a manual quoted price first.";
-      }
     }
 
     function calculateEstimate() {
@@ -1726,20 +1690,14 @@
       }
 
 
-      const manualOverridePrice = getManualQuotedPrice();
-      const manualOverrideDescription = getManualQuotedDescription();
+      const manualQuotedPrice = Number((document.getElementById("manualQuotedPrice")?.value) || 0);
+      const manualQuotedDescription = (document.getElementById("manualQuotedDescription")?.value || "").trim();
 
-      if (manualOverridePrice > 0) {
-        base = manualOverridePrice;
-        addOns = 0;
+      if (manualQuotedPrice > 0) {
+        base = manualQuotedPrice;
         isQuoted = false;
-
-        if (manualOverrideDescription) {
-          detail = manualOverrideDescription;
-        } else if (selectedSubcategory) {
-          detail = selectedSubcategory;
-        } else {
-          detail = "Manual quoted work";
+        if (manualQuotedDescription) {
+          detail = manualQuotedDescription;
         }
       }
 
@@ -1756,15 +1714,10 @@
       if (selectedCategory === "drywall") detailsText += "<br>IAC2 Certified (Certification #IAC2-94278)";
       if (selectedCategory === "plumbing") detailsText += "<br>Plumbing pricing is labor only unless noted otherwise.";
 
-      if (getManualQuotedPrice() > 0) {
-        detailsText += "<br>Manual quoted price override applied.";
-      }
-
       document.getElementById("summaryDetails").innerHTML = detailsText;
     }
 
     function generateQuote() {
-      calculateEstimate();
       const customerName = document.getElementById("customerName").value || "Customer";
       const customerPhone = document.getElementById("customerPhone").value || "";
       const customerEmail = document.getElementById("customerEmail").value || "";
@@ -1829,7 +1782,7 @@
         "This is Tim with Mobile Onsite Handyman Services.\n\n" +
         "Here is your estimated repair cost:\n\n" +
         "Service: " + (selectedCategory || "Not selected") + "\n" +
-        "Type: " + getDisplayServiceType() + "\n" +
+        "Type: " + ((document.getElementById("manualQuotedDescription")?.value.trim()) || selectedSubcategory || "Not selected") + "\n" +
         "Property: " + customerAddress + "\n" +
         "Phone: " + customerPhone + "\n" +
         "Email: " + customerEmail + "\n\n" +
@@ -1842,7 +1795,6 @@
     }
 
     function generateInvoice() {
-      calculateEstimate();
       const customerName = document.getElementById("customerName").value || "Customer";
       const customerPhone = document.getElementById("customerPhone").value || "";
       const customerEmail = document.getElementById("customerEmail").value || "";
@@ -1859,7 +1811,7 @@
         "Property: " + customerAddress + "\n\n" +
         "Work Completed:\n" +
         "Service: " + (selectedCategory || "Not selected") + "\n" +
-        "Type: " + getDisplayServiceType() + "\n\n" +
+        "Type: " + ((document.getElementById("manualQuotedDescription")?.value.trim()) || selectedSubcategory || "Not selected") + "\n\n" +
         "Amount Due: " + total + "\n\n" +
         "Accepted Payment Methods:\n" +
         "- Cash\n" +
@@ -1902,7 +1854,6 @@
     }
 
     async function saveInvoice() {
-      calculateEstimate();
       const data = {
         invoiceNumber: "REP-INV-" + Date.now(),
         sourceApp: "Repairs App",
@@ -1911,33 +1862,32 @@
         email: document.getElementById("customerEmail").value || "",
         address: document.getElementById("customerAddress").value || "",
         service: selectedCategory || "",
-        type: getDisplayServiceType(),
+        type: (document.getElementById("manualQuotedDescription")?.value.trim()) || selectedSubcategory || "",
         total: document.getElementById("totalPrice").textContent || "",
-        paymentStatus: "Due upon completion",
-        paymentMethod: "Cash / Zelle / Venmo / Cash App / Card",
-        notes: document.getElementById("quoteOutput").value || ""
+       paymentStatus: document.getElementById("paymentStatus").value || "Due upon completion",
+       paymentMethod: document.getElementById("paymentMethod").value || "",
+       notes: selectedSubcategory || ""
       };
 
-    try {
-  ...
-} catch (error) {
-  ...
-} 
-   await fetch("https://script.google.com/macros/s/AKfycbzpAvHREQwQRzolPg2KGiAIN86c5x7T6we86_NmKt7bMfIU90X4Wd3mXux19R05w4EtnQ/exec", {
-  method: "POST",
-  mode: "no-cors",
-  body: JSON.stringify(data),
-  headers: {
-    "Content-Type": "text/plain"
-  }
-});
+   try {
 
-document.getElementById("copyStatus").textContent =
-  "Invoice sent to database. Check Google Sheets.";
-      } catch (error) {
-        console.error(error);
-        document.getElementById("copyStatus").textContent = "Connection error.";
-      }
+  await fetch("https://script.google.com/macros/s/AKfycbzpAvHREQwQRzolPg2KGiAIN86c5x7T6we86_NmKt7bMfIU90X4Wd3mXux19R05w4EtnQ/exec", {
+    method: "POST",
+    mode: "no-cors",
+    body: JSON.stringify(data),
+    headers: {
+      "Content-Type": "text/plain"
+    }
+  });
+
+  document.getElementById("copyStatus").textContent =
+    "Invoice sent to database. Check Google Sheets.";
+
+} catch (error) {
+  console.error(error);
+  document.getElementById("copyStatus").textContent =
+    "Connection error.";
+}
     }
 
     function openTextMessage() {
