@@ -679,9 +679,8 @@
       </div>
 
       <div id="manualFields" class="note-box hidden">
-        This service is quoted. Enter the quoted price below to generate a quote, invoice, and database entry.
+        This service is quoted. The app will still generate a customer-ready summary.
       </div>
-
     </div>
 
     <div id="summaryCard" class="card hidden">
@@ -706,17 +705,19 @@
 
       <div class="note-box" id="summaryDetails">Service: Not selected</div>
 
-      <div id="quotedPriceFields" class="hidden">
-        <div class="pill">Quoted Item</div>
+      <div class="note-box" style="border:2px solid #2563eb; background:#eff6ff;">
+        <div class="pill">Manual / Quoted Price Override</div>
 
-        <label>Enter Quoted Price</label>
-        <input id="manualQuotedPrice" type="number" min="0" value="0" oninput="calculateEstimate()" />
+        <label>Quoted Price Override</label>
+        <input id="manualOverridePrice" type="text" inputmode="decimal" placeholder="Example: 475" oninput="calculateEstimate()" onchange="calculateEstimate()" />
 
         <label>Quoted Work Description</label>
-        <input id="manualQuotedDescription" placeholder="Describe the quoted work" oninput="calculateEstimate()" />
+        <input id="manualOverrideDescription" placeholder="Example: Kitchen sink install with new drain assembly" oninput="calculateEstimate()" onchange="calculateEstimate()" />
+
+        <button class="secondary-btn" type="button" onclick="calculateEstimate()">Apply Manual Price</button>
 
         <div class="note-box">
-          Use this box for quoted items only. Enter the final approved price, then generate the quote or invoice.
+          Leave this blank for normal app pricing. Use this only when the selected item is quoted or you need to override the calculated price.
         </div>
       </div>
 
@@ -1121,7 +1122,6 @@
         "flooringFields",
         "exteriorFields",
         "manualFields",
-        "quotedPriceFields",
         "doorInstallAddons",
         "windowCaulkNote",
         "angleStopQtyWrap",
@@ -1345,11 +1345,26 @@
       if (qty <= 1) return first;
       if (qty === 2) return first + second;
       return first + second + ((qty - 2) * additional);
-      if (selectedSubcategory && selectedSubcategory.includes("(Quoted)")) {
-        document.getElementById("quotedPriceFields").classList.remove("hidden");
+    }
+
+
+    function getManualOverridePrice() {
+      const input = document.getElementById("manualOverridePrice");
+      if (!input) return 0;
+      const cleaned = String(input.value || "").replace(/[^0-9.]/g, "");
+      return Number(cleaned || 0);
+    }
+
+    function getDisplayServiceType() {
+      const manualPrice = getManualOverridePrice();
+      const descInput = document.getElementById("manualOverrideDescription");
+      const desc = descInput ? descInput.value.trim() : "";
+
+      if (manualPrice > 0 && desc) {
+        return desc;
       }
 
-
+      return selectedSubcategory || "Not selected";
     }
 
     function calculateEstimate() {
@@ -1682,20 +1697,15 @@
         }
       }
 
+      const manualPriceOverride = getManualOverridePrice();
+      const manualDescriptionInput = document.getElementById("manualOverrideDescription");
+      const manualDescription = manualDescriptionInput ? manualDescriptionInput.value.trim() : "";
 
-      if (selectedSubcategory && selectedSubcategory.includes("(Quoted)")) {
-        const manualQuotedPrice = Number(document.getElementById("manualQuotedPrice").value || 0);
-        const manualQuotedDescription = document.getElementById("manualQuotedDescription").value || selectedSubcategory;
-
-        if (manualQuotedPrice > 0) {
-          base = manualQuotedPrice;
-          addOns = 0;
-          isQuoted = false;
-          detail = manualQuotedDescription;
-        } else {
-          isQuoted = true;
-          detail = selectedSubcategory;
-        }
+      if (manualPriceOverride > 0) {
+        base = manualPriceOverride;
+        addOns = 0;
+        isQuoted = false;
+        detail = manualDescription || selectedSubcategory || "Manual quoted work";
       }
 
       document.getElementById("basePrice").textContent = isQuoted ? "Quoted" : formatCurrency(base);
@@ -1714,20 +1724,8 @@
       document.getElementById("summaryDetails").innerHTML = detailsText;
     }
 
-
-    function getDisplayServiceType() {
-      if (selectedSubcategory && selectedSubcategory.includes("(Quoted)")) {
-        const manualQuotedDescription = document.getElementById("manualQuotedDescription");
-
-        if (manualQuotedDescription && manualQuotedDescription.value.trim()) {
-          return manualQuotedDescription.value.trim();
-        }
-      }
-
-      return selectedSubcategory || "Not selected";
-    }
-
     function generateQuote() {
+      calculateEstimate();
       const customerName = document.getElementById("customerName").value || "Customer";
       const customerPhone = document.getElementById("customerPhone").value || "";
       const customerEmail = document.getElementById("customerEmail").value || "";
@@ -1748,8 +1746,8 @@
         noteBlock += "\nPlumbing pricing is labor only unless noted otherwise.";
       }
 
-      if (selectedSubcategory && selectedSubcategory.includes("(Quoted)")) {
-        noteBlock += "\nQuoted work amount entered manually based on on-site conditions and scope.";
+      if (getManualOverridePrice() > 0) {
+        noteBlock += "\nManual quoted price override was used based on actual scope and field conditions.";
       }
 
       if (
@@ -1809,6 +1807,7 @@
     }
 
     function generateInvoice() {
+      calculateEstimate();
       const customerName = document.getElementById("customerName").value || "Customer";
       const customerPhone = document.getElementById("customerPhone").value || "";
       const customerEmail = document.getElementById("customerEmail").value || "";
@@ -1868,6 +1867,7 @@
     }
 
     async function saveInvoice() {
+      calculateEstimate();
       const data = {
         invoiceNumber: "REP-INV-" + Date.now(),
         sourceApp: "Repairs App",
