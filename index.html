@@ -705,14 +705,6 @@
 
       <div class="note-box" id="summaryDetails">Service: Not selected</div>
 
-      <div id="quotedPriceBox" class="note-box hidden">
-        <label>Quoted Price</label>
-        <input id="manualQuotedPrice" type="number" min="0" step="0.01" placeholder="Enter quoted amount" oninput="calculateEstimate()" />
-
-        <label>Quoted Work Description</label>
-        <input id="manualQuotedDescription" placeholder="Describe quoted work" oninput="calculateEstimate()" />
-      </div>
-
       <button class="primary-btn" onclick="generateQuote()">Generate Quote Text</button>
 
 <label>Payment Status</label>
@@ -1131,7 +1123,6 @@
         "flooringFields",
         "exteriorFields",
         "manualFields",
-        "quotedPriceBox",
         "doorInstallAddons",
         "windowCaulkNote",
         "angleStopQtyWrap",
@@ -1189,7 +1180,6 @@
 
         if (selectedSubcategory.includes("(Quoted)")) {
           document.getElementById("manualFields").classList.remove("hidden");
-          document.getElementById("quotedPriceBox").classList.remove("hidden");
         }
 
         return;
@@ -1269,7 +1259,6 @@
 
         if (selectedSubcategory.includes("(Quoted)")) {
           document.getElementById("manualFields").classList.remove("hidden");
-          document.getElementById("quotedPriceBox").classList.remove("hidden");
         }
 
         return;
@@ -1689,18 +1678,6 @@
         }
       }
 
-
-      const manualQuotedPrice = Number((document.getElementById("manualQuotedPrice")?.value) || 0);
-      const manualQuotedDescription = (document.getElementById("manualQuotedDescription")?.value || "").trim();
-
-      if (manualQuotedPrice > 0) {
-        base = manualQuotedPrice;
-        isQuoted = false;
-        if (manualQuotedDescription) {
-          detail = manualQuotedDescription;
-        }
-      }
-
       document.getElementById("basePrice").textContent = isQuoted ? "Quoted" : formatCurrency(base);
       document.getElementById("addOns").textContent = formatCurrency(addOns);
       document.getElementById("totalPrice").textContent = isQuoted ? (addOns > 0 ? "Quoted +" : "Quoted") : formatCurrency(base + addOns);
@@ -1782,7 +1759,7 @@
         "This is Tim with Mobile Onsite Handyman Services.\n\n" +
         "Here is your estimated repair cost:\n\n" +
         "Service: " + (selectedCategory || "Not selected") + "\n" +
-        "Type: " + ((document.getElementById("manualQuotedDescription")?.value.trim()) || selectedSubcategory || "Not selected") + "\n" +
+        "Type: " + (selectedSubcategory || "Not selected") + "\n" +
         "Property: " + customerAddress + "\n" +
         "Phone: " + customerPhone + "\n" +
         "Email: " + customerEmail + "\n\n" +
@@ -1811,7 +1788,7 @@
         "Property: " + customerAddress + "\n\n" +
         "Work Completed:\n" +
         "Service: " + (selectedCategory || "Not selected") + "\n" +
-        "Type: " + ((document.getElementById("manualQuotedDescription")?.value.trim()) || selectedSubcategory || "Not selected") + "\n\n" +
+        "Type: " + (selectedSubcategory || "Not selected") + "\n\n" +
         "Amount Due: " + total + "\n\n" +
         "Accepted Payment Methods:\n" +
         "- Cash\n" +
@@ -1862,7 +1839,7 @@
         email: document.getElementById("customerEmail").value || "",
         address: document.getElementById("customerAddress").value || "",
         service: selectedCategory || "",
-        type: (document.getElementById("manualQuotedDescription")?.value.trim()) || selectedSubcategory || "",
+        type: selectedSubcategory || "",
         total: document.getElementById("totalPrice").textContent || "",
        paymentStatus: document.getElementById("paymentStatus").value || "Due upon completion",
        paymentMethod: document.getElementById("paymentMethod").value || "",
