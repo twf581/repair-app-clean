@@ -703,21 +703,22 @@
         </div>
       </div>
 
+
       <div class="note-box" id="summaryDetails">Service: Not selected</div>
 
-      <div class="note-box" style="border:2px solid #2563eb; background:#eff6ff;">
+      <div class="note-box">
         <div class="pill">Manual / Quoted Price Override</div>
 
         <label>Quoted Price Override</label>
-        <input id="manualOverridePrice" type="text" inputmode="decimal" placeholder="Example: 475" oninput="calculateEstimate()" onchange="calculateEstimate()" />
+        <input id="manualQuotedPrice" type="text" inputmode="decimal" placeholder="Example: 475" oninput="calculateEstimate()" />
 
         <label>Quoted Work Description</label>
-        <input id="manualOverrideDescription" placeholder="Example: Kitchen sink install with new drain assembly" oninput="calculateEstimate()" onchange="calculateEstimate()" />
+        <input id="manualQuotedDescription" placeholder="Example: Custom kitchen sink install" oninput="calculateEstimate()" />
 
-        <button class="secondary-btn" type="button" onclick="calculateEstimate()">Apply Manual Price</button>
+        <button class="secondary-btn" type="button" onclick="applyManualQuotedPrice()">Apply Manual Price</button>
 
         <div class="note-box">
-          Leave this blank for normal app pricing. Use this only when the selected item is quoted or you need to override the calculated price.
+          Leave this blank for normal app pricing. Use it only when you need to enter a quoted price manually.
         </div>
       </div>
 
@@ -1348,23 +1349,50 @@
     }
 
 
-    function getManualOverridePrice() {
-      const input = document.getElementById("manualOverridePrice");
-      if (!input) return 0;
-      const cleaned = String(input.value || "").replace(/[^0-9.]/g, "");
+    function getManualQuotedPrice() {
+      const field = document.getElementById("manualQuotedPrice");
+
+      if (!field) {
+        return 0;
+      }
+
+      const cleaned = String(field.value || "").replace(/[^0-9.]/g, "");
       return Number(cleaned || 0);
     }
 
-    function getDisplayServiceType() {
-      const manualPrice = getManualOverridePrice();
-      const descInput = document.getElementById("manualOverrideDescription");
-      const desc = descInput ? descInput.value.trim() : "";
+    function getManualQuotedDescription() {
+      const field = document.getElementById("manualQuotedDescription");
 
-      if (manualPrice > 0 && desc) {
-        return desc;
+      if (!field) {
+        return "";
+      }
+
+      return field.value.trim();
+    }
+
+    function getDisplayServiceType() {
+      const manualPrice = getManualQuotedPrice();
+      const manualDescription = getManualQuotedDescription();
+
+      if (manualPrice > 0 && manualDescription) {
+        return manualDescription;
       }
 
       return selectedSubcategory || "Not selected";
+    }
+
+    function applyManualQuotedPrice() {
+      calculateEstimate();
+
+      const manualPrice = getManualQuotedPrice();
+
+      if (manualPrice > 0) {
+        document.getElementById("copyStatus").textContent =
+          "Manual quoted price applied.";
+      } else {
+        document.getElementById("copyStatus").textContent =
+          "Enter a manual quoted price first.";
+      }
     }
 
     function calculateEstimate() {
@@ -1697,15 +1725,22 @@
         }
       }
 
-      const manualPriceOverride = getManualOverridePrice();
-      const manualDescriptionInput = document.getElementById("manualOverrideDescription");
-      const manualDescription = manualDescriptionInput ? manualDescriptionInput.value.trim() : "";
 
-      if (manualPriceOverride > 0) {
-        base = manualPriceOverride;
+      const manualOverridePrice = getManualQuotedPrice();
+      const manualOverrideDescription = getManualQuotedDescription();
+
+      if (manualOverridePrice > 0) {
+        base = manualOverridePrice;
         addOns = 0;
         isQuoted = false;
-        detail = manualDescription || selectedSubcategory || "Manual quoted work";
+
+        if (manualOverrideDescription) {
+          detail = manualOverrideDescription;
+        } else if (selectedSubcategory) {
+          detail = selectedSubcategory;
+        } else {
+          detail = "Manual quoted work";
+        }
       }
 
       document.getElementById("basePrice").textContent = isQuoted ? "Quoted" : formatCurrency(base);
@@ -1720,6 +1755,10 @@
       if (selectedCategory === "painting") detailsText += "<br>Furniture moving required to complete painting may incur additional charges.";
       if (selectedCategory === "drywall") detailsText += "<br>IAC2 Certified (Certification #IAC2-94278)";
       if (selectedCategory === "plumbing") detailsText += "<br>Plumbing pricing is labor only unless noted otherwise.";
+
+      if (getManualQuotedPrice() > 0) {
+        detailsText += "<br>Manual quoted price override applied.";
+      }
 
       document.getElementById("summaryDetails").innerHTML = detailsText;
     }
@@ -1744,10 +1783,6 @@
 
       if (selectedCategory === "plumbing") {
         noteBlock += "\nPlumbing pricing is labor only unless noted otherwise.";
-      }
-
-      if (getManualOverridePrice() > 0) {
-        noteBlock += "\nManual quoted price override was used based on actual scope and field conditions.";
       }
 
       if (
