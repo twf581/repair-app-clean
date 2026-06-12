@@ -682,15 +682,6 @@
         This service is quoted. Enter the quoted price below to generate a quote, invoice, and database entry.
       </div>
 
-      <div id="quotedPriceFields" class="hidden">
-        <div class="pill">Quoted Item</div>
-
-        <label>Enter Quoted Price</label>
-        <input id="manualQuotedPrice" type="number" min="0" value="0" oninput="calculateEstimate()" />
-
-        <label>Quoted Work Description</label>
-        <input id="manualQuotedDescription" placeholder="Describe the quoted work" oninput="calculateEstimate()" />
-      </div>
     </div>
 
     <div id="summaryCard" class="card hidden">
@@ -714,6 +705,20 @@
       </div>
 
       <div class="note-box" id="summaryDetails">Service: Not selected</div>
+
+      <div id="quotedPriceFields" class="hidden">
+        <div class="pill">Quoted Item</div>
+
+        <label>Enter Quoted Price</label>
+        <input id="manualQuotedPrice" type="number" min="0" value="0" oninput="calculateEstimate()" />
+
+        <label>Quoted Work Description</label>
+        <input id="manualQuotedDescription" placeholder="Describe the quoted work" oninput="calculateEstimate()" />
+
+        <div class="note-box">
+          Use this box for quoted items only. Enter the final approved price, then generate the quote or invoice.
+        </div>
+      </div>
 
       <button class="primary-btn" onclick="generateQuote()">Generate Quote Text</button>
 
