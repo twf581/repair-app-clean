@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -754,7 +755,7 @@
 
 <textarea id="quoteOutput" rows="10" placeholder="Quote or invoice text will appear here"></textarea>
       <div class="grid-2">
-        <button class="dark-btn" onclick="openTextMessage()">Open Text Message</button>
+        <button class="dark-btn" onclick="openEmailQuote()">Email Quote</button>
         <button class="secondary-btn" onclick="copyQuote()">Copy Quote</button>
       </div>
 
@@ -1964,6 +1965,30 @@
   document.getElementById("copyStatus").textContent =
     "Connection error.";
 }
+    }
+
+
+    function openEmailQuote() {
+      const customerEmail = document.getElementById("customerEmail").value || "";
+      const quoteText = document.getElementById("quoteOutput").value || "";
+
+      if (!quoteText) {
+        document.getElementById("copyStatus").textContent = "Generate the quote first.";
+        return;
+      }
+
+      if (!customerEmail) {
+        document.getElementById("copyStatus").textContent = "Enter customer email first.";
+        return;
+      }
+
+      const subject = "Estimate from Mobile Onsite Handyman Services";
+      const mailtoLink =
+        "mailto:" + encodeURIComponent(customerEmail) +
+        "?subject=" + encodeURIComponent(subject) +
+        "&body=" + encodeURIComponent(quoteText);
+
+      window.location.href = mailtoLink;
     }
 
     function openTextMessage() {
