@@ -641,6 +641,19 @@
       <div id="carpentryFields" class="hidden">
         <div class="pill">Carpentry / Repairs</div>
 
+        <div id="doorJambFields" class="hidden">
+          <div class="note-box">
+            Door jamb repair is quoted based on site conditions, damage level, and materials needed.
+          </div>
+
+          <div class="note-box">
+            <label>
+              <input id="weatherStripInstall" class="inline-check" type="checkbox" onchange="calculateEstimate()" />
+              Add weather strip install (+$52.00)
+            </label>
+          </div>
+        </div>
+
         <div id="tvQtyWrap" class="hidden">
           <label>Total TV mounts</label>
           <input id="tvQty" type="number" min="1" value="1" oninput="calculateEstimate()" />
@@ -705,12 +718,18 @@
 
       <div class="note-box" id="summaryDetails">Service: Not selected</div>
 
-      <div id="quotedPriceBox" class="note-box hidden">
-        <label>Quoted Price</label>
-        <input id="manualQuotedPrice" type="number" min="0" step="0.01" placeholder="Enter quoted amount" oninput="calculateEstimate()" />
+      <div class="note-box">
+        <div class="pill">On-Site Quoted Price</div>
+
+        <label>Quoted Price / Manual Override</label>
+        <input id="manualQuotedPrice" type="number" min="0" step="0.01" value="0" oninput="calculateEstimate()" />
 
         <label>Quoted Work Description</label>
-        <input id="manualQuotedDescription" placeholder="Describe quoted work" oninput="calculateEstimate()" />
+        <input id="manualQuotedDescription" placeholder="Example: Repair damaged door jamb and install customer supplied trim" oninput="calculateEstimate()" />
+
+        <div class="note-box">
+          Leave this at 0 for normal app pricing. For quoted jobs, enter the approved on-site price here before generating the quote or invoice.
+        </div>
       </div>
 
       <button class="primary-btn" onclick="generateQuote()">Generate Quote Text</button>
@@ -820,6 +839,7 @@
         "Closet Rack / Shelving Repair or Install (Quoted)",
         "Baseboard Install (Quoted)",
         "Cabinet Repair (Quoted)",
+        "Door Jamb Repair (Quoted)",
         "TV Mounting"
       ],
 
@@ -1131,7 +1151,6 @@
         "flooringFields",
         "exteriorFields",
         "manualFields",
-        "quotedPriceBox",
         "doorInstallAddons",
         "windowCaulkNote",
         "angleStopQtyWrap",
@@ -1148,6 +1167,7 @@
         "outletQtyWrap",
         "fanQtyWrap",
         "floodQtyWrap",
+        "doorJambFields",
         "tvQtyWrap",
         "tvAddonWrap",
         "fencingFields",
@@ -1189,7 +1209,6 @@
 
         if (selectedSubcategory.includes("(Quoted)")) {
           document.getElementById("manualFields").classList.remove("hidden");
-          document.getElementById("quotedPriceBox").classList.remove("hidden");
         }
 
         return;
@@ -1269,7 +1288,6 @@
 
         if (selectedSubcategory.includes("(Quoted)")) {
           document.getElementById("manualFields").classList.remove("hidden");
-          document.getElementById("quotedPriceBox").classList.remove("hidden");
         }
 
         return;
@@ -1316,6 +1334,9 @@
         if (selectedSubcategory === "TV Mounting") {
           document.getElementById("tvQtyWrap").classList.remove("hidden");
           document.getElementById("tvAddonWrap").classList.remove("hidden");
+        } else if (selectedSubcategory === "Door Jamb Repair (Quoted)") {
+          document.getElementById("doorJambFields").classList.remove("hidden");
+          document.getElementById("manualFields").classList.remove("hidden");
         } else {
           document.getElementById("manualFields").classList.remove("hidden");
         }
@@ -1357,6 +1378,38 @@
       if (qty <= 1) return first;
       if (qty === 2) return first + second;
       return first + second + ((qty - 2) * additional);
+    }
+
+
+    function getManualQuotedPrice() {
+      const field = document.getElementById("manualQuotedPrice");
+
+      if (!field) {
+        return 0;
+      }
+
+      return Number(field.value || 0);
+    }
+
+    function getManualQuotedDescription() {
+      const field = document.getElementById("manualQuotedDescription");
+
+      if (!field) {
+        return "";
+      }
+
+      return field.value.trim();
+    }
+
+    function getDisplayServiceType() {
+      const manualPrice = getManualQuotedPrice();
+      const manualDescription = getManualQuotedDescription();
+
+      if (manualPrice > 0 && manualDescription) {
+        return manualDescription;
+      }
+
+      return selectedSubcategory || "Not selected";
     }
 
     function calculateEstimate() {
@@ -1659,6 +1712,9 @@
           if (document.getElementById("concealedWiring").checked) {
             isQuoted = true;
           }
+        } else if (selectedSubcategory === "Door Jamb Repair (Quoted)") {
+          isQuoted = true;
+          addOns += document.getElementById("weatherStripInstall").checked ? 52 : 0;
         } else {
           isQuoted = true;
         }
@@ -1689,15 +1745,19 @@
         }
       }
 
-
-      const manualQuotedPrice = Number((document.getElementById("manualQuotedPrice")?.value) || 0);
-      const manualQuotedDescription = (document.getElementById("manualQuotedDescription")?.value || "").trim();
+      const manualQuotedPrice = getManualQuotedPrice();
+      const manualQuotedDescription = getManualQuotedDescription();
 
       if (manualQuotedPrice > 0) {
         base = manualQuotedPrice;
         isQuoted = false;
+
         if (manualQuotedDescription) {
           detail = manualQuotedDescription;
+        } else if (selectedSubcategory) {
+          detail = selectedSubcategory;
+        } else {
+          detail = "On-site quoted work";
         }
       }
 
@@ -1718,6 +1778,7 @@
     }
 
     function generateQuote() {
+      calculateEstimate();
       const customerName = document.getElementById("customerName").value || "Customer";
       const customerPhone = document.getElementById("customerPhone").value || "";
       const customerEmail = document.getElementById("customerEmail").value || "";
@@ -1764,6 +1825,18 @@
         noteBlock += "\nStandard angle stop replacement starts at $150 labor. Price may be reduced when added to other plumbing fixture replacement work during the same service call.";
       }
 
+      if (getManualQuotedPrice() > 0) {
+        noteBlock += "\nQuoted price entered on-site based on actual scope and conditions.";
+      }
+
+      if (
+        selectedCategory === "carpentry" &&
+        selectedSubcategory === "Door Jamb Repair (Quoted)" &&
+        document.getElementById("weatherStripInstall").checked
+      ) {
+        noteBlock += "\nIncludes weather strip install add-on.";
+      }
+
       if (
         selectedCategory === "plumbing" &&
         (
@@ -1782,7 +1855,7 @@
         "This is Tim with Mobile Onsite Handyman Services.\n\n" +
         "Here is your estimated repair cost:\n\n" +
         "Service: " + (selectedCategory || "Not selected") + "\n" +
-        "Type: " + ((document.getElementById("manualQuotedDescription")?.value.trim()) || selectedSubcategory || "Not selected") + "\n" +
+        "Type: " + getDisplayServiceType() + "\n" +
         "Property: " + customerAddress + "\n" +
         "Phone: " + customerPhone + "\n" +
         "Email: " + customerEmail + "\n\n" +
@@ -1795,6 +1868,7 @@
     }
 
     function generateInvoice() {
+      calculateEstimate();
       const customerName = document.getElementById("customerName").value || "Customer";
       const customerPhone = document.getElementById("customerPhone").value || "";
       const customerEmail = document.getElementById("customerEmail").value || "";
@@ -1811,7 +1885,7 @@
         "Property: " + customerAddress + "\n\n" +
         "Work Completed:\n" +
         "Service: " + (selectedCategory || "Not selected") + "\n" +
-        "Type: " + ((document.getElementById("manualQuotedDescription")?.value.trim()) || selectedSubcategory || "Not selected") + "\n\n" +
+        "Type: " + getDisplayServiceType() + "\n\n" +
         "Amount Due: " + total + "\n\n" +
         "Accepted Payment Methods:\n" +
         "- Cash\n" +
@@ -1854,6 +1928,8 @@
     }
 
     async function saveInvoice() {
+      calculateEstimate();
+
       const data = {
         invoiceNumber: "REP-INV-" + Date.now(),
         sourceApp: "Repairs App",
@@ -1862,11 +1938,11 @@
         email: document.getElementById("customerEmail").value || "",
         address: document.getElementById("customerAddress").value || "",
         service: selectedCategory || "",
-        type: (document.getElementById("manualQuotedDescription")?.value.trim()) || selectedSubcategory || "",
+        type: getDisplayServiceType(),
         total: document.getElementById("totalPrice").textContent || "",
        paymentStatus: document.getElementById("paymentStatus").value || "Due upon completion",
        paymentMethod: document.getElementById("paymentMethod").value || "",
-       notes: selectedSubcategory || ""
+       notes: getDisplayServiceType()
       };
 
    try {
