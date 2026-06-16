@@ -1423,12 +1423,26 @@
     }
 
     function getCurrentCalculatedItem() {
+      /*
+        Important:
+        When quoteItems already has items, calculateEstimate() displays the combined
+        multi-item total in the Total box. To add a new item correctly, we temporarily
+        hide the existing quoteItems, calculate only the currently selected service,
+        read that price, then restore the existing quoteItems.
+      */
+      const savedQuoteItems = quoteItems.slice();
+      quoteItems = [];
+
       calculateEstimate();
 
       const totalText = document.getElementById("totalPrice").textContent || "";
       const baseText = document.getElementById("basePrice").textContent || "";
       const addOnsText = document.getElementById("addOns").textContent || "";
       const totalAmount = parseCurrencyValue(totalText);
+
+      quoteItems = savedQuoteItems;
+      renderQuoteItems();
+      calculateEstimate();
 
       if (!selectedCategory || !selectedSubcategory) {
         document.getElementById("copyStatus").textContent = "Select a service before adding an item.";
