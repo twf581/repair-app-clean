@@ -1454,8 +1454,9 @@
         return null;
       }
 
+      const manualPriceForDescription = typeof getManualQuotedPrice === "function" ? getManualQuotedPrice() : 0;
       const manualDescription = typeof getManualQuotedDescription === "function" ? getManualQuotedDescription() : "";
-      const description = manualDescription || selectedSubcategory || "Selected service";
+      const description = (manualPriceForDescription > 0 && manualDescription) ? manualDescription : (selectedSubcategory || "Selected service");
 
       return {
         category: selectedCategory,
@@ -1475,6 +1476,18 @@
       }
 
       quoteItems.push(item);
+
+      const manualPriceField = document.getElementById("manualQuotedPrice");
+      const manualDescriptionField = document.getElementById("manualQuotedDescription");
+
+      if (manualPriceField && Number(manualPriceField.value || 0) > 0) {
+        manualPriceField.value = 0;
+
+        if (manualDescriptionField) {
+          manualDescriptionField.value = "";
+        }
+      }
+
       renderQuoteItems();
       calculateEstimate();
       document.getElementById("copyStatus").textContent = "Item added to quote.";
