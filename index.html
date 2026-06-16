@@ -209,6 +209,23 @@
       margin-bottom: 0;
     }
 
+    .quote-item-row {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 14px;
+      padding: 12px;
+      margin-bottom: 10px;
+      line-height: 1.45;
+    }
+
+    .small-btn {
+      padding: 10px;
+      border-radius: 10px;
+      margin-top: 8px;
+      margin-bottom: 0;
+      font-size: 14px;
+    }
+
     @media (max-width: 800px) {
       .grid-2,
       .grid-3 {
@@ -732,6 +749,23 @@
         </div>
       </div>
 
+      <div class="note-box">
+        <div class="pill">Multi-Item Quote / Invoice</div>
+
+        <button class="primary-btn" type="button" onclick="addCurrentItemToQuote()">Add Current Item to Quote</button>
+
+        <div id="quoteItemsList">No items added yet.</div>
+
+        <div class="grid-2">
+          <button class="secondary-btn" type="button" onclick="clearQuoteItems()">Clear Items</button>
+          <button class="dark-btn" type="button" onclick="recalculateQuoteItems()">Recalculate Items</button>
+        </div>
+
+        <div class="note-box">
+          Select one repair, enter any quantity or quoted price, then tap Add Current Item to Quote. Repeat for each repair before generating the quote or invoice.
+        </div>
+      </div>
+
       <button class="primary-btn" onclick="generateQuote()">Generate Quote Text</button>
 
 <label>Payment Status</label>
@@ -773,6 +807,7 @@
     let selectedCategory = "";
     let selectedSubcategory = "";
     let currentZone = null;
+    let quoteItems = [];
 
     const subcategories = {
       painting: [
@@ -1382,6 +1417,134 @@
     }
 
 
+
+    function parseCurrencyValue(value) {
+      return parseFloat(String(value || "0").replace(/[^0-9.]/g, "")) || 0;
+    }
+
+    function getCurrentCalculatedItem() {
+      calculateEstimate();
+
+      const totalText = document.getElementById("totalPrice").textContent || "";
+      const baseText = document.getElementById("basePrice").textContent || "";
+      const addOnsText = document.getElementById("addOns").textContent || "";
+      const totalAmount = parseCurrencyValue(totalText);
+
+      if (!selectedCategory || !selectedSubcategory) {
+        document.getElementById("copyStatus").textContent = "Select a service before adding an item.";
+        return null;
+      }
+
+      if (!totalAmount || totalText.includes("Quoted")) {
+        document.getElementById("copyStatus").textContent = "Enter a price for quoted items before adding them.";
+        return null;
+      }
+
+      const manualDescription = typeof getManualQuotedDescription === "function" ? getManualQuotedDescription() : "";
+      const description = manualDescription || selectedSubcategory || "Selected service";
+
+      return {
+        category: selectedCategory,
+        service: selectedSubcategory,
+        description: description,
+        base: parseCurrencyValue(baseText),
+        addOns: parseCurrencyValue(addOnsText),
+        total: totalAmount
+      };
+    }
+
+    function addCurrentItemToQuote() {
+      const item = getCurrentCalculatedItem();
+
+      if (!item) {
+        return;
+      }
+
+      quoteItems.push(item);
+      renderQuoteItems();
+      calculateEstimate();
+      document.getElementById("copyStatus").textContent = "Item added to quote.";
+    }
+
+    function removeQuoteItem(index) {
+      quoteItems.splice(index, 1);
+      renderQuoteItems();
+      calculateEstimate();
+    }
+
+    function clearQuoteItems() {
+      quoteItems = [];
+      renderQuoteItems();
+      calculateEstimate();
+      document.getElementById("copyStatus").textContent = "Quote items cleared.";
+    }
+
+    function recalculateQuoteItems() {
+      renderQuoteItems();
+      calculateEstimate();
+      document.getElementById("copyStatus").textContent = "Quote items recalculated.";
+    }
+
+    function getQuoteItemsTotal() {
+      return quoteItems.reduce(function (sum, item) {
+        return sum + (Number(item.total) || 0);
+      }, 0);
+    }
+
+    function getQuoteItemsText() {
+      if (!quoteItems.length) {
+        return "";
+      }
+
+      return quoteItems.map(function (item, index) {
+        return (index + 1) + ". " + item.description + " - " + formatCurrency(item.total);
+      }).join("\n");
+    }
+
+    function getQuoteItemsTypeText() {
+      if (!quoteItems.length) {
+        return typeof getDisplayServiceType === "function" ? getDisplayServiceType() : (selectedSubcategory || "");
+      }
+
+      return quoteItems.map(function (item) {
+        return item.description + " (" + formatCurrency(item.total) + ")";
+      }).join("; ");
+    }
+
+    function renderQuoteItems() {
+      const wrap = document.getElementById("quoteItemsList");
+
+      if (!wrap) {
+        return;
+      }
+
+      if (!quoteItems.length) {
+        wrap.innerHTML = "No items added yet.";
+        return;
+      }
+
+      let lineHtml = "";
+
+      quoteItems.forEach(function (item, index) {
+        lineHtml +=
+          '<div class="quote-item-row">' +
+          '<strong>' + (index + 1) + '. ' + item.description + '</strong><br>' +
+          'Category: ' + item.category + '<br>' +
+          'Amount: ' + formatCurrency(item.total) +
+          '<button class="secondary-btn small-btn" type="button" onclick="removeQuoteItem(' + index + ')">Remove Item</button>' +
+          '</div>';
+      });
+
+      lineHtml +=
+        '<div class="summary-box summary-total">' +
+        '<div class="muted">Multi-Item Quote Total</div>' +
+        '<div class="big">' + formatCurrency(getQuoteItemsTotal()) + '</div>' +
+        '</div>';
+
+      wrap.innerHTML = lineHtml;
+    }
+
+
     function getManualQuotedPrice() {
       const field = document.getElementById("manualQuotedPrice");
 
@@ -1766,6 +1929,10 @@
       document.getElementById("addOns").textContent = formatCurrency(addOns);
       document.getElementById("totalPrice").textContent = isQuoted ? (addOns > 0 ? "Quoted +" : "Quoted") : formatCurrency(base + addOns);
 
+      if (quoteItems.length) {
+        document.getElementById("totalPrice").textContent = formatCurrency(getQuoteItemsTotal());
+      }
+
       let detailsText =
         "Service: " + (selectedCategory || "Not selected") +
         "<br>Type: " + (selectedSubcategory || "Not selected");
@@ -1780,11 +1947,13 @@
 
     function generateQuote() {
       calculateEstimate();
+
       const customerName = document.getElementById("customerName").value || "Customer";
       const customerPhone = document.getElementById("customerPhone").value || "";
       const customerEmail = document.getElementById("customerEmail").value || "";
       const customerAddress = document.getElementById("customerAddress").value || "";
-      const total = document.getElementById("totalPrice").textContent;
+      const total = quoteItems.length ? formatCurrency(getQuoteItemsTotal()) : document.getElementById("totalPrice").textContent;
+      const multiItemText = getQuoteItemsText();
 
       let noteBlock = "";
 
@@ -1826,13 +1995,14 @@
         noteBlock += "\nStandard angle stop replacement starts at $150 labor. Price may be reduced when added to other plumbing fixture replacement work during the same service call.";
       }
 
-      if (getManualQuotedPrice() > 0) {
+      if (typeof getManualQuotedPrice === "function" && getManualQuotedPrice() > 0) {
         noteBlock += "\nQuoted price entered on-site based on actual scope and conditions.";
       }
 
       if (
         selectedCategory === "carpentry" &&
         selectedSubcategory === "Door Jamb Repair (Quoted)" &&
+        document.getElementById("weatherStripInstall") &&
         document.getElementById("weatherStripInstall").checked
       ) {
         noteBlock += "\nIncludes weather strip install add-on.";
@@ -1855,8 +2025,9 @@
         "Hi " + customerName + ",\n\n" +
         "This is Tim with Mobile Onsite Handyman Services.\n\n" +
         "Here is your estimated repair cost:\n\n" +
-        "Service: " + (selectedCategory || "Not selected") + "\n" +
-        "Type: " + getDisplayServiceType() + "\n" +
+        (quoteItems.length ? "Work Items:\n" + multiItemText + "\n\n" : "") +
+        "Service: " + (quoteItems.length ? "Multiple Repairs" : (selectedCategory || "Not selected")) + "\n" +
+        "Type: " + (quoteItems.length ? getQuoteItemsTypeText() : (typeof getDisplayServiceType === "function" ? getDisplayServiceType() : (selectedSubcategory || "Not selected"))) + "\n" +
         "Property: " + customerAddress + "\n" +
         "Phone: " + customerPhone + "\n" +
         "Email: " + customerEmail + "\n\n" +
@@ -1870,11 +2041,13 @@
 
     function generateInvoice() {
       calculateEstimate();
+
       const customerName = document.getElementById("customerName").value || "Customer";
       const customerPhone = document.getElementById("customerPhone").value || "";
       const customerEmail = document.getElementById("customerEmail").value || "";
       const customerAddress = document.getElementById("customerAddress").value || "";
-      const total = document.getElementById("totalPrice").textContent;
+      const total = quoteItems.length ? formatCurrency(getQuoteItemsTotal()) : document.getElementById("totalPrice").textContent;
+      const multiItemText = getQuoteItemsText();
 
       const text =
         "INVOICE\n\n" +
@@ -1885,8 +2058,9 @@
         "Email: " + customerEmail + "\n" +
         "Property: " + customerAddress + "\n\n" +
         "Work Completed:\n" +
-        "Service: " + (selectedCategory || "Not selected") + "\n" +
-        "Type: " + getDisplayServiceType() + "\n\n" +
+        (quoteItems.length ? multiItemText + "\n\n" : "") +
+        "Service: " + (quoteItems.length ? "Multiple Repairs" : (selectedCategory || "Not selected")) + "\n" +
+        "Type: " + (quoteItems.length ? getQuoteItemsTypeText() : (typeof getDisplayServiceType === "function" ? getDisplayServiceType() : (selectedSubcategory || "Not selected"))) + "\n\n" +
         "Amount Due: " + total + "\n\n" +
         "Accepted Payment Methods:\n" +
         "- Cash\n" +
@@ -1938,12 +2112,12 @@
         phone: document.getElementById("customerPhone").value || "",
         email: document.getElementById("customerEmail").value || "",
         address: document.getElementById("customerAddress").value || "",
-        service: selectedCategory || "",
-        type: getDisplayServiceType(),
-        total: document.getElementById("totalPrice").textContent || "",
+        service: quoteItems.length ? "Multiple Repairs" : (selectedCategory || ""),
+        type: quoteItems.length ? getQuoteItemsTypeText() : getDisplayServiceType(),
+        total: quoteItems.length ? formatCurrency(getQuoteItemsTotal()) : (document.getElementById("totalPrice").textContent || ""),
        paymentStatus: document.getElementById("paymentStatus").value || "Due upon completion",
        paymentMethod: document.getElementById("paymentMethod").value || "",
-       notes: getDisplayServiceType()
+       notes: quoteItems.length ? getQuoteItemsText() : getDisplayServiceType()
       };
 
    try {
