@@ -314,6 +314,7 @@
       <button class="service-btn" id="btn-carpentry" onclick="selectCategory('carpentry')">Carpentry / Repairs</button>
       <button class="service-btn" id="btn-flooring" onclick="selectCategory('flooring')">Flooring</button>
       <button class="service-btn" id="btn-exterior" onclick="selectCategory('exterior')">Exterior</button>
+      <button class="service-btn" id="btn-hauling" onclick="selectCategory('hauling')">Trash Removal / Haul Off</button>
       <button class="service-btn" id="btn-propertymanager" onclick="selectCategory('propertymanager')">Property Manager / Realtor</button>
     </div>
 
@@ -813,6 +814,52 @@
 
       </div>
 
+      <div id="haulingFields" class="hidden">
+        <div class="pill">Trash Removal / Haul Off</div>
+
+        <div class="note-box">
+          Haul-away pricing is based on trailer load volume.
+          Heavy materials including concrete, dirt, tile, brick, roofing, masonry, and excessively heavy debris may require additional disposal charges.
+        </div>
+
+        <div class="note-box">
+          <div class="pill">Customer Haul Away / Dump Fee</div>
+
+          <div class="grid-2">
+            <div>
+              <label>Trailer Load Rate</label>
+              <input id="customerDumpRate" type="number" min="0" step="0.01" value="90" oninput="calculateCustomerDumpFee()" />
+            </div>
+            <div>
+              <label>Load Multiplier</label>
+              <input id="customerDumpMultiplier" type="number" min="0" step="0.25" value="0" oninput="calculateCustomerDumpFee()" />
+            </div>
+          </div>
+
+          <div class="grid-3">
+            <button class="secondary-btn small-btn" type="button" onclick="setCustomerDumpLoad(0.25)">1/4 Load</button>
+            <button class="secondary-btn small-btn" type="button" onclick="setCustomerDumpLoad(0.5)">1/2 Load</button>
+            <button class="secondary-btn small-btn" type="button" onclick="setCustomerDumpLoad(0.75)">3/4 Load</button>
+          </div>
+
+          <div class="grid-3">
+            <button class="secondary-btn small-btn" type="button" onclick="setCustomerDumpLoad(1)">1 Load</button>
+            <button class="secondary-btn small-btn" type="button" onclick="setCustomerDumpLoad(1.5)">1.5 Loads</button>
+            <button class="secondary-btn small-btn" type="button" onclick="setCustomerDumpLoad(2)">2 Loads</button>
+          </div>
+
+          <div class="grid-3">
+            <button class="secondary-btn small-btn" type="button" onclick="setCustomerDumpLoad(3)">3 Loads</button>
+            <button class="secondary-btn small-btn" type="button" onclick="setCustomerDumpLoad(4)">4 Loads</button>
+            <button class="secondary-btn small-btn" type="button" onclick="setCustomerDumpLoad(5)">5 Loads</button>
+          </div>
+
+          <div id="customerDumpFeeStatus" class="note-box">
+            Customer haul-away fee: $90.00 x 0 load(s) = $0.00
+          </div>
+        </div>
+      </div>
+
       <div id="exteriorFields" class="hidden">
         <div class="pill">Exterior</div>
 
@@ -999,13 +1046,13 @@
           <input id="materialCost" type="number" min="0" step="0.01" value="0" oninput="calculateJobCosting()" />
         </div>
         <div>
-          <label>Dump Fee</label>
+          <label>Actual Dump Cost</label>
           <input id="dumpFee" type="number" min="0" step="0.01" value="0" oninput="calculateJobCosting()" />
         </div>
       </div>
 
       <div class="note-box">
-        <div class="pill">Dump Fee Calculator</div>
+        <div class="pill">Actual Dump Cost Calculator</div>
         <div class="grid-2">
           <div>
             <label>Dump Fee Base Rate</label>
@@ -1242,6 +1289,22 @@
         "Fencing / Post Repair / Replacement",
         "Pressure Washing (Quoted)",
         "Junk Removal (Quoted)"
+      ],
+
+      hauling: [
+        "Single Item Pickup",
+        "Small Haul Away",
+        "Garage Clean Out",
+        "Storage Unit Clean Out",
+        "Rental Property Clean Out",
+        "Eviction Clean Out",
+        "Yard Debris Removal",
+        "Construction Debris Removal",
+        "Appliance Removal",
+        "Furniture Removal",
+        "Hot Tub Removal (Quoted)",
+        "Shed Clean Out",
+        "Full Property Clean Out (Quoted)"
       ],
 
       propertymanager: [
@@ -1536,6 +1599,8 @@
         notes.innerHTML = "Appliance installation pricing assumes standard replacement conditions. Modifications are quoted separately.";
       } else if (category === "propertymanager") {
         notes.innerHTML = "Property manager and realtor services are designed for turnovers, repair lists, inspection responses, and pre-listing preparation.";
+      } else if (category === "hauling") {
+        notes.innerHTML = "Trash removal and haul-off pricing is based on trailer load volume. Heavy debris may require additional disposal charges.";
       } else {
         notes.classList.add("hidden");
         notes.innerHTML = "";
@@ -1566,6 +1631,7 @@
         "carpentryFields",
         "flooringFields",
         "propertyManagerFields",
+        "haulingFields",
         "exteriorFields",
         "manualFields",
         "doorInstallAddons",
@@ -1825,6 +1891,16 @@
         return;
       }
 
+      if (selectedCategory === "hauling") {
+        document.getElementById("haulingFields").classList.remove("hidden");
+
+        if (selectedSubcategory.includes("(Quoted)")) {
+          document.getElementById("manualFields").classList.remove("hidden");
+        }
+
+        return;
+      }
+
       if (selectedCategory === "exterior") {
         document.getElementById("exteriorFields").classList.remove("hidden");
 
@@ -2041,6 +2117,52 @@
 
       return selectedSubcategory || "Not selected";
     }
+
+
+    function getCustomerDumpFee() {
+      const rateField = document.getElementById("customerDumpRate");
+      const multiplierField = document.getElementById("customerDumpMultiplier");
+
+      if (!rateField || !multiplierField) {
+        return 0;
+      }
+
+      const rate = Number(rateField.value || 0) || 0;
+      const multiplier = Number(multiplierField.value || 0) || 0;
+
+      return rate * multiplier;
+    }
+
+    function calculateCustomerDumpFee() {
+      const rateField = document.getElementById("customerDumpRate");
+      const multiplierField = document.getElementById("customerDumpMultiplier");
+      const status = document.getElementById("customerDumpFeeStatus");
+
+      if (!rateField || !multiplierField) {
+        return;
+      }
+
+      const rate = Number(rateField.value || 0) || 0;
+      const multiplier = Number(multiplierField.value || 0) || 0;
+      const fee = rate * multiplier;
+
+      if (status) {
+        status.textContent = "Customer haul-away fee: " + formatCurrency(rate) + " x " + multiplier + " load(s) = " + formatCurrency(fee);
+      }
+
+      calculateEstimate();
+    }
+
+    function setCustomerDumpLoad(value) {
+      const field = document.getElementById("customerDumpMultiplier");
+
+      if (field) {
+        field.value = value;
+      }
+
+      calculateCustomerDumpFee();
+    }
+
 
     function calculateEstimate() {
       let base = 0;
@@ -2698,6 +2820,75 @@
         }
       }
 
+      if (selectedCategory === "hauling") {
+        const haulFee = getCustomerDumpFee();
+
+        if (selectedSubcategory === "Single Item Pickup") {
+          base = 75 * zoneMultiplier;
+          detail = "Single item pickup / haul away. Dump fee may be added based on trailer load volume.";
+        }
+
+        if (selectedSubcategory === "Small Haul Away") {
+          base = 125 * zoneMultiplier;
+          detail = "Small haul away. Dump fee added based on trailer load volume.";
+        }
+
+        if (selectedSubcategory === "Garage Clean Out") {
+          base = 225 * zoneMultiplier;
+          detail = "Garage clean out labor. Dump fee added based on trailer load volume.";
+        }
+
+        if (selectedSubcategory === "Storage Unit Clean Out") {
+          base = 225 * zoneMultiplier;
+          detail = "Storage unit clean out labor. Dump fee added based on trailer load volume.";
+        }
+
+        if (selectedSubcategory === "Rental Property Clean Out") {
+          base = 295 * zoneMultiplier;
+          detail = "Rental property clean out labor. Dump fee added based on trailer load volume.";
+        }
+
+        if (selectedSubcategory === "Eviction Clean Out") {
+          base = 395 * zoneMultiplier;
+          detail = "Eviction clean out labor. Dump fee added based on trailer load volume.";
+        }
+
+        if (selectedSubcategory === "Yard Debris Removal") {
+          base = 150 * zoneMultiplier;
+          detail = "Yard debris removal labor. Dump fee added based on trailer load volume.";
+        }
+
+        if (selectedSubcategory === "Construction Debris Removal") {
+          base = 195 * zoneMultiplier;
+          detail = "Construction debris removal labor. Dump fee added based on trailer load volume. Heavy debris may require additional disposal charges.";
+        }
+
+        if (selectedSubcategory === "Appliance Removal") {
+          base = 95 * zoneMultiplier;
+          detail = "Appliance removal labor. Dump fee or disposal fee may be added based on trailer load volume.";
+        }
+
+        if (selectedSubcategory === "Furniture Removal") {
+          base = 95 * zoneMultiplier;
+          detail = "Furniture removal labor. Dump fee added based on trailer load volume.";
+        }
+
+        if (
+          selectedSubcategory === "Hot Tub Removal (Quoted)" ||
+          selectedSubcategory === "Full Property Clean Out (Quoted)"
+        ) {
+          isQuoted = true;
+          detail = selectedSubcategory;
+        }
+
+        if (selectedSubcategory === "Shed Clean Out") {
+          base = 225 * zoneMultiplier;
+          detail = "Shed clean out labor. Dump fee added based on trailer load volume.";
+        }
+
+        addOns += haulFee;
+      }
+
       if (selectedCategory === "exterior") {
         if (selectedSubcategory === "House Number Install") {
           base = 65 * zoneMultiplier;
@@ -3157,6 +3348,10 @@
         noteBlock += "\nProperty manager / realtor pricing is based on accessible standard repairs. Larger repair lists, tenant damage, and inspection response repairs may be quoted as a package.";
       }
 
+      if (selectedCategory === "hauling") {
+        noteBlock += "\nHaul-away pricing is based on trailer load volume. Heavy materials including concrete, dirt, tile, brick, roofing, masonry, and excessively heavy debris may require additional disposal charges.";
+      }
+
       if (
         selectedCategory === "plumbing" &&
         (
@@ -3435,6 +3630,7 @@
         service: quoteItems.length ? "Multiple Repairs" : (selectedCategory || ""),
         type: quoteItems.length ? getQuoteItemsTypeText() : getDisplayServiceType(),
         total: quoteItems.length ? formatCurrency(getQuoteItemsTotal()) : (document.getElementById("totalPrice").textContent || ""),
+        customerDumpFee: formatCurrency(getCustomerDumpFee()),
        paymentStatus: document.getElementById("paymentStatus").value || "Due upon completion",
        paymentMethod: document.getElementById("paymentMethod").value || "",
        notes: quoteItems.length ? getQuoteItemsText() : getDisplayServiceType(),
