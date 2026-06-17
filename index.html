@@ -1,9 +1,10 @@
 <!DOCTYPE html>
+<!-- PUBLIC WEBSITE VERSION: No owner dashboard, no job costing, no CRM save button, no internal profit data. -->
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Mobile Onsite Handyman Repairs App</title>
+  <title>Mobile Onsite Handyman Repair Estimate Request</title>
 
   <style>
     body {
@@ -209,70 +210,29 @@
       margin-bottom: 0;
     }
 
-    .quote-item-row {
-      background: #f8fafc;
-      border: 1px solid #e2e8f0;
-      border-radius: 14px;
-      padding: 12px;
-      margin-bottom: 10px;
-      line-height: 1.45;
-    }
-
-    .small-btn {
-      padding: 10px;
-      border-radius: 10px;
-      margin-top: 8px;
-      margin-bottom: 0;
-      font-size: 14px;
-    }
-
-    .feature-panel {
-      border: 1px solid #bfdbfe;
-      background: #eff6ff;
-      border-radius: 14px;
-      padding: 14px;
-      margin-bottom: 12px;
-    }
-
-    .mini-result {
-      background: white;
-      border: 1px solid #dbeafe;
-      border-radius: 12px;
-      padding: 10px;
-      margin-top: 8px;
-      font-size: 14px;
-      line-height: 1.45;
-    }
-
-    .photo-list {
-      font-size: 14px;
-      color: #475569;
-      margin-top: 8px;
-      line-height: 1.5;
-    }
-
     @media (max-width: 800px) {
       .grid-2,
       .grid-3 {
         grid-template-columns: 1fr;
       }
     }
-  
-    .owner-dashboard { border:2px solid #f59e0b; background:#fffbeb; border-radius:18px; padding:16px; margin-top:16px; }
-    .owner-warning { background:#fef3c7; border:1px solid #f59e0b; border-radius:12px; padding:12px; font-size:14px; color:#92400e; line-height:1.45; margin-bottom:12px; }
-    .profit-good { color:#047857; font-weight:700; }
-    .profit-watch { color:#b45309; font-weight:700; }
-    .profit-low { color:#b91c1c; font-weight:700; }
-
   </style>
 </head>
 
 <body>
   <div class="wrap">
     <div class="hero">
-      <div class="hero-kicker">Repairs Estimator App</div>
+      <div class="hero-kicker">Repair Estimate Request</div>
       <h1>Mobile Onsite Handyman Services LLC</h1>
-      <p>Fast on-site pricing for repairs, installs, painting, invoices, and booking.</p>
+      <p>Request an estimate for repairs, installs, painting, and handyman services. Final pricing may depend on site conditions and scope.</p>
+    </div>
+
+    <div id="publicDisclosureNote" class="card">
+      <h2>How This Estimate Works</h2>
+      <div class="note-box">
+        This tool provides a preliminary estimate based on the service selected and property ZIP code.
+        Final pricing may be adjusted after review of photos, property conditions, access, materials, and full scope of work.
+      </div>
     </div>
 
     <div class="card">
@@ -309,13 +269,10 @@
       <button class="service-btn" id="btn-drywall" onclick="selectCategory('drywall')">Drywall</button>
       <button class="service-btn" id="btn-plumbing" onclick="selectCategory('plumbing')">Plumbing</button>
       <button class="service-btn" id="btn-electrical" onclick="selectCategory('electrical')">Electrical</button>
-      <button class="service-btn" id="btn-appliances" onclick="selectCategory('appliances')">Appliance Installation</button>
       <button class="service-btn" id="btn-doors" onclick="selectCategory('doors')">Doors / Windows</button>
       <button class="service-btn" id="btn-carpentry" onclick="selectCategory('carpentry')">Carpentry / Repairs</button>
       <button class="service-btn" id="btn-flooring" onclick="selectCategory('flooring')">Flooring</button>
       <button class="service-btn" id="btn-exterior" onclick="selectCategory('exterior')">Exterior</button>
-      <button class="service-btn" id="btn-hauling" onclick="selectCategory('hauling')">Trash Removal / Haul Off</button>
-      <button class="service-btn" id="btn-propertymanager" onclick="selectCategory('propertymanager')">Property Manager / Realtor</button>
     </div>
 
     <div id="subcategoryCard" class="card hidden">
@@ -504,7 +461,7 @@
         <div class="note-box">
           <label>
             <input id="textureMatch" class="inline-check" type="checkbox" onchange="calculateEstimate()" />
-            Texture match (+$50)
+            Texture match (+$75)
           </label>
 
           <label>
@@ -653,7 +610,7 @@
         <div class="pill">Electrical</div>
 
         <div id="outletQtyWrap" class="hidden">
-          <label>Quantity</label>
+          <label>Total outlets / switches</label>
           <input id="outletQty" type="number" min="1" value="1" oninput="calculateEstimate()" />
         </div>
 
@@ -665,55 +622,6 @@
         <div id="floodQtyWrap" class="hidden">
           <label>Total Ring flood light cameras</label>
           <input id="floodQty" type="number" min="1" value="1" oninput="calculateEstimate()" />
-        </div>
-      </div>
-
-      <div id="applianceFields" class="hidden">
-        <div class="pill">Appliance Installation</div>
-
-        <div class="note-box">
-          Appliance installation pricing assumes standard replacement conditions, accessible connections, and customer-supplied appliance.
-          Modifications to plumbing, electrical, cabinetry, countertops, venting, flooring, wall openings, or gas lines are quoted separately.
-        </div>
-
-        <div id="dishwasherFields" class="hidden">
-          <div class="note-box">
-            <label>
-              <input id="dishwasherSupplyLine" class="inline-check" type="checkbox" onchange="calculateEstimate()" />
-              New dishwasher supply line (+$35)
-            </label>
-            <label>
-              <input id="dishwasherPowerCord" class="inline-check" type="checkbox" onchange="calculateEstimate()" />
-              New dishwasher power cord (+$25)
-            </label>
-            <label>
-              <input id="dishwasherDrainHose" class="inline-check" type="checkbox" onchange="calculateEstimate()" />
-              New dishwasher drain hose (+$25)
-            </label>
-            <label>
-              <input id="disposalKnockoutRemoval" class="inline-check" type="checkbox" onchange="calculateEstimate()" />
-              Disposal knockout removal (+$25)
-            </label>
-          </div>
-
-          <div class="note-box">
-            Dishwasher installation includes standard removal/replacement connection to existing water supply, drain, and electrical connection where accessible.
-            New supply line, drain hose, air gap, disposal knockout, shut-off valve, or cabinet modification may be additional.
-          </div>
-        </div>
-
-        <div id="rangeHoodFields" class="hidden">
-          <div class="note-box">
-            Range hood installation assumes standard replacement using existing cabinet/wall opening and existing electrical connection.
-            New venting, duct changes, cabinet modification, or electrical work is quoted separately.
-          </div>
-        </div>
-
-        <div id="microwaveFields" class="hidden">
-          <div class="note-box">
-            Over-the-range microwave installation assumes standard replacement using existing mounting location, outlet, bracket conditions, and vent setup.
-            Cabinet modification, tile drilling, new outlet, or vent changes are quoted separately.
-          </div>
         </div>
       </div>
 
@@ -742,37 +650,6 @@
       <div id="carpentryFields" class="hidden">
         <div class="pill">Carpentry / Repairs</div>
 
-        <div id="grabBarQtyWrap" class="hidden">
-          <label>Grab Bar Quantity</label>
-          <input id="grabBarQty" type="number" min="1" value="1" oninput="calculateEstimate()" />
-          <div class="note-box">Grab bar installation is $95 each for standard customer-supplied grab bars.</div>
-        </div>
-
-        <div id="cabinetHardwareQtyWrap" class="hidden">
-          <label>Cabinet Hardware Quantity</label>
-          <input id="cabinetHardwareQty" type="number" min="1" value="1" oninput="calculateEstimate()" />
-          <div class="note-box">Cabinet hardware install is priced at $45 each. Hardware supplied by customer.</div>
-        </div>
-
-        <div id="shelfQtyWrap" class="hidden">
-          <label>Shelf Quantity</label>
-          <input id="shelfQty" type="number" min="1" value="1" oninput="calculateEstimate()" />
-          <div class="note-box">Shelf installation is priced at $85 each for standard customer-supplied shelves.</div>
-        </div>
-
-        <div id="doorJambFields" class="hidden">
-          <div class="note-box">
-            Door jamb repair is quoted based on site conditions, damage level, and materials needed.
-          </div>
-
-          <div class="note-box">
-            <label>
-              <input id="weatherStripInstall" class="inline-check" type="checkbox" onchange="calculateEstimate()" />
-              Add weather strip install (+$52.00)
-            </label>
-          </div>
-        </div>
-
         <div id="tvQtyWrap" class="hidden">
           <label>Total TV mounts</label>
           <input id="tvQty" type="number" min="1" value="1" oninput="calculateEstimate()" />
@@ -791,73 +668,6 @@
       <div id="flooringFields" class="hidden">
         <div class="pill">Flooring</div>
         <div class="note-box">Flooring install, repair, vinyl plank, transition strip, and base shoe are quoted items.</div>
-      </div>
-
-      <div id="propertyManagerFields" class="hidden">
-        <div class="pill">Property Manager / Realtor</div>
-        <div class="note-box">
-          Use this section for turnover work, pre-listing repairs, inspection repair lists, realtor requests, and property management maintenance items.
-          Quoted repair lists can be entered using the on-site quoted price box in Section 5.
-        </div>
-
-        <div id="turnoverExplanationBox" class="note-box">
-          <strong>Small Turnover Package - $295 Labor Only</strong><br>
-          Typical scope: smoke detector compliance check, outlet/switch cover replacement, minor door adjustments, minor hardware adjustments, minor caulking touch-ups, light bulb replacement, and small punch-list items.<br>
-          Typical labor time: 1-2 hours.<br><br>
-          <strong>Standard Turnover Package - $595 Labor Only</strong><br>
-          Typical scope: multiple door adjustments, minor drywall repairs, minor plumbing repairs, minor electrical repairs, minor carpentry repairs, lock replacement labor, smoke detector compliance check, and turnover punch-list completion.<br>
-          Typical labor time: 3-5 hours.<br><br>
-          <strong>Labor-Only Disclaimer:</strong><br>
-          Property Manager and Realtor package pricing is labor only unless specifically stated otherwise.
-          Replacement parts, fixtures, appliances, paint, drywall materials, electrical devices, plumbing parts, locks, smoke detectors, haul-away fees, dump fees, and disposal charges are additional unless included in the written quote.
-        </div>
-
-      </div>
-
-      <div id="haulingFields" class="hidden">
-        <div class="pill">Trash Removal / Haul Off</div>
-
-        <div class="note-box">
-          Haul-away pricing is based on trailer load volume.
-          Heavy materials including concrete, dirt, tile, brick, roofing, masonry, and excessively heavy debris may require additional disposal charges.
-        </div>
-
-        <div class="note-box">
-          <div class="pill">Customer Haul Away / Dump Fee</div>
-
-          <div class="grid-2">
-            <div>
-              <label>Trailer Load Rate</label>
-              <input id="customerDumpRate" type="number" min="0" step="0.01" value="90" oninput="calculateCustomerDumpFee()" />
-            </div>
-            <div>
-              <label>Load Multiplier</label>
-              <input id="customerDumpMultiplier" type="number" min="0" step="0.25" value="0" oninput="calculateCustomerDumpFee()" />
-            </div>
-          </div>
-
-          <div class="grid-3">
-            <button class="secondary-btn small-btn" type="button" onclick="setCustomerDumpLoad(0.25)">1/4 Load</button>
-            <button class="secondary-btn small-btn" type="button" onclick="setCustomerDumpLoad(0.5)">1/2 Load</button>
-            <button class="secondary-btn small-btn" type="button" onclick="setCustomerDumpLoad(0.75)">3/4 Load</button>
-          </div>
-
-          <div class="grid-3">
-            <button class="secondary-btn small-btn" type="button" onclick="setCustomerDumpLoad(1)">1 Load</button>
-            <button class="secondary-btn small-btn" type="button" onclick="setCustomerDumpLoad(1.5)">1.5 Loads</button>
-            <button class="secondary-btn small-btn" type="button" onclick="setCustomerDumpLoad(2)">2 Loads</button>
-          </div>
-
-          <div class="grid-3">
-            <button class="secondary-btn small-btn" type="button" onclick="setCustomerDumpLoad(3)">3 Loads</button>
-            <button class="secondary-btn small-btn" type="button" onclick="setCustomerDumpLoad(4)">4 Loads</button>
-            <button class="secondary-btn small-btn" type="button" onclick="setCustomerDumpLoad(5)">5 Loads</button>
-          </div>
-
-          <div id="customerDumpFeeStatus" class="note-box">
-            Customer haul-away fee: $90.00 x 0 load(s) = $0.00
-          </div>
-        </div>
       </div>
 
       <div id="exteriorFields" class="hidden">
@@ -882,70 +692,6 @@
       </div>
     </div>
 
-    <div id="businessToolsCard" class="card hidden">
-      <h2>5. Field Tools</h2>
-
-      <div class="feature-panel">
-        <div class="pill">Saved Draft Quotes</div>
-        <label>Draft Name</label>
-        <input id="draftName" placeholder="Example: Smith kitchen and door repairs" />
-        <div class="grid-3">
-          <button class="primary-btn" type="button" onclick="saveDraftQuote()">Save Draft</button>
-          <button class="secondary-btn" type="button" onclick="loadSelectedDraft()">Load Draft</button>
-          <button class="dark-btn" type="button" onclick="deleteSelectedDraft()">Delete Draft</button>
-        </div>
-        <label>Saved Drafts</label>
-        <select id="draftList"></select>
-        <div id="draftStatus" class="mini-result">Drafts are saved on this device/browser.</div>
-      </div>
-
-      <div class="feature-panel">
-        <div class="pill">Customer Search</div>
-        <label>Search Customer History</label>
-        <input id="customerSearchInput" placeholder="Search name, phone, email, or address" oninput="searchLocalCustomers()" />
-        <div id="customerSearchResults" class="mini-result">
-          Customer history saved from this device will appear here. Google Sheets lookup can be added later with a CRM search API.
-        </div>
-      </div>
-
-      <div class="feature-panel">
-        <div class="pill">Property Manager / Realtor Packages</div>
-        <div class="grid-3">
-          <button class="primary-btn" type="button" onclick="applyPropertyPackage('small')">Small Turnover</button>
-          <button class="primary-btn" type="button" onclick="applyPropertyPackage('standard')">Standard Turnover</button>
-          <button class="primary-btn" type="button" onclick="applyPropertyPackage('heavy')">Heavy Turnover</button>
-        </div>
-        <div id="packageStatus" class="mini-result">
-          Packages add common turnover work as multi-item quote lines. Adjust or clear items before sending.
-        </div>
-      </div>
-
-      <div class="feature-panel">
-        <div class="pill">Photo Notes</div>
-        <label>Attach / Reference Job Photos</label>
-        <input id="photoInput" type="file" accept="image/*" multiple onchange="handlePhotoSelection()" />
-        <textarea id="photoNotes" rows="4" placeholder="Photo notes: front door damage, under sink leak, drywall patch location, etc."></textarea>
-        <div id="photoList" class="photo-list">No photos selected. Email buttons cannot attach photos automatically, but the names/notes can be included in the quote.</div>
-      </div>
-
-      <div class="feature-panel">
-        <div class="pill">Inspection-to-Repair Import</div>
-        <label>Paste Inspection Repair List</label>
-        <textarea id="inspectionImportText" rows="5" placeholder="Paste inspection findings or repair list here"></textarea>
-        <div class="grid-2">
-          <button class="primary-btn" type="button" onclick="importInspectionRepairList()">Import as Quoted Repair List</button>
-          <button class="secondary-btn" type="button" onclick="clearInspectionImport()">Clear Import</button>
-        </div>
-        <div id="inspectionImportStatus" class="mini-result">Imported inspection items will be added as a quoted multi-item line.</div>
-      </div>
-
-      <div class="feature-panel">
-        <div class="pill">Local Profit Dashboard</div>
-        <div id="localDashboard" class="mini-result">Dashboard will update from quotes saved on this device.</div>
-        <button class="secondary-btn" type="button" onclick="refreshLocalDashboard()">Refresh Dashboard</button>
-      </div>
-    </div>
-
     <div id="summaryCard" class="card hidden">
       <h2>5. Estimate</h2>
 
@@ -967,37 +713,6 @@
       </div>
 
       <div class="note-box" id="summaryDetails">Service: Not selected</div>
-
-      <div class="note-box">
-        <div class="pill">On-Site Quoted Price</div>
-
-        <label>Quoted Price / Manual Override</label>
-        <input id="manualQuotedPrice" type="number" min="0" step="0.01" value="0" oninput="calculateEstimate()" />
-
-        <label>Quoted Work Description</label>
-        <input id="manualQuotedDescription" placeholder="Example: Repair damaged door jamb and install customer supplied trim" oninput="calculateEstimate()" />
-
-        <div class="note-box">
-          Leave this at 0 for normal app pricing. For quoted jobs, enter the approved on-site price here before generating the quote or invoice.
-        </div>
-      </div>
-
-      <div class="note-box">
-        <div class="pill">Multi-Item Quote / Invoice</div>
-
-        <button class="primary-btn" type="button" onclick="addCurrentItemToQuote()">Add Current Item to Quote</button>
-
-        <div id="quoteItemsList">No items added yet.</div>
-
-        <div class="grid-2">
-          <button class="secondary-btn" type="button" onclick="clearQuoteItems()">Clear Items</button>
-          <button class="dark-btn" type="button" onclick="recalculateQuoteItems()">Recalculate Items</button>
-        </div>
-
-        <div class="note-box">
-          Select one repair, enter any quantity or quoted price, then tap Add Current Item to Quote. Repeat for each repair before generating the quote or invoice.
-        </div>
-      </div>
 
       <button class="primary-btn" onclick="generateQuote()">Generate Quote Text</button>
 
@@ -1026,120 +741,21 @@
         <button class="secondary-btn" onclick="copyQuote()">Copy Quote</button>
       </div>
 
+      <button class="primary-btn" onclick="sendEstimateRequestToBusiness()">Send Estimate Request</button>
+
       <a class="book-btn" href="https://calendly.com/mobileonsitehandyman/handyman-service-appointment" target="_blank">Book Appointment</a>
 
-      <button class="primary-btn" onclick="generateInvoice()">Generate Invoice</button>
-      <button class="secondary-btn" onclick="downloadInvoice()">Download Invoice</button>
-      <button class="dark-btn" onclick="saveInvoice()">Save Invoice to Database</button>
+      <button class="primary-btn" onclick="generateInvoice()">Generate Customer Summary</button>
+      <button class="secondary-btn" onclick="downloadInvoice()">Download Summary</button>
 
       <div id="copyStatus" style="margin-top:8px; font-size:14px; font-weight:700; color:#1d4ed8;"></div>
     </div>
-    <div id="ownerDashboardCard" class="card owner-dashboard">
-      <h2>Owner Dashboard - Internal Use Only</h2>
-      <div class="owner-warning">
-        <strong>Internal Use Only:</strong> This job costing and profit section is not included in customer quotes, invoices, emails, copied quote text, or downloaded invoice text. It is only saved to the internal Job Costing sheet when you save the invoice to the database.
-      </div>
-
-      <div class="grid-2">
-        <div>
-          <label>Material Cost</label>
-          <input id="materialCost" type="number" min="0" step="0.01" value="0" oninput="calculateJobCosting()" />
-        </div>
-        <div>
-          <label>Actual Dump Cost</label>
-          <input id="dumpFee" type="number" min="0" step="0.01" value="0" oninput="calculateJobCosting()" />
-        </div>
-      </div>
-
-      <div class="note-box">
-        <div class="pill">Actual Dump Cost Calculator</div>
-        <div class="grid-2">
-          <div>
-            <label>Dump Fee Base Rate</label>
-            <input id="dumpFeeBaseRate" type="number" min="0" step="0.01" value="25" oninput="calculateDumpFeeFromLoad()" />
-          </div>
-          <div>
-            <label>Trailer Load Multiplier</label>
-            <input id="dumpLoadMultiplier" type="number" min="0" step="0.25" value="0" oninput="calculateDumpFeeFromLoad()" />
-          </div>
-        </div>
-
-        <div class="grid-3">
-          <button class="secondary-btn small-btn" type="button" onclick="setDumpLoadMultiplier(0.25)">1/4 Load</button>
-          <button class="secondary-btn small-btn" type="button" onclick="setDumpLoadMultiplier(0.5)">1/2 Load</button>
-          <button class="secondary-btn small-btn" type="button" onclick="setDumpLoadMultiplier(1)">Full Load</button>
-        </div>
-
-        <div class="grid-2">
-          <button class="secondary-btn small-btn" type="button" onclick="setDumpLoadMultiplier(1.5)">1.5 Loads</button>
-          <button class="secondary-btn small-btn" type="button" onclick="setDumpLoadMultiplier(2)">2 Loads</button>
-        </div>
-
-        <div id="dumpFeeCalcStatus" class="note-box">
-          Dump fee calculator: $25 base × selected load multiplier.
-        </div>
-      </div>
-
-      <div class="grid-2">
-        <div>
-          <label>Permit Fee</label>
-          <input id="permitFee" type="number" min="0" step="0.01" value="0" oninput="calculateJobCosting()" />
-        </div>
-        <div>
-          <label>Additional Labor Hours</label>
-          <input id="additionalLaborHours" type="number" min="0" step="0.25" value="0" oninput="calculateJobCosting()" />
-        </div>
-      </div>
-
-      <div class="grid-2">
-        <div>
-          <label>Tax Rate %</label>
-          <input id="taxRate" type="number" min="0" step="0.01" value="8.5" oninput="calculateJobCosting()" />
-        </div>
-        <div>
-          <label><input id="applyTax" class="inline-check" type="checkbox" onchange="calculateJobCosting()" /> Apply Tax</label>
-          <div class="note-box">Default tax rate is 8.5%. Use only when appropriate. Tax can be changed or turned off before saving.</div>
-        </div>
-      </div>
-
-      <label>Internal Job Notes</label>
-      <textarea id="internalJobNotes" rows="4" placeholder="Private notes: materials, dump run, risk, access issues, job limit concerns, etc."></textarea>
-
-      <div class="summary-box">
-        <div class="muted">Customer Total</div>
-        <div class="big" id="costCustomerTotal">$0.00</div>
-      </div>
-
-      <div class="grid-3">
-        <div class="summary-box">
-          <div class="muted">Tax Collected</div>
-          <div class="big" id="taxCollected">$0.00</div>
-        </div>
-        <div class="summary-box">
-          <div class="muted">Estimated Job Cost</div>
-          <div class="big" id="estimatedJobCost">$0.00</div>
-        </div>
-        <div class="summary-box summary-total">
-          <div class="muted">Estimated Gross Profit</div>
-          <div class="big" id="estimatedGrossProfit">$0.00</div>
-        </div>
-      </div>
-
-      <div class="summary-box">
-        <div class="muted">Profit Margin</div>
-        <div class="big" id="profitMargin">0%</div>
-        <div id="profitStatus" class="note-box">Profit status will appear here.</div>
-      </div>
-    </div>
-
   </div>
 
-    
   <script>
     let selectedCategory = "";
     let selectedSubcategory = "";
     let currentZone = null;
-    let quoteItems = [];
 
     const subcategories = {
       painting: [
@@ -1153,9 +769,6 @@
       ],
 
       drywall: [
-        "Drywall Patch Under 6 Inches",
-        "Drywall Patch 6-12 Inches",
-        "Drywall Patch 12-24 Inches",
         "Small Drywall Repair",
         "Medium Drywall Repair",
         "Large Drywall Repair",
@@ -1166,15 +779,8 @@
       ],
 
       plumbing: [
-        "Kitchen Faucet Installation",
-        "Kitchen Faucet Installation w/ Disposal or Drainpipe Removal",
-        "Bathroom Faucet Installation",
-        "Widespread Bathroom Faucet Installation",
-        "Bathroom Faucet Drain Assembly",
-        "Toilet Supply Line Replacement",
-        "Ice Maker Supply Line Replacement",
-        "Refrigerator Water Line Install",
-        "Garbage Disposal Replacement",
+        "Faucet Installation",
+        "Faucet Installation w/ Disposal or Drainpipe Removal",
         "Toilet Replacement",
         "Toilet Repair",
         "Angle Stop Replacement",
@@ -1185,19 +791,11 @@
         "Basket Strainer Replacement (Kitchen Sink)",
         "Garbage Disposal Removal Only",
         "Toilet Wax Ring Replacement",
-        "Toilet Rebuild Kit Install",
-        "Flush Valve Replacement",
-        "Toilet Handle Replacement",
-        "Toilet Seat Replacement",
-        "Bidet Seat Install",
         "Fill Valve Replacement",
         "Flapper Replacement",
         "Tub Spout Replacement",
         "Shower Head Replacement",
         "Dishwasher Supply Line Replacement",
-        "Reverse Osmosis Faucet Install",
-        "Water Filtration System Install (Quoted)",
-        "Instant Hot Water Faucet Install (Quoted)",
         "Pedestal Sink Install",
         "Vanity Install 24-36",
         "Vanity Install 37-48",
@@ -1209,68 +807,22 @@
 
       electrical: [
         "Outlet / Switch Replace",
-        "GFCI Replacement",
-        "Light Fixture Replacement",
         "Light Fixture Install",
-        "Ceiling Fan Replacement",
         "Ceiling Fan Install",
-        "Exhaust Fan Replacement",
-        "Smoke Detector Replacement",
-        "Carbon Monoxide Detector Replacement",
-        "Bathroom Vanity Light Replacement",
-        "Security Camera Install",
-        "Floodlight Camera Install",
         "Ring Flood Light Camera Install",
         "Ring Doorbell Install"
       ],
 
-      appliances: [
-        "Dishwasher Installation",
-        "Dishwasher Removal Only",
-        "Freestanding Stove / Range Installation",
-        "Range Removal Only",
-        "Wall Oven Installation (Quoted)",
-        "Cooktop Installation (Quoted)",
-        "Built-In Microwave Installation (Quoted)",
-        "Over-the-Range Microwave Installation",
-        "Range Hood Installation",
-        "Refrigerator Installation",
-        "Washer Installation",
-        "Dryer Installation",
-        "Washer / Dryer Set Installation"
-      ],
-
       doors: [
-        "Door Adjustment",
-        "Door Sweep Replacement",
-        "Door Closer Adjustment",
-        "Lockset Replacement",
-        "Deadbolt Replacement",
         "Interior Door Install",
-        "Interior Door Replacement (Quoted)",
-        "Exterior Door Replacement (Quoted)",
         "Pre-Hung Door Install",
-        "Window Caulking",
-        "Window Screen Replacement (Quoted)",
-        "Sliding Screen Door Roller Replacement"
+        "Window Caulking"
       ],
 
       carpentry: [
         "Closet Rack / Shelving Repair or Install (Quoted)",
         "Baseboard Install (Quoted)",
-        "Baseboard Repair (Quoted)",
         "Cabinet Repair (Quoted)",
-        "Cabinet Door Repair",
-        "Cabinet Hinge Adjustment",
-        "Cabinet Hardware Install",
-        "Shelf Installation",
-        "Grab Bar Installation",
-        "Towel Bar Install",
-        "Toilet Paper Holder Install",
-        "Medicine Cabinet Install",
-        "Sound Bar Mount Install",
-        "Floating Shelf Install",
-        "Door Jamb Repair (Quoted)",
         "TV Mounting"
       ],
 
@@ -1282,45 +834,9 @@
       ],
 
       exterior: [
-        "House Number Install",
-        "Mailbox Replacement",
-        "Gate Latch Replacement",
-        "Weather Stripping Install",
         "Fencing / Post Repair / Replacement",
         "Pressure Washing (Quoted)",
         "Junk Removal (Quoted)"
-      ],
-
-      hauling: [
-        "Single Item Pickup",
-        "Small Haul Away",
-        "Garage Clean Out",
-        "Storage Unit Clean Out",
-        "Rental Property Clean Out",
-        "Eviction Clean Out",
-        "Yard Debris Removal",
-        "Construction Debris Removal",
-        "Appliance Removal",
-        "Furniture Removal",
-        "Hot Tub Removal (Quoted)",
-        "Shed Clean Out",
-        "Full Property Clean Out (Quoted)"
-      ],
-
-      propertymanager: [
-        "Move-Out Punch List (Quoted)",
-        "Rental Turnover Repairs (Quoted)",
-        "Realtor Repair List (Quoted)",
-        "Inspection Repair List (Quoted)",
-        "Smoke Detector Compliance Check",
-        "Lockset Replacement",
-        "Deadbolt Replacement",
-        "Rekey Coordination (Quoted)",
-        "Mailbox Replacement",
-        "House Number Install",
-        "Address Plaque Install",
-        "Appliance Removal / Haul Away (Quoted)",
-        "Tenant Damage Repair (Quoted)"
       ]
     };
 
@@ -1528,15 +1044,11 @@
       if (currentZone) {
         document.getElementById("serviceCard").classList.remove("hidden");
         document.getElementById("summaryCard").classList.remove("hidden");
-        const businessToolsCard = document.getElementById("businessToolsCard");
-        if (businessToolsCard) businessToolsCard.classList.remove("hidden");
       } else {
         document.getElementById("serviceCard").classList.add("hidden");
         document.getElementById("subcategoryCard").classList.add("hidden");
         document.getElementById("detailsCard").classList.add("hidden");
         document.getElementById("summaryCard").classList.add("hidden");
-        const businessToolsCard = document.getElementById("businessToolsCard");
-        if (businessToolsCard) businessToolsCard.classList.add("hidden");
       }
 
       calculateEstimate();
@@ -1595,12 +1107,6 @@
         notes.innerHTML = "Drywall repairs — IAC2 Certified (Certification #IAC2-94278)";
       } else if (category === "plumbing") {
         notes.innerHTML = "Plumbing pricing is labor only unless noted otherwise.";
-      } else if (category === "appliances") {
-        notes.innerHTML = "Appliance installation pricing assumes standard replacement conditions. Modifications are quoted separately.";
-      } else if (category === "propertymanager") {
-        notes.innerHTML = "Property manager and realtor services are designed for turnovers, repair lists, inspection responses, and pre-listing preparation.";
-      } else if (category === "hauling") {
-        notes.innerHTML = "Trash removal and haul-off pricing is based on trailer load volume. Heavy debris may require additional disposal charges.";
       } else {
         notes.classList.add("hidden");
         notes.innerHTML = "";
@@ -1623,15 +1129,9 @@
         "drywallFields",
         "plumbingFields",
         "electricalFields",
-        "applianceFields",
-        "dishwasherFields",
-        "rangeHoodFields",
-        "microwaveFields",
         "doorsFields",
         "carpentryFields",
         "flooringFields",
-        "propertyManagerFields",
-        "haulingFields",
         "exteriorFields",
         "manualFields",
         "doorInstallAddons",
@@ -1650,10 +1150,6 @@
         "outletQtyWrap",
         "fanQtyWrap",
         "floodQtyWrap",
-        "grabBarQtyWrap",
-        "cabinetHardwareQtyWrap",
-        "shelfQtyWrap",
-        "doorJambFields",
         "tvQtyWrap",
         "tvAddonWrap",
         "fencingFields",
@@ -1736,8 +1232,6 @@
         if (
           selectedSubcategory === "Garbage Disposal Removal Only" ||
           selectedSubcategory === "Toilet Wax Ring Replacement" ||
-          selectedSubcategory === "Toilet Rebuild Kit Install" ||
-          selectedSubcategory === "Flush Valve Replacement" ||
           selectedSubcategory === "Fill Valve Replacement" ||
           selectedSubcategory === "Flapper Replacement" ||
           selectedSubcategory === "Tub Spout Replacement" ||
@@ -1749,8 +1243,6 @@
 
         if (
           selectedSubcategory === "Toilet Wax Ring Replacement" ||
-          selectedSubcategory === "Toilet Rebuild Kit Install" ||
-          selectedSubcategory === "Flush Valve Replacement" ||
           selectedSubcategory === "Fill Valve Replacement" ||
           selectedSubcategory === "Flapper Replacement" ||
           selectedSubcategory === "Tub Spout Replacement" ||
@@ -1786,46 +1278,16 @@
       if (selectedCategory === "electrical") {
         document.getElementById("electricalFields").classList.remove("hidden");
 
-        if (
-          selectedSubcategory === "Outlet / Switch Replace" ||
-          selectedSubcategory === "GFCI Replacement" ||
-          selectedSubcategory === "Light Fixture Replacement" ||
-          selectedSubcategory === "Light Fixture Install"
-        ) {
+        if (selectedSubcategory === "Outlet / Switch Replace") {
           document.getElementById("outletQtyWrap").classList.remove("hidden");
         }
 
-        if (
-          selectedSubcategory === "Ceiling Fan Install" ||
-          selectedSubcategory === "Ceiling Fan Replacement"
-        ) {
+        if (selectedSubcategory === "Ceiling Fan Install") {
           document.getElementById("fanQtyWrap").classList.remove("hidden");
         }
 
         if (selectedSubcategory === "Ring Flood Light Camera Install") {
           document.getElementById("floodQtyWrap").classList.remove("hidden");
-        }
-
-        return;
-      }
-
-      if (selectedCategory === "appliances") {
-        document.getElementById("applianceFields").classList.remove("hidden");
-
-        if (selectedSubcategory === "Dishwasher Installation") {
-          document.getElementById("dishwasherFields").classList.remove("hidden");
-        }
-
-        if (selectedSubcategory === "Range Hood Installation") {
-          document.getElementById("rangeHoodFields").classList.remove("hidden");
-        }
-
-        if (selectedSubcategory === "Over-the-Range Microwave Installation") {
-          document.getElementById("microwaveFields").classList.remove("hidden");
-        }
-
-        if (selectedSubcategory.includes("(Quoted)")) {
-          document.getElementById("manualFields").classList.remove("hidden");
         }
 
         return;
@@ -1854,21 +1316,7 @@
         if (selectedSubcategory === "TV Mounting") {
           document.getElementById("tvQtyWrap").classList.remove("hidden");
           document.getElementById("tvAddonWrap").classList.remove("hidden");
-        } else if (selectedSubcategory === "Door Jamb Repair (Quoted)") {
-          document.getElementById("doorJambFields").classList.remove("hidden");
-          document.getElementById("manualFields").classList.remove("hidden");
-        } else if (selectedSubcategory === "Grab Bar Installation") {
-          document.getElementById("grabBarQtyWrap").classList.remove("hidden");
-        } else if (selectedSubcategory === "Cabinet Hardware Install") {
-          document.getElementById("cabinetHardwareQtyWrap").classList.remove("hidden");
-        } else if (selectedSubcategory === "Shelf Installation" || selectedSubcategory === "Floating Shelf Install") {
-          document.getElementById("shelfQtyWrap").classList.remove("hidden");
-        } else if (
-          selectedSubcategory === "Closet Rack / Shelving Repair or Install (Quoted)" ||
-          selectedSubcategory === "Baseboard Install (Quoted)" ||
-          selectedSubcategory === "Baseboard Repair (Quoted)" ||
-          selectedSubcategory === "Cabinet Repair (Quoted)"
-        ) {
+        } else {
           document.getElementById("manualFields").classList.remove("hidden");
         }
 
@@ -1878,26 +1326,6 @@
       if (selectedCategory === "flooring") {
         document.getElementById("flooringFields").classList.remove("hidden");
         document.getElementById("manualFields").classList.remove("hidden");
-        return;
-      }
-
-      if (selectedCategory === "propertymanager") {
-        document.getElementById("propertyManagerFields").classList.remove("hidden");
-
-        if (selectedSubcategory.includes("(Quoted)")) {
-          document.getElementById("manualFields").classList.remove("hidden");
-        }
-
-        return;
-      }
-
-      if (selectedCategory === "hauling") {
-        document.getElementById("haulingFields").classList.remove("hidden");
-
-        if (selectedSubcategory.includes("(Quoted)")) {
-          document.getElementById("manualFields").classList.remove("hidden");
-        }
-
         return;
       }
 
@@ -1930,239 +1358,6 @@
       if (qty === 2) return first + second;
       return first + second + ((qty - 2) * additional);
     }
-
-
-
-    function parseCurrencyValue(value) {
-      return parseFloat(String(value || "0").replace(/[^0-9.]/g, "")) || 0;
-    }
-
-    function getCurrentCalculatedItem() {
-      /*
-        Important:
-        When quoteItems already has items, calculateEstimate() displays the combined
-        multi-item total in the Total box. To add a new item correctly, we temporarily
-        hide the existing quoteItems, calculate only the currently selected service,
-        read that price, then restore the existing quoteItems.
-      */
-      const savedQuoteItems = quoteItems.slice();
-      quoteItems = [];
-
-      calculateEstimate();
-
-      const totalText = document.getElementById("totalPrice").textContent || "";
-      const baseText = document.getElementById("basePrice").textContent || "";
-      const addOnsText = document.getElementById("addOns").textContent || "";
-      const totalAmount = parseCurrencyValue(totalText);
-
-      quoteItems = savedQuoteItems;
-      renderQuoteItems();
-      calculateEstimate();
-
-      if (!selectedCategory || !selectedSubcategory) {
-        document.getElementById("copyStatus").textContent = "Select a service before adding an item.";
-        return null;
-      }
-
-      if (!totalAmount || totalText.includes("Quoted")) {
-        document.getElementById("copyStatus").textContent = "Enter a price for quoted items before adding them.";
-        return null;
-      }
-
-      const manualPriceForDescription = typeof getManualQuotedPrice === "function" ? getManualQuotedPrice() : 0;
-      const manualDescription = typeof getManualQuotedDescription === "function" ? getManualQuotedDescription() : "";
-      const description = (manualPriceForDescription > 0 && manualDescription) ? manualDescription : (selectedSubcategory || "Selected service");
-
-      return {
-        category: selectedCategory,
-        service: selectedSubcategory,
-        description: description,
-        base: parseCurrencyValue(baseText),
-        addOns: parseCurrencyValue(addOnsText),
-        total: totalAmount
-      };
-    }
-
-    function addCurrentItemToQuote() {
-      const item = getCurrentCalculatedItem();
-
-      if (!item) {
-        return;
-      }
-
-      quoteItems.push(item);
-
-      const manualPriceField = document.getElementById("manualQuotedPrice");
-      const manualDescriptionField = document.getElementById("manualQuotedDescription");
-
-      if (manualPriceField && Number(manualPriceField.value || 0) > 0) {
-        manualPriceField.value = 0;
-
-        if (manualDescriptionField) {
-          manualDescriptionField.value = "";
-        }
-      }
-
-      renderQuoteItems();
-      calculateEstimate();
-      document.getElementById("copyStatus").textContent = "Item added to quote.";
-    }
-
-    function removeQuoteItem(index) {
-      quoteItems.splice(index, 1);
-      renderQuoteItems();
-      calculateEstimate();
-    }
-
-    function clearQuoteItems() {
-      quoteItems = [];
-      renderQuoteItems();
-      calculateEstimate();
-      document.getElementById("copyStatus").textContent = "Quote items cleared.";
-    }
-
-    function recalculateQuoteItems() {
-      renderQuoteItems();
-      calculateEstimate();
-      document.getElementById("copyStatus").textContent = "Quote items recalculated.";
-    }
-
-    function getQuoteItemsTotal() {
-      return quoteItems.reduce(function (sum, item) {
-        return sum + (Number(item.total) || 0);
-      }, 0);
-    }
-
-    function getQuoteItemsText() {
-      if (!quoteItems.length) {
-        return "";
-      }
-
-      return quoteItems.map(function (item, index) {
-        return (index + 1) + ". " + item.description + " - " + formatCurrency(item.total);
-      }).join("\n");
-    }
-
-    function getQuoteItemsTypeText() {
-      if (!quoteItems.length) {
-        return typeof getDisplayServiceType === "function" ? getDisplayServiceType() : (selectedSubcategory || "");
-      }
-
-      return quoteItems.map(function (item) {
-        return item.description + " (" + formatCurrency(item.total) + ")";
-      }).join("; ");
-    }
-
-    function renderQuoteItems() {
-      const wrap = document.getElementById("quoteItemsList");
-
-      if (!wrap) {
-        return;
-      }
-
-      if (!quoteItems.length) {
-        wrap.innerHTML = "No items added yet.";
-        return;
-      }
-
-      let lineHtml = "";
-
-      quoteItems.forEach(function (item, index) {
-        lineHtml +=
-          '<div class="quote-item-row">' +
-          '<strong>' + (index + 1) + '. ' + item.description + '</strong><br>' +
-          'Category: ' + item.category + '<br>' +
-          'Amount: ' + formatCurrency(item.total) +
-          '<button class="secondary-btn small-btn" type="button" onclick="removeQuoteItem(' + index + ')">Remove Item</button>' +
-          '</div>';
-      });
-
-      lineHtml +=
-        '<div class="summary-box summary-total">' +
-        '<div class="muted">Multi-Item Quote Total</div>' +
-        '<div class="big">' + formatCurrency(getQuoteItemsTotal()) + '</div>' +
-        '</div>';
-
-      wrap.innerHTML = lineHtml;
-    }
-
-
-    function getManualQuotedPrice() {
-      const field = document.getElementById("manualQuotedPrice");
-
-      if (!field) {
-        return 0;
-      }
-
-      return Number(field.value || 0);
-    }
-
-    function getManualQuotedDescription() {
-      const field = document.getElementById("manualQuotedDescription");
-
-      if (!field) {
-        return "";
-      }
-
-      return field.value.trim();
-    }
-
-    function getDisplayServiceType() {
-      const manualPrice = getManualQuotedPrice();
-      const manualDescription = getManualQuotedDescription();
-
-      if (manualPrice > 0 && manualDescription) {
-        return manualDescription;
-      }
-
-      return selectedSubcategory || "Not selected";
-    }
-
-
-    function getCustomerDumpFee() {
-      const rateField = document.getElementById("customerDumpRate");
-      const multiplierField = document.getElementById("customerDumpMultiplier");
-
-      if (!rateField || !multiplierField) {
-        return 0;
-      }
-
-      const rate = Number(rateField.value || 0) || 0;
-      const multiplier = Number(multiplierField.value || 0) || 0;
-
-      return rate * multiplier;
-    }
-
-    function calculateCustomerDumpFee() {
-      const rateField = document.getElementById("customerDumpRate");
-      const multiplierField = document.getElementById("customerDumpMultiplier");
-      const status = document.getElementById("customerDumpFeeStatus");
-
-      if (!rateField || !multiplierField) {
-        return;
-      }
-
-      const rate = Number(rateField.value || 0) || 0;
-      const multiplier = Number(multiplierField.value || 0) || 0;
-      const fee = rate * multiplier;
-
-      if (status) {
-        status.textContent = "Customer haul-away fee: " + formatCurrency(rate) + " x " + multiplier + " load(s) = " + formatCurrency(fee);
-      }
-
-      calculateEstimate();
-    }
-
-    function setCustomerDumpLoad(value) {
-      const field = document.getElementById("customerDumpMultiplier");
-
-      if (field) {
-        field.value = value;
-      }
-
-      calculateCustomerDumpFee();
-    }
-
 
     function calculateEstimate() {
       let base = 0;
@@ -2262,21 +1457,6 @@
       }
 
       if (selectedCategory === "drywall") {
-        if (selectedSubcategory === "Drywall Patch Under 6 Inches") {
-          base = 125 * zoneMultiplier;
-          detail = "Drywall patch under 6 inches. Texture match and paint matching may be additional.";
-        }
-
-        if (selectedSubcategory === "Drywall Patch 6-12 Inches") {
-          base = 175 * zoneMultiplier;
-          detail = "Drywall patch 6 to 12 inches. Texture match and paint matching may be additional.";
-        }
-
-        if (selectedSubcategory === "Drywall Patch 12-24 Inches") {
-          base = 250 * zoneMultiplier;
-          detail = "Drywall patch 12 to 24 inches. Texture match and paint matching may be additional.";
-        }
-
         if (selectedSubcategory === "Small Drywall Repair") base = 150 * zoneMultiplier;
         if (selectedSubcategory === "Medium Drywall Repair") base = 300 * zoneMultiplier;
         if (selectedSubcategory === "Large Drywall Repair") base = 700 * zoneMultiplier;
@@ -2295,7 +1475,7 @@
         const drywallModerateTreatment = document.getElementById("drywallModerateTreatment").checked;
         const drywallHeavyContainment = document.getElementById("drywallHeavyContainment").checked;
 
-        addOns += textureMatch ? 50 : 0;
+        addOns += textureMatch ? 75 : 0;
         addOns += drywallPaintMatch ? 65 : 0;
         addOns += drywallLightTreatment ? 95 : 0;
         addOns += drywallModerateTreatment ? 210 : 0;
@@ -2312,50 +1492,8 @@
       }
 
       if (selectedCategory === "plumbing") {
-        if (selectedSubcategory === "Kitchen Faucet Installation") {
-          base = 150 * zoneMultiplier;
-          detail = "Kitchen faucet installation - labor only. Customer supplied faucet. Parts, supply lines, angle stops, disposal removal, or drain modifications are additional unless selected separately.";
-        }
-
-        if (selectedSubcategory === "Kitchen Faucet Installation w/ Disposal or Drainpipe Removal") {
-          base = 235 * zoneMultiplier;
-          detail = "Kitchen faucet installation with disposal or drainpipe removal - labor only. Customer supplied faucet. Parts, supply lines, angle stops, or additional plumbing modifications are not included.";
-        }
-
-        if (selectedSubcategory === "Bathroom Faucet Installation") {
-          base = 125 * zoneMultiplier;
-          detail = "Bathroom faucet installation - labor only. Standard customer supplied bathroom faucet. New supply lines, angle stops, drain assembly replacement, or plumbing modifications are not included.";
-        }
-
-        if (selectedSubcategory === "Widespread Bathroom Faucet Installation") {
-          base = 150 * zoneMultiplier;
-          detail = "Widespread bathroom faucet installation - labor only. Standard 8-inch widespread customer supplied faucet. New supply lines, angle stops, drain assembly replacement, or plumbing modifications are not included.";
-        }
-
-        if (selectedSubcategory === "Bathroom Faucet Drain Assembly") {
-          base = 95 * zoneMultiplier;
-          detail = "Bathroom faucet drain assembly replacement - labor only. Parts additional if supplied.";
-        }
-
-        if (selectedSubcategory === "Toilet Supply Line Replacement") {
-          base = 75 * zoneMultiplier;
-          detail = "Toilet supply line replacement - labor only. Parts additional if supplied.";
-        }
-
-        if (selectedSubcategory === "Ice Maker Supply Line Replacement") {
-          base = 95 * zoneMultiplier;
-          detail = "Ice maker supply line replacement - labor only. Parts additional if supplied.";
-        }
-
-        if (selectedSubcategory === "Refrigerator Water Line Install") {
-          base = 125 * zoneMultiplier;
-          detail = "Refrigerator water line install - labor only. Parts and access conditions may affect final price.";
-        }
-
-        if (selectedSubcategory === "Garbage Disposal Replacement") {
-          base = 225 * zoneMultiplier;
-          detail = "Garbage disposal replacement - labor only. Customer supplied disposal. Plumbing modifications or electrical issues not included.";
-        }
+        if (selectedSubcategory === "Faucet Installation") base = 150 * zoneMultiplier;
+        if (selectedSubcategory === "Faucet Installation w/ Disposal or Drainpipe Removal") base = 235 * zoneMultiplier;
         if (selectedSubcategory === "Toilet Replacement") base = 150 * zoneMultiplier;
         if (selectedSubcategory === "Toilet Repair") base = 150 * zoneMultiplier;
         if (selectedSubcategory === "Garbage Disposal Install") base = 160 * zoneMultiplier;
@@ -2420,35 +1558,6 @@
           detail = "Toilet wax ring replacement - labor only, parts additional";
         }
 
-        if (selectedSubcategory === "Toilet Rebuild Kit Install") {
-          const qty = Number(document.getElementById("simplePlumbingQty").value || 1);
-          base = multiFixturePrice(qty, 185, 135, 95) * zoneMultiplier;
-          base = applyPlumbingFixtureDiscount(base);
-          detail = "Toilet rebuild kit installation - labor only. Parts additional if supplied.";
-        }
-
-        if (selectedSubcategory === "Flush Valve Replacement") {
-          const qty = Number(document.getElementById("simplePlumbingQty").value || 1);
-          base = multiFixturePrice(qty, 185, 135, 95) * zoneMultiplier;
-          base = applyPlumbingFixtureDiscount(base);
-          detail = "Flush valve replacement - labor only. Parts additional if supplied.";
-        }
-
-        if (selectedSubcategory === "Toilet Handle Replacement") {
-          base = 65 * zoneMultiplier;
-          detail = "Toilet handle replacement - labor only. Parts additional if supplied.";
-        }
-
-        if (selectedSubcategory === "Toilet Seat Replacement") {
-          base = 45 * zoneMultiplier;
-          detail = "Toilet seat replacement - labor only. Parts additional if supplied.";
-        }
-
-        if (selectedSubcategory === "Bidet Seat Install") {
-          base = 75 * zoneMultiplier;
-          detail = "Bidet seat installation - labor only. Customer supplied bidet seat. Electrical outlet, angle stop, or plumbing modifications not included.";
-        }
-
         if (selectedSubcategory === "Fill Valve Replacement") {
           const qty = Number(document.getElementById("simplePlumbingQty").value || 1);
           base = multiFixturePrice(qty, 125, 85, 65) * zoneMultiplier;
@@ -2484,19 +1593,6 @@
           detail = "Dishwasher supply line replacement - labor only, parts additional";
         }
 
-        if (selectedSubcategory === "Reverse Osmosis Faucet Install") {
-          base = 125 * zoneMultiplier;
-          detail = "Reverse osmosis faucet installation - labor only. Customer supplied RO faucet. Filter system installation or countertop drilling may be additional.";
-        }
-
-        if (
-          selectedSubcategory === "Water Filtration System Install (Quoted)" ||
-          selectedSubcategory === "Instant Hot Water Faucet Install (Quoted)"
-        ) {
-          isQuoted = true;
-          detail = selectedSubcategory;
-        }
-
         if (selectedSubcategory.includes("(Quoted)")) {
           isQuoted = true;
         }
@@ -2516,68 +1612,19 @@
       }
 
       if (selectedCategory === "electrical") {
-        if (selectedSubcategory === "Light Fixture Replacement" || selectedSubcategory === "Light Fixture Install") {
-          const qty = Number(document.getElementById("outletQty").value || 1);
-          base = (qty <= 1 ? 135 : 135 + ((qty - 1) * 95)) * zoneMultiplier;
-          detail = "Light fixture installation/replacement - labor only. Customer supplied fixture. Pricing does not apply to vaulted/high ceilings over 9 ft or chandeliers; those are quoted.";
-        }
-
-        if (selectedSubcategory === "Ceiling Fan Replacement") {
-          const qty = Number(document.getElementById("fanQty").value || 1);
-          base = (qty <= 1 ? 150 : 150 + ((qty - 1) * 135)) * zoneMultiplier;
-          detail = "Ceiling fan replacement - labor only. Customer supplied fan. Pricing does not apply to vaulted/high ceilings over 9 ft; those are quoted.";
-        }
-
-        if (selectedSubcategory === "Exhaust Fan Replacement") {
-          base = 185 * zoneMultiplier;
-          detail = "Bathroom exhaust fan replacement - labor only. Customer supplied fan. Ducting or electrical modifications not included.";
-        }
-
-        if (selectedSubcategory === "GFCI Replacement") {
-          const qty = Number(document.getElementById("outletQty").value || 1);
-          base = (qty <= 1 ? 125 : 125 + ((qty - 1) * 85)) * zoneMultiplier;
-          detail = "GFCI outlet replacement - labor only. GFCI device supplied by Mobile Onsite Handyman or billed separately.";
-        }
-
-        if (selectedSubcategory === "Smoke Detector Replacement") {
-          base = 65 * zoneMultiplier;
-          detail = "Smoke detector replacement - labor only. Device supplied by customer or billed separately.";
-        }
-
-        if (selectedSubcategory === "Carbon Monoxide Detector Replacement") {
-          base = 65 * zoneMultiplier;
-          detail = "Carbon monoxide detector replacement - labor only. Device supplied by customer or billed separately.";
-        }
-
-        if (selectedSubcategory === "Bathroom Vanity Light Replacement") {
-          base = 125 * zoneMultiplier;
-          detail = "Bathroom vanity light replacement - labor only. Customer supplied fixture. Electrical box or wall repairs not included.";
-        }
-
-        if (selectedSubcategory === "Security Camera Install") {
-          base = 125 * zoneMultiplier;
-          detail = "Security camera installation - labor only. Customer supplied camera. Wiring, subscription setup, or network troubleshooting not included.";
-        }
-
-        if (selectedSubcategory === "Floodlight Camera Install") {
-          base = 165 * zoneMultiplier;
-          detail = "Floodlight camera installation - labor only. Customer supplied camera. Wiring or electrical modifications not included.";
-        }
-
+        if (selectedSubcategory === "Light Fixture Install") base = 150 * zoneMultiplier;
         if (selectedSubcategory === "Ring Doorbell Install") base = 115 * zoneMultiplier;
 
         if (selectedSubcategory === "Outlet / Switch Replace") {
           const qty = Number(document.getElementById("outletQty").value || 1);
 
-          base = (qty <= 1 ? 125 : 125 + ((qty - 1) * 50)) * zoneMultiplier;
-          detail = "Outlet or switch replacement - labor only. Device supplied by customer or billed separately.";
+          base = (qty <= 1 ? 150 : 150 + ((qty - 1) * 50)) * zoneMultiplier;
         }
 
         if (selectedSubcategory === "Ceiling Fan Install") {
           const qty = Number(document.getElementById("fanQty").value || 1);
 
           base = (qty <= 1 ? 150 : 150 + ((qty - 1) * 135)) * zoneMultiplier;
-          detail = "Ceiling fan installation - labor only. Customer supplied fan. Pricing does not apply to vaulted/high ceilings over 9 ft; those are quoted.";
         }
 
         if (selectedSubcategory === "Ring Flood Light Camera Install") {
@@ -2589,139 +1636,7 @@
         detail = selectedSubcategory;
       }
 
-      if (selectedCategory === "appliances") {
-        if (selectedSubcategory === "Dishwasher Installation") {
-          base = 225 * zoneMultiplier;
-          detail = "Dishwasher installation - labor only. Standard replacement using existing connections. New supply line, drain hose, air gap, disposal knockout, shut-off valve, cabinet modification, electrical, or plumbing repairs may be additional.";
-        }
-
-        if (selectedSubcategory === "Freestanding Stove / Range Installation") {
-          base = 125 * zoneMultiplier;
-          detail = "Freestanding stove/range installation - labor only. Standard slide-in/standalone appliance connection. Electrical, gas, anti-tip bracket, or fitment modifications are not included.";
-        }
-
-        if (selectedSubcategory === "Wall Oven Installation (Quoted)") {
-          isQuoted = true;
-          detail = "Wall oven installation is quoted based on size, cabinet opening, electrical connection, removal requirements, and appliance weight.";
-        }
-
-        if (selectedSubcategory === "Over-the-Range Microwave Installation") {
-          base = 225 * zoneMultiplier;
-          detail = "Over-the-range microwave installation - labor only. Standard replacement using existing mounting location, outlet, bracket conditions, and vent setup.";
-        }
-
-        if (selectedSubcategory === "Range Hood Installation") {
-          base = 185 * zoneMultiplier;
-          detail = "Range hood installation - labor only. Standard replacement using existing opening and connection. Venting, duct changes, cabinet modifications, or electrical work are quoted separately.";
-        }
-      }
-
-      if (selectedCategory === "appliances") {
-        if (selectedSubcategory === "Dishwasher Installation") {
-          base = 150 * zoneMultiplier;
-          addOns += document.getElementById("dishwasherSupplyLine").checked ? 35 : 0;
-          addOns += document.getElementById("dishwasherPowerCord").checked ? 25 : 0;
-          addOns += document.getElementById("dishwasherDrainHose").checked ? 25 : 0;
-          addOns += document.getElementById("disposalKnockoutRemoval").checked ? 25 : 0;
-          detail = "Dishwasher installation - labor only. Standard replacement using existing connections. New supply line, power cord, drain hose, disposal knockout, shut-off valve, cabinet modification, electrical, or plumbing repairs may be additional.";
-        }
-
-        if (selectedSubcategory === "Dishwasher Removal Only") {
-          base = 75 * zoneMultiplier;
-          detail = "Dishwasher removal only. Haul away or disposal may be additional if required.";
-        }
-
-        if (selectedSubcategory === "Freestanding Stove / Range Installation") {
-          base = 125 * zoneMultiplier;
-          addOns += document.getElementById("newGasConnector").checked ? 45 : 0;
-          addOns += document.getElementById("antiTipBracket").checked ? 25 : 0;
-          detail = "Freestanding stove/range installation - labor only. Standard replacement using existing utility connections. Gas line modifications, shutoff valve replacement, electrical circuit work, cabinetry modification, or conversion kits are not included.";
-        }
-
-        if (selectedSubcategory === "Range Removal Only") {
-          base = 75 * zoneMultiplier;
-          detail = "Range removal only. Haul away or disposal may be additional if required.";
-        }
-
-        if (
-          selectedSubcategory === "Wall Oven Installation (Quoted)" ||
-          selectedSubcategory === "Cooktop Installation (Quoted)" ||
-          selectedSubcategory === "Built-In Microwave Installation (Quoted)"
-        ) {
-          isQuoted = true;
-          detail = selectedSubcategory + " is quoted based on size, opening, electrical/gas connection, removal requirements, and appliance weight.";
-        }
-
-        if (selectedSubcategory === "Over-the-Range Microwave Installation") {
-          base = 225 * zoneMultiplier;
-          detail = "Over-the-range microwave installation - labor only. Standard replacement using existing mounting location, outlet, bracket conditions, and vent setup.";
-        }
-
-        if (selectedSubcategory === "Range Hood Installation") {
-          base = 185 * zoneMultiplier;
-          detail = "Range hood installation - labor only. Standard replacement using existing opening and connection. Venting, duct changes, cabinet modifications, or electrical work are quoted separately.";
-        }
-
-        if (selectedSubcategory === "Refrigerator Installation") {
-          base = 95 * zoneMultiplier;
-          detail = "Refrigerator installation - labor only. Water line connection or modifications are not included unless selected separately.";
-        }
-
-        if (selectedSubcategory === "Washer Installation") {
-          base = 125 * zoneMultiplier;
-          detail = "Washer installation - labor only. Standard connection to existing water supply and drain.";
-        }
-
-        if (selectedSubcategory === "Dryer Installation") {
-          base = 125 * zoneMultiplier;
-          detail = "Dryer installation - labor only. Standard connection to existing power/gas and vent.";
-        }
-
-        if (selectedSubcategory === "Washer / Dryer Set Installation") {
-          base = 225 * zoneMultiplier;
-          detail = "Washer/dryer set installation - labor only. Standard connections to existing utilities.";
-        }
-      }
-
       if (selectedCategory === "doors") {
-        if (selectedSubcategory === "Door Adjustment") {
-          base = 95 * zoneMultiplier;
-          detail = "Door adjustment for rubbing, sticking, hinge alignment, or strike plate alignment.";
-        }
-
-        if (selectedSubcategory === "Door Sweep Replacement") {
-          base = 65 * zoneMultiplier;
-          detail = "Door sweep replacement - labor only. Parts additional if supplied.";
-        }
-
-        if (selectedSubcategory === "Door Closer Adjustment") {
-          base = 65 * zoneMultiplier;
-          detail = "Door closer adjustment for speed, latch, and closing action.";
-        }
-
-        if (selectedSubcategory === "Lockset Replacement") {
-          base = 95 * zoneMultiplier;
-          detail = "Lockset replacement - labor only. Customer supplied lockset.";
-        }
-
-        if (selectedSubcategory === "Deadbolt Replacement") {
-          base = 85 * zoneMultiplier;
-          detail = "Deadbolt replacement - labor only. Customer supplied deadbolt.";
-        }
-
-        if (selectedSubcategory === "Sliding Screen Door Roller Replacement") {
-          base = 95 * zoneMultiplier;
-          detail = "Sliding screen door roller replacement - labor only. Parts additional if supplied.";
-        }
-
-        if (
-          selectedSubcategory === "Interior Door Replacement (Quoted)" ||
-          selectedSubcategory === "Exterior Door Replacement (Quoted)" ||
-          selectedSubcategory === "Window Screen Replacement (Quoted)"
-        ) {
-          isQuoted = true;
-        }
-
         if (selectedSubcategory === "Interior Door Install") base = 150 * zoneMultiplier;
         if (selectedSubcategory === "Pre-Hung Door Install") base = 495 * zoneMultiplier;
         if (selectedSubcategory === "Window Caulking") base = 125 * zoneMultiplier;
@@ -2744,30 +1659,11 @@
           if (document.getElementById("concealedWiring").checked) {
             isQuoted = true;
           }
-        } else if (selectedSubcategory === "Door Jamb Repair (Quoted)") {
-          isQuoted = true;
-          addOns += document.getElementById("weatherStripInstall").checked ? 52 : 0;
-        } else if (selectedSubcategory === "Cabinet Hinge Adjustment") {
-          base = 65 * zoneMultiplier;
-          detail = "Cabinet hinge adjustment.";
-        } else if (selectedSubcategory === "Cabinet Door Repair") {
-          base = 95 * zoneMultiplier;
-          detail = "Cabinet door repair - labor only. Parts additional if supplied.";
-        } else if (selectedSubcategory === "Cabinet Hardware Install") {
-          const qty = Number(document.getElementById("cabinetHardwareQty").value || 1);
-          base = qty * 45 * zoneMultiplier;
-          detail = "Cabinet hardware installation - customer supplied hardware.";
-        } else if (selectedSubcategory === "Shelf Installation") {
-          const qty = Number(document.getElementById("shelfQty").value || 1);
-          base = qty * 85 * zoneMultiplier;
-          detail = "Shelf installation - standard customer supplied shelf.";
         } else {
           isQuoted = true;
         }
 
-        if (!detail) {
-          detail = selectedSubcategory;
-        }
+        detail = selectedSubcategory;
       }
 
       if (selectedCategory === "flooring") {
@@ -2775,146 +1671,7 @@
         detail = selectedSubcategory;
       }
 
-      if (selectedCategory === "propertymanager") {
-        if (selectedSubcategory === "Smoke Detector Compliance Check") {
-          base = 65 * zoneMultiplier;
-          detail = "Smoke detector compliance check - visual and functional check of accessible smoke/CO detectors. Replacement devices or repairs are additional.";
-        }
-
-        if (selectedSubcategory === "Lockset Replacement") {
-          base = 95 * zoneMultiplier;
-          detail = "Lockset replacement - labor only. Customer supplied lockset.";
-        }
-
-        if (selectedSubcategory === "Deadbolt Replacement") {
-          base = 85 * zoneMultiplier;
-          detail = "Deadbolt replacement - labor only. Customer supplied deadbolt.";
-        }
-
-        if (selectedSubcategory === "Mailbox Replacement") {
-          base = 125 * zoneMultiplier;
-          detail = "Mailbox replacement - labor only. Customer supplied mailbox. Post or concrete work not included unless quoted.";
-        }
-
-        if (selectedSubcategory === "House Number Install") {
-          base = 65 * zoneMultiplier;
-          detail = "House number installation - labor only. Customer supplied numbers.";
-        }
-
-        if (selectedSubcategory === "Address Plaque Install") {
-          base = 65 * zoneMultiplier;
-          detail = "Address plaque installation - labor only. Customer supplied plaque.";
-        }
-
-        if (
-          selectedSubcategory === "Move-Out Punch List (Quoted)" ||
-          selectedSubcategory === "Rental Turnover Repairs (Quoted)" ||
-          selectedSubcategory === "Realtor Repair List (Quoted)" ||
-          selectedSubcategory === "Inspection Repair List (Quoted)" ||
-          selectedSubcategory === "Rekey Coordination (Quoted)" ||
-          selectedSubcategory === "Appliance Removal / Haul Away (Quoted)" ||
-          selectedSubcategory === "Tenant Damage Repair (Quoted)"
-        ) {
-          isQuoted = true;
-          detail = selectedSubcategory;
-        }
-      }
-
-      if (selectedCategory === "hauling") {
-        const haulFee = getCustomerDumpFee();
-
-        if (selectedSubcategory === "Single Item Pickup") {
-          base = 75 * zoneMultiplier;
-          detail = "Single item pickup / haul away. Dump fee may be added based on trailer load volume.";
-        }
-
-        if (selectedSubcategory === "Small Haul Away") {
-          base = 125 * zoneMultiplier;
-          detail = "Small haul away. Dump fee added based on trailer load volume.";
-        }
-
-        if (selectedSubcategory === "Garage Clean Out") {
-          base = 225 * zoneMultiplier;
-          detail = "Garage clean out labor. Dump fee added based on trailer load volume.";
-        }
-
-        if (selectedSubcategory === "Storage Unit Clean Out") {
-          base = 225 * zoneMultiplier;
-          detail = "Storage unit clean out labor. Dump fee added based on trailer load volume.";
-        }
-
-        if (selectedSubcategory === "Rental Property Clean Out") {
-          base = 295 * zoneMultiplier;
-          detail = "Rental property clean out labor. Dump fee added based on trailer load volume.";
-        }
-
-        if (selectedSubcategory === "Eviction Clean Out") {
-          base = 395 * zoneMultiplier;
-          detail = "Eviction clean out labor. Dump fee added based on trailer load volume.";
-        }
-
-        if (selectedSubcategory === "Yard Debris Removal") {
-          base = 150 * zoneMultiplier;
-          detail = "Yard debris removal labor. Dump fee added based on trailer load volume.";
-        }
-
-        if (selectedSubcategory === "Construction Debris Removal") {
-          base = 195 * zoneMultiplier;
-          detail = "Construction debris removal labor. Dump fee added based on trailer load volume. Heavy debris may require additional disposal charges.";
-        }
-
-        if (selectedSubcategory === "Appliance Removal") {
-          base = 95 * zoneMultiplier;
-          detail = "Appliance removal labor. Dump fee or disposal fee may be added based on trailer load volume.";
-        }
-
-        if (selectedSubcategory === "Furniture Removal") {
-          base = 95 * zoneMultiplier;
-          detail = "Furniture removal labor. Dump fee added based on trailer load volume.";
-        }
-
-        if (
-          selectedSubcategory === "Hot Tub Removal (Quoted)" ||
-          selectedSubcategory === "Full Property Clean Out (Quoted)"
-        ) {
-          isQuoted = true;
-          detail = selectedSubcategory;
-        }
-
-        if (selectedSubcategory === "Shed Clean Out") {
-          base = 225 * zoneMultiplier;
-          detail = "Shed clean out labor. Dump fee added based on trailer load volume.";
-        }
-
-        addOns += haulFee;
-      }
-
       if (selectedCategory === "exterior") {
-        if (selectedSubcategory === "House Number Install") {
-          base = 65 * zoneMultiplier;
-          detail = "House number installation - labor only. Customer supplied numbers.";
-        }
-
-        if (selectedSubcategory === "Address Plaque Install") {
-          base = 65 * zoneMultiplier;
-          detail = "Address plaque installation - labor only. Customer supplied plaque.";
-        }
-
-        if (selectedSubcategory === "Mailbox Replacement") {
-          base = 125 * zoneMultiplier;
-          detail = "Mailbox replacement - labor only. Customer supplied mailbox. Post or concrete work not included unless quoted.";
-        }
-
-        if (selectedSubcategory === "Gate Latch Replacement") {
-          base = 95 * zoneMultiplier;
-          detail = "Gate latch replacement - labor only. Parts additional if supplied.";
-        }
-
-        if (selectedSubcategory === "Weather Stripping Install") {
-          base = 52 * zoneMultiplier;
-          detail = "Weather stripping installation - labor only. Parts additional if supplied.";
-        }
-
         if (selectedSubcategory === "Fencing / Post Repair / Replacement") {
           const extraPosts = Number(document.getElementById("extraPosts").value || 0);
 
@@ -2932,33 +1689,9 @@
         }
       }
 
-      const manualQuotedPrice = getManualQuotedPrice();
-      const manualQuotedDescription = getManualQuotedDescription();
-
-      if (manualQuotedPrice > 0) {
-        base = manualQuotedPrice;
-        isQuoted = false;
-
-        if (manualQuotedDescription) {
-          detail = manualQuotedDescription;
-        } else if (selectedSubcategory) {
-          detail = selectedSubcategory;
-        } else {
-          detail = "On-site quoted work";
-        }
-      }
-
       document.getElementById("basePrice").textContent = isQuoted ? "Quoted" : formatCurrency(base);
       document.getElementById("addOns").textContent = formatCurrency(addOns);
       document.getElementById("totalPrice").textContent = isQuoted ? (addOns > 0 ? "Quoted +" : "Quoted") : formatCurrency(base + addOns);
-
-      if (quoteItems.length) {
-        document.getElementById("totalPrice").textContent = formatCurrency(getQuoteItemsTotal());
-      }
-
-      if (typeof calculateJobCosting === "function") {
-        calculateJobCosting();
-      }
 
       let detailsText =
         "Service: " + (selectedCategory || "Not selected") +
@@ -2972,355 +1705,12 @@
       document.getElementById("summaryDetails").innerHTML = detailsText;
     }
 
-
-    function getLocalStore(key, fallback) {
-      try {
-        return JSON.parse(localStorage.getItem(key)) || fallback;
-      } catch (error) {
-        return fallback;
-      }
-    }
-
-    function setLocalStore(key, value) {
-      localStorage.setItem(key, JSON.stringify(value));
-    }
-
-    function getCurrentCustomerSnapshot() {
-      return {
-        customerName: document.getElementById("customerName").value || "",
-        phone: document.getElementById("customerPhone").value || "",
-        email: document.getElementById("customerEmail").value || "",
-        address: document.getElementById("customerAddress").value || ""
-      };
-    }
-
-    function saveLocalCustomerRecord(totalOverride, serviceOverride, notesOverride) {
-      const record = getCurrentCustomerSnapshot();
-      const totalText = totalOverride || document.getElementById("totalPrice").textContent || "$0.00";
-      const totalAmount = parseCurrencyValue(totalText);
-      const records = getLocalStore("moh_local_customers", []);
-
-      records.push({
-        ...record,
-        date: new Date().toISOString(),
-        total: totalAmount,
-        totalText: formatCurrency(totalAmount),
-        service: serviceOverride || (quoteItems.length ? "Multiple Repairs" : selectedCategory),
-        notes: notesOverride || (quoteItems.length ? getQuoteItemsText() : (selectedSubcategory || ""))
-      });
-
-      setLocalStore("moh_local_customers", records.slice(-300));
-      refreshLocalDashboard();
-    }
-
-    function searchLocalCustomers() {
-      const query = (document.getElementById("customerSearchInput").value || "").toLowerCase().trim();
-      const wrap = document.getElementById("customerSearchResults");
-      const records = getLocalStore("moh_local_customers", []);
-
-      if (!query) {
-        wrap.innerHTML = "Enter a name, phone, email, or address to search local customer history.";
-        return;
-      }
-
-      const matches = records.filter(function (r) {
-        return (
-          String(r.customerName || "").toLowerCase().includes(query) ||
-          String(r.phone || "").toLowerCase().includes(query) ||
-          String(r.email || "").toLowerCase().includes(query) ||
-          String(r.address || "").toLowerCase().includes(query)
-        );
-      }).slice(-10).reverse();
-
-      if (!matches.length) {
-        wrap.innerHTML = "No local matches found. This searches customer records saved on this device.";
-        return;
-      }
-
-      wrap.innerHTML = matches.map(function (r, index) {
-        return "<div class='mini-result'>" +
-          "<strong>" + (r.customerName || "Customer") + "</strong><br>" +
-          "Phone: " + (r.phone || "") + "<br>" +
-          "Email: " + (r.email || "") + "<br>" +
-          "Address: " + (r.address || "") + "<br>" +
-          "Last Total: " + (r.totalText || "") + "<br>" +
-          "Service: " + (r.service || "") + "<br>" +
-          "<button class='primary-btn small-btn' type='button' onclick='loadLocalCustomer(" + (records.indexOf(r)) + ")'>Load Customer</button>" +
-          "</div>";
-      }).join("");
-    }
-
-    function loadLocalCustomer(index) {
-      const records = getLocalStore("moh_local_customers", []);
-      const r = records[index];
-
-      if (!r) {
-        return;
-      }
-
-      document.getElementById("customerName").value = r.customerName || "";
-      document.getElementById("customerPhone").value = r.phone || "";
-      document.getElementById("customerEmail").value = r.email || "";
-      document.getElementById("customerAddress").value = r.address || "";
-      document.getElementById("copyStatus").textContent = "Customer loaded from local history.";
-    }
-
-    function refreshDraftList() {
-      const list = document.getElementById("draftList");
-      if (!list) return;
-
-      const drafts = getLocalStore("moh_quote_drafts", []);
-      list.innerHTML = "";
-
-      if (!drafts.length) {
-        const opt = document.createElement("option");
-        opt.value = "";
-        opt.textContent = "No saved drafts";
-        list.appendChild(opt);
-        return;
-      }
-
-      drafts.forEach(function (draft, index) {
-        const opt = document.createElement("option");
-        opt.value = index;
-        opt.textContent = draft.name + " - " + new Date(draft.date).toLocaleDateString();
-        list.appendChild(opt);
-      });
-    }
-
-    function saveDraftQuote() {
-      const name = document.getElementById("draftName").value || ("Draft " + new Date().toLocaleString());
-      const drafts = getLocalStore("moh_quote_drafts", []);
-
-      drafts.push({
-        name: name,
-        date: new Date().toISOString(),
-        customer: getCurrentCustomerSnapshot(),
-        selectedCategory: selectedCategory,
-        selectedSubcategory: selectedSubcategory,
-        quoteItems: quoteItems,
-        quoteOutput: document.getElementById("quoteOutput").value || "",
-        total: document.getElementById("totalPrice").textContent || "",
-        photoNotes: document.getElementById("photoNotes") ? document.getElementById("photoNotes").value : "",
-        inspectionImportText: document.getElementById("inspectionImportText") ? document.getElementById("inspectionImportText").value : ""
-      });
-
-      setLocalStore("moh_quote_drafts", drafts.slice(-100));
-      refreshDraftList();
-      document.getElementById("draftStatus").textContent = "Draft saved on this device.";
-    }
-
-    function loadSelectedDraft() {
-      const list = document.getElementById("draftList");
-      const drafts = getLocalStore("moh_quote_drafts", []);
-      const draft = drafts[Number(list.value)];
-
-      if (!draft) {
-        document.getElementById("draftStatus").textContent = "No draft selected.";
-        return;
-      }
-
-      document.getElementById("customerName").value = draft.customer.customerName || "";
-      document.getElementById("customerPhone").value = draft.customer.phone || "";
-      document.getElementById("customerEmail").value = draft.customer.email || "";
-      document.getElementById("customerAddress").value = draft.customer.address || "";
-      selectedCategory = draft.selectedCategory || "";
-      selectedSubcategory = draft.selectedSubcategory || "";
-      quoteItems = draft.quoteItems || [];
-      document.getElementById("quoteOutput").value = draft.quoteOutput || "";
-      if (document.getElementById("photoNotes")) document.getElementById("photoNotes").value = draft.photoNotes || "";
-      if (document.getElementById("inspectionImportText")) document.getElementById("inspectionImportText").value = draft.inspectionImportText || "";
-
-      renderQuoteItems();
-      calculateEstimate();
-      document.getElementById("draftStatus").textContent = "Draft loaded.";
-    }
-
-    function deleteSelectedDraft() {
-      const list = document.getElementById("draftList");
-      const drafts = getLocalStore("moh_quote_drafts", []);
-      const idx = Number(list.value);
-
-      if (Number.isNaN(idx) || !drafts[idx]) {
-        document.getElementById("draftStatus").textContent = "No draft selected.";
-        return;
-      }
-
-      drafts.splice(idx, 1);
-      setLocalStore("moh_quote_drafts", drafts);
-      refreshDraftList();
-      document.getElementById("draftStatus").textContent = "Draft deleted.";
-    }
-
-    function applyPropertyPackage(type) {
-      const packages = {
-        small: {
-          name: "Small Rental Turnover Package",
-          total: 295,
-          items: [
-            "Smoke detector compliance check",
-            "Door adjustment / minor hardware adjustment",
-            "Outlet / switch plate check",
-            "General punch-list touch-ups"
-          ]
-        },
-        standard: {
-          name: "Standard Rental Turnover Package",
-          total: 595,
-          items: [
-            "Smoke detector compliance check",
-            "Lockset or deadbolt replacement allowance",
-            "Minor plumbing / fixture check",
-            "Door adjustment",
-            "Small drywall or paint touch-up allowance"
-          ]
-        },
-        heavy: {
-          name: "Heavy Rental Turnover / Realtor Repair Package",
-          total: 0,
-          items: [
-            "Multiple repair list",
-            "Tenant damage repairs",
-            "Inspection response repairs",
-            "Appliance / plumbing / door / drywall items"
-          ]
-        }
-      };
-
-      const pkg = packages[type];
-
-      if (!pkg) return;
-
-      if (type === "heavy") {
-        document.getElementById("manualQuotedPrice").value = 0;
-        document.getElementById("manualQuotedDescription").value = pkg.name + " - quoted after review";
-        document.getElementById("packageStatus").textContent = "Heavy package selected. Enter the quoted price in Section 5, then add current item.";
-        selectedCategory = "propertymanager";
-        selectedSubcategory = "Rental Turnover Repairs (Quoted)";
-        calculateEstimate();
-        return;
-      }
-
-      quoteItems.push({
-        category: "propertymanager",
-        service: pkg.name,
-        description: pkg.name + ": " + pkg.items.join(", "),
-        base: pkg.total,
-        addOns: 0,
-        total: pkg.total
-      });
-
-      renderQuoteItems();
-      calculateEstimate();
-      document.getElementById("packageStatus").textContent = pkg.name + " added to quote.";
-    }
-
-    function handlePhotoSelection() {
-      const input = document.getElementById("photoInput");
-      const list = document.getElementById("photoList");
-
-      if (!input || !list) return;
-
-      if (!input.files || !input.files.length) {
-        list.textContent = "No photos selected.";
-        return;
-      }
-
-      const names = Array.from(input.files).map(function (file) {
-        return file.name;
-      });
-
-      list.innerHTML = "Selected photos:<br>" + names.join("<br>");
-    }
-
-    function getPhotoQuoteNote() {
-      const input = document.getElementById("photoInput");
-      const notes = document.getElementById("photoNotes") ? document.getElementById("photoNotes").value.trim() : "";
-
-      let photoText = "";
-
-      if (input && input.files && input.files.length) {
-        photoText += "\nPhotos referenced: " + Array.from(input.files).map(function (file) { return file.name; }).join(", ");
-      }
-
-      if (notes) {
-        photoText += "\nPhoto notes: " + notes;
-      }
-
-      return photoText;
-    }
-
-    function importInspectionRepairList() {
-      const text = document.getElementById("inspectionImportText").value.trim();
-
-      if (!text) {
-        document.getElementById("inspectionImportStatus").textContent = "Paste an inspection repair list first.";
-        return;
-      }
-
-      quoteItems.push({
-        category: "inspection",
-        service: "Inspection Repair List",
-        description: "Inspection Repair List Review",
-        base: 0,
-        addOns: 0,
-        total: 0,
-        quoted: true,
-        notes: text
-      });
-
-      document.getElementById("manualQuotedDescription").value = "Inspection repair list";
-      document.getElementById("inspectionImportStatus").textContent = "Inspection repair list imported. Enter quoted price in Section 5 and add as current item if pricing is ready.";
-      renderQuoteItems();
-    }
-
-    function clearInspectionImport() {
-      document.getElementById("inspectionImportText").value = "";
-      document.getElementById("inspectionImportStatus").textContent = "Inspection import cleared.";
-    }
-
-    function refreshLocalDashboard() {
-      const wrap = document.getElementById("localDashboard");
-      if (!wrap) return;
-
-      const records = getLocalStore("moh_local_customers", []);
-      const drafts = getLocalStore("moh_quote_drafts", []);
-
-      const totalRevenue = records.reduce(function (sum, r) { return sum + (Number(r.total) || 0); }, 0);
-      const avgTicket = records.length ? totalRevenue / records.length : 0;
-
-      const categoryCounts = {};
-      records.forEach(function (r) {
-        const key = r.service || "Unknown";
-        categoryCounts[key] = (categoryCounts[key] || 0) + 1;
-      });
-
-      const topCategories = Object.keys(categoryCounts)
-        .sort(function (a, b) { return categoryCounts[b] - categoryCounts[a]; })
-        .slice(0, 5)
-        .map(function (key) { return key + " (" + categoryCounts[key] + ")"; })
-        .join("<br>");
-
-      wrap.innerHTML =
-        "<strong>Local Dashboard</strong><br>" +
-        "Saved customer records on this device: " + records.length + "<br>" +
-        "Saved draft quotes: " + drafts.length + "<br>" +
-        "Local revenue tracked: " + formatCurrency(totalRevenue) + "<br>" +
-        "Average ticket: " + formatCurrency(avgTicket) + "<br><br>" +
-        "<strong>Top local categories:</strong><br>" +
-        (topCategories || "No data yet");
-    }
-
-
     function generateQuote() {
-      calculateEstimate();
-
       const customerName = document.getElementById("customerName").value || "Customer";
       const customerPhone = document.getElementById("customerPhone").value || "";
       const customerEmail = document.getElementById("customerEmail").value || "";
       const customerAddress = document.getElementById("customerAddress").value || "";
-      const total = quoteItems.length ? formatCurrency(getQuoteItemsTotal()) : document.getElementById("totalPrice").textContent;
-      const multiItemText = getQuoteItemsText();
+      const total = document.getElementById("totalPrice").textContent;
 
       let noteBlock = "";
 
@@ -3336,42 +1726,15 @@
         noteBlock += "\nPlumbing pricing is labor only unless noted otherwise.";
       }
 
-      if (selectedCategory === "electrical") {
-        noteBlock += "\nElectrical pricing assumes standard ceiling height and accessible existing wiring. Vaulted/high ceilings over 9 ft and chandeliers are quoted.";
-      }
-
-      if (selectedCategory === "appliances") {
-        noteBlock += "\nAppliance installation pricing assumes standard replacement conditions and accessible existing connections. Modifications are quoted separately.";
-      }
-
-      if (selectedCategory === "propertymanager") {
-        noteBlock += "\nProperty manager / realtor pricing is based on accessible standard repairs. Larger repair lists, tenant damage, and inspection response repairs may be quoted as a package.";
-      }
-
-      if (selectedCategory === "hauling") {
-        noteBlock += "\nHaul-away pricing is based on trailer load volume. Heavy materials including concrete, dirt, tile, brick, roofing, masonry, and excessively heavy debris may require additional disposal charges.";
-      }
-
       if (
         selectedCategory === "plumbing" &&
         (
-          selectedSubcategory === "Kitchen Faucet Installation" ||
-          selectedSubcategory === "Kitchen Faucet Installation w/ Disposal or Drainpipe Removal" ||
-          selectedSubcategory === "Bathroom Faucet Installation" ||
-          selectedSubcategory === "Widespread Bathroom Faucet Installation" ||
-          selectedSubcategory === "Bathroom Faucet Drain Assembly" ||
-          selectedSubcategory === "Toilet Supply Line Replacement" ||
-          selectedSubcategory === "Ice Maker Supply Line Replacement" ||
-          selectedSubcategory === "Refrigerator Water Line Install" ||
-          selectedSubcategory === "Garbage Disposal Replacement" ||
           selectedSubcategory === "Bathroom Sink Pop-Up Strainer Replacement" ||
           selectedSubcategory === "P-Trap Replacement (Labor Only)" ||
           selectedSubcategory === "Lavatory Drain Assembly Replacement" ||
           selectedSubcategory === "Basket Strainer Replacement (Kitchen Sink)" ||
           selectedSubcategory === "Garbage Disposal Removal Only" ||
           selectedSubcategory === "Toilet Wax Ring Replacement" ||
-          selectedSubcategory === "Toilet Rebuild Kit Install" ||
-          selectedSubcategory === "Flush Valve Replacement" ||
           selectedSubcategory === "Fill Valve Replacement" ||
           selectedSubcategory === "Flapper Replacement" ||
           selectedSubcategory === "Tub Spout Replacement" ||
@@ -3387,19 +1750,6 @@
         selectedSubcategory === "Angle Stop Replacement"
       ) {
         noteBlock += "\nStandard angle stop replacement starts at $150 labor. Price may be reduced when added to other plumbing fixture replacement work during the same service call.";
-      }
-
-      if (typeof getManualQuotedPrice === "function" && getManualQuotedPrice() > 0) {
-        noteBlock += "\nQuoted price entered on-site based on actual scope and conditions.";
-      }
-
-      if (
-        selectedCategory === "carpentry" &&
-        selectedSubcategory === "Door Jamb Repair (Quoted)" &&
-        document.getElementById("weatherStripInstall") &&
-        document.getElementById("weatherStripInstall").checked
-      ) {
-        noteBlock += "\nIncludes weather strip install add-on.";
       }
 
       if (
@@ -3419,33 +1769,28 @@
         "Hi " + customerName + ",\n\n" +
         "This is Tim with Mobile Onsite Handyman Services.\n\n" +
         "Here is your estimated repair cost:\n\n" +
-        (quoteItems.length ? "Work Items:\n" + multiItemText + "\n\n" : "") +
-        "Service: " + (quoteItems.length ? "Multiple Repairs" : (selectedCategory || "Not selected")) + "\n" +
-        "Type: " + (quoteItems.length ? getQuoteItemsTypeText() : (typeof getDisplayServiceType === "function" ? getDisplayServiceType() : (selectedSubcategory || "Not selected"))) + "\n" +
+        "Service: " + (selectedCategory || "Not selected") + "\n" +
+        "Type: " + (selectedSubcategory || "Not selected") + "\n" +
         "Property: " + customerAddress + "\n" +
         "Phone: " + customerPhone + "\n" +
         "Email: " + customerEmail + "\n\n" +
-        "Estimated Total: " + total + getCustomerTaxLineText() + "\n" +
-        noteBlock +
-        getPhotoQuoteNote() + "\n\n" +
-        "Final pricing may be adjusted on-site based on conditions, access, or additional work requested.\n\n" +
+        "Estimated Total: " + total + "\n" +
+        noteBlock + "\n\n" +
+        "Final pricing may be adjusted after review of photos, site conditions, access, materials, or additional work requested.\n\n" +
         "Thanks,\nTim\nMobile Onsite Handyman\n951-388-4744";
 
       document.getElementById("quoteOutput").value = text;
     }
 
     function generateInvoice() {
-      calculateEstimate();
-
       const customerName = document.getElementById("customerName").value || "Customer";
       const customerPhone = document.getElementById("customerPhone").value || "";
       const customerEmail = document.getElementById("customerEmail").value || "";
       const customerAddress = document.getElementById("customerAddress").value || "";
-      const total = quoteItems.length ? formatCurrency(getQuoteItemsTotal()) : document.getElementById("totalPrice").textContent;
-      const multiItemText = getQuoteItemsText();
+      const total = document.getElementById("totalPrice").textContent;
 
       const text =
-        "INVOICE\n\n" +
+        "CUSTOMER SUMMARY\n\n" +
         "Mobile Onsite Handyman Services LLC\n" +
         "Phone: 951-388-4744\n\n" +
         "Bill To: " + customerName + "\n" +
@@ -3453,18 +1798,16 @@
         "Email: " + customerEmail + "\n" +
         "Property: " + customerAddress + "\n\n" +
         "Work Completed:\n" +
-        (quoteItems.length ? multiItemText + "\n\n" : "") +
-        "Service: " + (quoteItems.length ? "Multiple Repairs" : (selectedCategory || "Not selected")) + "\n" +
-        "Type: " + (quoteItems.length ? getQuoteItemsTypeText() : (typeof getDisplayServiceType === "function" ? getDisplayServiceType() : (selectedSubcategory || "Not selected"))) + "\n\n" +
-        "Amount Due: " + total + getCustomerTaxLineText() + "\n" +
-        getPhotoQuoteNote() + "\n\n" +
+        "Service: " + (selectedCategory || "Not selected") + "\n" +
+        "Type: " + (selectedSubcategory || "Not selected") + "\n\n" +
+        "Estimated Total: " + total + "\n\n" +
         "Accepted Payment Methods:\n" +
         "- Cash\n" +
         "- Zelle\n" +
         "- Venmo\n" +
         "- Cash App\n" +
         "- Credit / Debit Card\n\n" +
-        "Payment Status: Due upon completion\n\n" +
+        "Estimate status: Pending final review\n\n" +
         "Thank you,\n" +
         "Tim\n" +
         "Mobile Onsite Handyman Services LLC";
@@ -3499,188 +1842,27 @@
     }
 
 
-    function getCurrentCustomerTotalAmount() {
-      const totalText = quoteItems.length ? formatCurrency(getQuoteItemsTotal()) : (document.getElementById("totalPrice").textContent || "$0.00");
-      return parseCurrencyValue(totalText);
-    }
+    function getQuoteTextForEmail() {
+      let quoteText = document.getElementById("quoteOutput").value || "";
 
-    function getNumberFieldValue(id) {
-      const field = document.getElementById(id);
-      if (!field) return 0;
-      return Number(field.value || 0) || 0;
-    }
-
-
-    function calculateDumpFeeFromLoad() {
-      const baseRate = getNumberFieldValue("dumpFeeBaseRate") || 25;
-      const multiplier = getNumberFieldValue("dumpLoadMultiplier");
-      const dumpFee = baseRate * multiplier;
-      const dumpFeeField = document.getElementById("dumpFee");
-      const status = document.getElementById("dumpFeeCalcStatus");
-
-      if (dumpFeeField) {
-        dumpFeeField.value = dumpFee.toFixed(2);
+      if (!quoteText) {
+        generateQuote();
+        quoteText = document.getElementById("quoteOutput").value || "";
       }
 
-      if (status) {
-        status.textContent = "Dump fee calculated: " + formatCurrency(baseRate) + " x " + multiplier + " load(s) = " + formatCurrency(dumpFee);
-      }
-
-      calculateJobCosting();
+      return quoteText;
     }
-
-    function setDumpLoadMultiplier(value) {
-      const field = document.getElementById("dumpLoadMultiplier");
-
-      if (field) {
-        field.value = value;
-      }
-
-      calculateDumpFeeFromLoad();
-    }
-
-
-    function calculateJobCosting() {
-      const baseCustomerTotal = getCurrentCustomerTotalAmount();
-      const materialCost = getNumberFieldValue("materialCost");
-      const dumpFee = getNumberFieldValue("dumpFee");
-      const permitFee = getNumberFieldValue("permitFee");
-      const additionalLaborHours = getNumberFieldValue("additionalLaborHours");
-      const taxRate = getNumberFieldValue("taxRate");
-      const applyTax = document.getElementById("applyTax") ? document.getElementById("applyTax").checked : false;
-
-      const taxCollected = applyTax ? baseCustomerTotal * (taxRate / 100) : 0;
-      const customerTotalWithTax = baseCustomerTotal + taxCollected;
-      const estimatedJobCost = materialCost + dumpFee + permitFee;
-      const estimatedGrossProfit = customerTotalWithTax - estimatedJobCost;
-      const profitMargin = customerTotalWithTax > 0 ? (estimatedGrossProfit / customerTotalWithTax) * 100 : 0;
-
-      if (document.getElementById("costCustomerTotal")) {
-        document.getElementById("costCustomerTotal").textContent = formatCurrency(customerTotalWithTax);
-        document.getElementById("taxCollected").textContent = formatCurrency(taxCollected);
-        document.getElementById("estimatedJobCost").textContent = formatCurrency(estimatedJobCost);
-        document.getElementById("estimatedGrossProfit").textContent = formatCurrency(estimatedGrossProfit);
-        document.getElementById("profitMargin").textContent = profitMargin.toFixed(1) + "%";
-
-        const status = document.getElementById("profitStatus");
-        if (profitMargin >= 70) {
-          status.innerHTML = "<span class='profit-good'>Good profit range.</span> Strong job based on entered cost.";
-        } else if (profitMargin >= 50) {
-          status.innerHTML = "<span class='profit-watch'>Watch margin.</span> Job may still be acceptable depending on labor time and customer value.";
-        } else {
-          status.innerHTML = "<span class='profit-low'>Low margin.</span> Review pricing, materials, scope, or risk before approving.";
-        }
-      }
-
-      return {
-        baseCustomerTotal,
-        customerTotalWithTax,
-        materialCost,
-        dumpFee,
-        permitFee,
-        additionalLaborHours,
-        taxRate,
-        applyTax,
-        taxCollected,
-        estimatedJobCost,
-        estimatedGrossProfit,
-        profitMargin
-      };
-    }
-
-    function getJobCostingData() {
-      const costing = calculateJobCosting();
-      const notes = document.getElementById("internalJobNotes");
-      return {
-        materialCost: formatCurrency(costing.materialCost),
-        dumpFee: formatCurrency(costing.dumpFee),
-        dumpFeeBaseRate: formatCurrency(getNumberFieldValue("dumpFeeBaseRate") || 25),
-        dumpLoadMultiplier: getNumberFieldValue("dumpLoadMultiplier"),
-        permitFee: formatCurrency(costing.permitFee),
-        additionalLaborHours: costing.additionalLaborHours,
-        taxRate: costing.taxRate,
-        applyTax: costing.applyTax ? "Yes" : "No",
-        taxCollected: formatCurrency(costing.taxCollected),
-        customerTotalWithTax: formatCurrency(costing.customerTotalWithTax),
-        estimatedJobCost: formatCurrency(costing.estimatedJobCost),
-        estimatedGrossProfit: formatCurrency(costing.estimatedGrossProfit),
-        profitMargin: costing.profitMargin.toFixed(1) + "%",
-        internalNotes: notes ? notes.value || "" : ""
-      };
-    }
-
-    function getCustomerTaxLineText() {
-      const costing = calculateJobCosting();
-      if (!costing.applyTax || costing.taxCollected <= 0) return "";
-      return "\nTax (" + costing.taxRate + "%): " + formatCurrency(costing.taxCollected) +
-             "\nTotal Due: " + formatCurrency(costing.customerTotalWithTax);
-    }
-
-
-    async function saveInvoice() {
-      calculateEstimate();
-
-      const data = {
-        invoiceNumber: "REP-INV-" + Date.now(),
-        sourceApp: "Repairs App",
-        customerName: document.getElementById("customerName").value || "",
-        phone: document.getElementById("customerPhone").value || "",
-        email: document.getElementById("customerEmail").value || "",
-        address: document.getElementById("customerAddress").value || "",
-        service: quoteItems.length ? "Multiple Repairs" : (selectedCategory || ""),
-        type: quoteItems.length ? getQuoteItemsTypeText() : getDisplayServiceType(),
-        total: quoteItems.length ? formatCurrency(getQuoteItemsTotal()) : (document.getElementById("totalPrice").textContent || ""),
-        customerDumpFee: formatCurrency(getCustomerDumpFee()),
-       paymentStatus: document.getElementById("paymentStatus").value || "Due upon completion",
-       paymentMethod: document.getElementById("paymentMethod").value || "",
-       notes: quoteItems.length ? getQuoteItemsText() : getDisplayServiceType(),
-        jobCosting: getJobCostingData()
-      };
-
-   try {
-
-  await fetch("https://script.google.com/macros/s/AKfycbzpAvHREQwQRzolPg2KGiAIN86c5x7T6we86_NmKt7bMfIU90X4Wd3mXux19R05w4EtnQ/exec", {
-    method: "POST",
-    mode: "no-cors",
-    body: JSON.stringify(data),
-    headers: {
-      "Content-Type": "text/plain"
-    }
-  });
-
-  document.getElementById("copyStatus").textContent =
-    "Invoice sent to database. Check Google Sheets.";
-
-  saveLocalCustomerRecord(
-    quoteItems.length ? formatCurrency(getQuoteItemsTotal()) : (document.getElementById("totalPrice").textContent || ""),
-    quoteItems.length ? "Multiple Repairs" : (selectedCategory || ""),
-    quoteItems.length ? getQuoteItemsText() : (selectedSubcategory || "")
-  );
-
-} catch (error) {
-  console.error(error);
-  document.getElementById("copyStatus").textContent =
-    "Connection error.";
-}
-    }
-
-
 
     function openGmailQuote() {
       const customerEmail = document.getElementById("customerEmail").value || "";
-      const quoteText = document.getElementById("quoteOutput").value || "";
+      const quoteText = getQuoteTextForEmail();
 
       if (!quoteText) {
         document.getElementById("copyStatus").textContent = "Generate the quote first.";
         return;
       }
 
-      if (!customerEmail) {
-        document.getElementById("copyStatus").textContent = "Enter customer email first.";
-        return;
-      }
-
-      const subject = "Estimate from Mobile Onsite Handyman Services";
+      const subject = "Repair Estimate from Mobile Onsite Handyman Services";
       const gmailLink =
         "https://mail.google.com/mail/?view=cm&fs=1" +
         "&to=" + encodeURIComponent(customerEmail) +
@@ -3692,19 +1874,14 @@
 
     function openEmailQuote() {
       const customerEmail = document.getElementById("customerEmail").value || "";
-      const quoteText = document.getElementById("quoteOutput").value || "";
+      const quoteText = getQuoteTextForEmail();
 
       if (!quoteText) {
         document.getElementById("copyStatus").textContent = "Generate the quote first.";
         return;
       }
 
-      if (!customerEmail) {
-        document.getElementById("copyStatus").textContent = "Enter customer email first.";
-        return;
-      }
-
-      const subject = "Estimate from Mobile Onsite Handyman Services";
+      const subject = "Repair Estimate from Mobile Onsite Handyman Services";
       const mailtoLink =
         "mailto:" + encodeURIComponent(customerEmail) +
         "?subject=" + encodeURIComponent(subject) +
@@ -3713,14 +1890,30 @@
       window.location.href = mailtoLink;
     }
 
+    function sendEstimateRequestToBusiness() {
+      const quoteText = getQuoteTextForEmail();
+
+      if (!quoteText) {
+        document.getElementById("copyStatus").textContent = "Generate the quote first.";
+        return;
+      }
+
+      const subject = "New Repair Estimate Request";
+      const body =
+        quoteText +
+        "\n\nCustomer is requesting review/confirmation of this estimate.";
+
+      const mailtoLink =
+        "mailto:mobileonsitehandyman@gmail.com" +
+        "?subject=" + encodeURIComponent(subject) +
+        "&body=" + encodeURIComponent(body);
+
+      window.location.href = mailtoLink;
+    }
+
+
     function openTextMessage() {
-      const customerPhone = document.getElementById("customerPhone").value || "";
-      const quoteText = document.getElementById("quoteOutput").value || "";
-
-      if (!quoteText || !customerPhone) return;
-
-      const cleanedPhone = customerPhone.replace(/\D/g, "");
-      window.location.href = "sms:" + cleanedPhone + "?body=" + encodeURIComponent(quoteText);
+      openEmailQuote();
     }
 
     function copyQuote() {
