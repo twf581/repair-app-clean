@@ -226,6 +226,31 @@
       font-size: 14px;
     }
 
+    .feature-panel {
+      border: 1px solid #bfdbfe;
+      background: #eff6ff;
+      border-radius: 14px;
+      padding: 14px;
+      margin-bottom: 12px;
+    }
+
+    .mini-result {
+      background: white;
+      border: 1px solid #dbeafe;
+      border-radius: 12px;
+      padding: 10px;
+      margin-top: 8px;
+      font-size: 14px;
+      line-height: 1.45;
+    }
+
+    .photo-list {
+      font-size: 14px;
+      color: #475569;
+      margin-top: 8px;
+      line-height: 1.5;
+    }
+
     @media (max-width: 800px) {
       .grid-2,
       .grid-3 {
@@ -790,6 +815,70 @@
       </div>
     </div>
 
+    <div id="businessToolsCard" class="card hidden">
+      <h2>5. Field Tools</h2>
+
+      <div class="feature-panel">
+        <div class="pill">Saved Draft Quotes</div>
+        <label>Draft Name</label>
+        <input id="draftName" placeholder="Example: Smith kitchen and door repairs" />
+        <div class="grid-3">
+          <button class="primary-btn" type="button" onclick="saveDraftQuote()">Save Draft</button>
+          <button class="secondary-btn" type="button" onclick="loadSelectedDraft()">Load Draft</button>
+          <button class="dark-btn" type="button" onclick="deleteSelectedDraft()">Delete Draft</button>
+        </div>
+        <label>Saved Drafts</label>
+        <select id="draftList"></select>
+        <div id="draftStatus" class="mini-result">Drafts are saved on this device/browser.</div>
+      </div>
+
+      <div class="feature-panel">
+        <div class="pill">Customer Search</div>
+        <label>Search Customer History</label>
+        <input id="customerSearchInput" placeholder="Search name, phone, email, or address" oninput="searchLocalCustomers()" />
+        <div id="customerSearchResults" class="mini-result">
+          Customer history saved from this device will appear here. Google Sheets lookup can be added later with a CRM search API.
+        </div>
+      </div>
+
+      <div class="feature-panel">
+        <div class="pill">Property Manager / Realtor Packages</div>
+        <div class="grid-3">
+          <button class="primary-btn" type="button" onclick="applyPropertyPackage('small')">Small Turnover</button>
+          <button class="primary-btn" type="button" onclick="applyPropertyPackage('standard')">Standard Turnover</button>
+          <button class="primary-btn" type="button" onclick="applyPropertyPackage('heavy')">Heavy Turnover</button>
+        </div>
+        <div id="packageStatus" class="mini-result">
+          Packages add common turnover work as multi-item quote lines. Adjust or clear items before sending.
+        </div>
+      </div>
+
+      <div class="feature-panel">
+        <div class="pill">Photo Notes</div>
+        <label>Attach / Reference Job Photos</label>
+        <input id="photoInput" type="file" accept="image/*" multiple onchange="handlePhotoSelection()" />
+        <textarea id="photoNotes" rows="4" placeholder="Photo notes: front door damage, under sink leak, drywall patch location, etc."></textarea>
+        <div id="photoList" class="photo-list">No photos selected. Email buttons cannot attach photos automatically, but the names/notes can be included in the quote.</div>
+      </div>
+
+      <div class="feature-panel">
+        <div class="pill">Inspection-to-Repair Import</div>
+        <label>Paste Inspection Repair List</label>
+        <textarea id="inspectionImportText" rows="5" placeholder="Paste inspection findings or repair list here"></textarea>
+        <div class="grid-2">
+          <button class="primary-btn" type="button" onclick="importInspectionRepairList()">Import as Quoted Repair List</button>
+          <button class="secondary-btn" type="button" onclick="clearInspectionImport()">Clear Import</button>
+        </div>
+        <div id="inspectionImportStatus" class="mini-result">Imported inspection items will be added as a quoted multi-item line.</div>
+      </div>
+
+      <div class="feature-panel">
+        <div class="pill">Local Profit Dashboard</div>
+        <div id="localDashboard" class="mini-result">Dashboard will update from quotes saved on this device.</div>
+        <button class="secondary-btn" type="button" onclick="refreshLocalDashboard()">Refresh Dashboard</button>
+      </div>
+    </div>
+
     <div id="summaryCard" class="card hidden">
       <h2>5. Estimate</h2>
 
@@ -1257,11 +1346,15 @@
       if (currentZone) {
         document.getElementById("serviceCard").classList.remove("hidden");
         document.getElementById("summaryCard").classList.remove("hidden");
+        const businessToolsCard = document.getElementById("businessToolsCard");
+        if (businessToolsCard) businessToolsCard.classList.remove("hidden");
       } else {
         document.getElementById("serviceCard").classList.add("hidden");
         document.getElementById("subcategoryCard").classList.add("hidden");
         document.getElementById("detailsCard").classList.add("hidden");
         document.getElementById("summaryCard").classList.add("hidden");
+        const businessToolsCard = document.getElementById("businessToolsCard");
+        if (businessToolsCard) businessToolsCard.classList.add("hidden");
       }
 
       calculateEstimate();
@@ -2565,6 +2658,346 @@
       document.getElementById("summaryDetails").innerHTML = detailsText;
     }
 
+
+    function getLocalStore(key, fallback) {
+      try {
+        return JSON.parse(localStorage.getItem(key)) || fallback;
+      } catch (error) {
+        return fallback;
+      }
+    }
+
+    function setLocalStore(key, value) {
+      localStorage.setItem(key, JSON.stringify(value));
+    }
+
+    function getCurrentCustomerSnapshot() {
+      return {
+        customerName: document.getElementById("customerName").value || "",
+        phone: document.getElementById("customerPhone").value || "",
+        email: document.getElementById("customerEmail").value || "",
+        address: document.getElementById("customerAddress").value || ""
+      };
+    }
+
+    function saveLocalCustomerRecord(totalOverride, serviceOverride, notesOverride) {
+      const record = getCurrentCustomerSnapshot();
+      const totalText = totalOverride || document.getElementById("totalPrice").textContent || "$0.00";
+      const totalAmount = parseCurrencyValue(totalText);
+      const records = getLocalStore("moh_local_customers", []);
+
+      records.push({
+        ...record,
+        date: new Date().toISOString(),
+        total: totalAmount,
+        totalText: formatCurrency(totalAmount),
+        service: serviceOverride || (quoteItems.length ? "Multiple Repairs" : selectedCategory),
+        notes: notesOverride || (quoteItems.length ? getQuoteItemsText() : (selectedSubcategory || ""))
+      });
+
+      setLocalStore("moh_local_customers", records.slice(-300));
+      refreshLocalDashboard();
+    }
+
+    function searchLocalCustomers() {
+      const query = (document.getElementById("customerSearchInput").value || "").toLowerCase().trim();
+      const wrap = document.getElementById("customerSearchResults");
+      const records = getLocalStore("moh_local_customers", []);
+
+      if (!query) {
+        wrap.innerHTML = "Enter a name, phone, email, or address to search local customer history.";
+        return;
+      }
+
+      const matches = records.filter(function (r) {
+        return (
+          String(r.customerName || "").toLowerCase().includes(query) ||
+          String(r.phone || "").toLowerCase().includes(query) ||
+          String(r.email || "").toLowerCase().includes(query) ||
+          String(r.address || "").toLowerCase().includes(query)
+        );
+      }).slice(-10).reverse();
+
+      if (!matches.length) {
+        wrap.innerHTML = "No local matches found. This searches customer records saved on this device.";
+        return;
+      }
+
+      wrap.innerHTML = matches.map(function (r, index) {
+        return "<div class='mini-result'>" +
+          "<strong>" + (r.customerName || "Customer") + "</strong><br>" +
+          "Phone: " + (r.phone || "") + "<br>" +
+          "Email: " + (r.email || "") + "<br>" +
+          "Address: " + (r.address || "") + "<br>" +
+          "Last Total: " + (r.totalText || "") + "<br>" +
+          "Service: " + (r.service || "") + "<br>" +
+          "<button class='primary-btn small-btn' type='button' onclick='loadLocalCustomer(" + (records.indexOf(r)) + ")'>Load Customer</button>" +
+          "</div>";
+      }).join("");
+    }
+
+    function loadLocalCustomer(index) {
+      const records = getLocalStore("moh_local_customers", []);
+      const r = records[index];
+
+      if (!r) {
+        return;
+      }
+
+      document.getElementById("customerName").value = r.customerName || "";
+      document.getElementById("customerPhone").value = r.phone || "";
+      document.getElementById("customerEmail").value = r.email || "";
+      document.getElementById("customerAddress").value = r.address || "";
+      document.getElementById("copyStatus").textContent = "Customer loaded from local history.";
+    }
+
+    function refreshDraftList() {
+      const list = document.getElementById("draftList");
+      if (!list) return;
+
+      const drafts = getLocalStore("moh_quote_drafts", []);
+      list.innerHTML = "";
+
+      if (!drafts.length) {
+        const opt = document.createElement("option");
+        opt.value = "";
+        opt.textContent = "No saved drafts";
+        list.appendChild(opt);
+        return;
+      }
+
+      drafts.forEach(function (draft, index) {
+        const opt = document.createElement("option");
+        opt.value = index;
+        opt.textContent = draft.name + " - " + new Date(draft.date).toLocaleDateString();
+        list.appendChild(opt);
+      });
+    }
+
+    function saveDraftQuote() {
+      const name = document.getElementById("draftName").value || ("Draft " + new Date().toLocaleString());
+      const drafts = getLocalStore("moh_quote_drafts", []);
+
+      drafts.push({
+        name: name,
+        date: new Date().toISOString(),
+        customer: getCurrentCustomerSnapshot(),
+        selectedCategory: selectedCategory,
+        selectedSubcategory: selectedSubcategory,
+        quoteItems: quoteItems,
+        quoteOutput: document.getElementById("quoteOutput").value || "",
+        total: document.getElementById("totalPrice").textContent || "",
+        photoNotes: document.getElementById("photoNotes") ? document.getElementById("photoNotes").value : "",
+        inspectionImportText: document.getElementById("inspectionImportText") ? document.getElementById("inspectionImportText").value : ""
+      });
+
+      setLocalStore("moh_quote_drafts", drafts.slice(-100));
+      refreshDraftList();
+      document.getElementById("draftStatus").textContent = "Draft saved on this device.";
+    }
+
+    function loadSelectedDraft() {
+      const list = document.getElementById("draftList");
+      const drafts = getLocalStore("moh_quote_drafts", []);
+      const draft = drafts[Number(list.value)];
+
+      if (!draft) {
+        document.getElementById("draftStatus").textContent = "No draft selected.";
+        return;
+      }
+
+      document.getElementById("customerName").value = draft.customer.customerName || "";
+      document.getElementById("customerPhone").value = draft.customer.phone || "";
+      document.getElementById("customerEmail").value = draft.customer.email || "";
+      document.getElementById("customerAddress").value = draft.customer.address || "";
+      selectedCategory = draft.selectedCategory || "";
+      selectedSubcategory = draft.selectedSubcategory || "";
+      quoteItems = draft.quoteItems || [];
+      document.getElementById("quoteOutput").value = draft.quoteOutput || "";
+      if (document.getElementById("photoNotes")) document.getElementById("photoNotes").value = draft.photoNotes || "";
+      if (document.getElementById("inspectionImportText")) document.getElementById("inspectionImportText").value = draft.inspectionImportText || "";
+
+      renderQuoteItems();
+      calculateEstimate();
+      document.getElementById("draftStatus").textContent = "Draft loaded.";
+    }
+
+    function deleteSelectedDraft() {
+      const list = document.getElementById("draftList");
+      const drafts = getLocalStore("moh_quote_drafts", []);
+      const idx = Number(list.value);
+
+      if (Number.isNaN(idx) || !drafts[idx]) {
+        document.getElementById("draftStatus").textContent = "No draft selected.";
+        return;
+      }
+
+      drafts.splice(idx, 1);
+      setLocalStore("moh_quote_drafts", drafts);
+      refreshDraftList();
+      document.getElementById("draftStatus").textContent = "Draft deleted.";
+    }
+
+    function applyPropertyPackage(type) {
+      const packages = {
+        small: {
+          name: "Small Rental Turnover Package",
+          total: 295,
+          items: [
+            "Smoke detector compliance check",
+            "Door adjustment / minor hardware adjustment",
+            "Outlet / switch plate check",
+            "General punch-list touch-ups"
+          ]
+        },
+        standard: {
+          name: "Standard Rental Turnover Package",
+          total: 595,
+          items: [
+            "Smoke detector compliance check",
+            "Lockset or deadbolt replacement allowance",
+            "Minor plumbing / fixture check",
+            "Door adjustment",
+            "Small drywall or paint touch-up allowance"
+          ]
+        },
+        heavy: {
+          name: "Heavy Rental Turnover / Realtor Repair Package",
+          total: 0,
+          items: [
+            "Multiple repair list",
+            "Tenant damage repairs",
+            "Inspection response repairs",
+            "Appliance / plumbing / door / drywall items"
+          ]
+        }
+      };
+
+      const pkg = packages[type];
+
+      if (!pkg) return;
+
+      if (type === "heavy") {
+        document.getElementById("manualQuotedPrice").value = 0;
+        document.getElementById("manualQuotedDescription").value = pkg.name + " - quoted after review";
+        document.getElementById("packageStatus").textContent = "Heavy package selected. Enter the quoted price in Section 5, then add current item.";
+        selectedCategory = "propertymanager";
+        selectedSubcategory = "Rental Turnover Repairs (Quoted)";
+        calculateEstimate();
+        return;
+      }
+
+      quoteItems.push({
+        category: "propertymanager",
+        service: pkg.name,
+        description: pkg.name + ": " + pkg.items.join(", "),
+        base: pkg.total,
+        addOns: 0,
+        total: pkg.total
+      });
+
+      renderQuoteItems();
+      calculateEstimate();
+      document.getElementById("packageStatus").textContent = pkg.name + " added to quote.";
+    }
+
+    function handlePhotoSelection() {
+      const input = document.getElementById("photoInput");
+      const list = document.getElementById("photoList");
+
+      if (!input || !list) return;
+
+      if (!input.files || !input.files.length) {
+        list.textContent = "No photos selected.";
+        return;
+      }
+
+      const names = Array.from(input.files).map(function (file) {
+        return file.name;
+      });
+
+      list.innerHTML = "Selected photos:<br>" + names.join("<br>");
+    }
+
+    function getPhotoQuoteNote() {
+      const input = document.getElementById("photoInput");
+      const notes = document.getElementById("photoNotes") ? document.getElementById("photoNotes").value.trim() : "";
+
+      let photoText = "";
+
+      if (input && input.files && input.files.length) {
+        photoText += "\nPhotos referenced: " + Array.from(input.files).map(function (file) { return file.name; }).join(", ");
+      }
+
+      if (notes) {
+        photoText += "\nPhoto notes: " + notes;
+      }
+
+      return photoText;
+    }
+
+    function importInspectionRepairList() {
+      const text = document.getElementById("inspectionImportText").value.trim();
+
+      if (!text) {
+        document.getElementById("inspectionImportStatus").textContent = "Paste an inspection repair list first.";
+        return;
+      }
+
+      quoteItems.push({
+        category: "inspection",
+        service: "Inspection Repair List",
+        description: "Inspection Repair List Review",
+        base: 0,
+        addOns: 0,
+        total: 0,
+        quoted: true,
+        notes: text
+      });
+
+      document.getElementById("manualQuotedDescription").value = "Inspection repair list";
+      document.getElementById("inspectionImportStatus").textContent = "Inspection repair list imported. Enter quoted price in Section 5 and add as current item if pricing is ready.";
+      renderQuoteItems();
+    }
+
+    function clearInspectionImport() {
+      document.getElementById("inspectionImportText").value = "";
+      document.getElementById("inspectionImportStatus").textContent = "Inspection import cleared.";
+    }
+
+    function refreshLocalDashboard() {
+      const wrap = document.getElementById("localDashboard");
+      if (!wrap) return;
+
+      const records = getLocalStore("moh_local_customers", []);
+      const drafts = getLocalStore("moh_quote_drafts", []);
+
+      const totalRevenue = records.reduce(function (sum, r) { return sum + (Number(r.total) || 0); }, 0);
+      const avgTicket = records.length ? totalRevenue / records.length : 0;
+
+      const categoryCounts = {};
+      records.forEach(function (r) {
+        const key = r.service || "Unknown";
+        categoryCounts[key] = (categoryCounts[key] || 0) + 1;
+      });
+
+      const topCategories = Object.keys(categoryCounts)
+        .sort(function (a, b) { return categoryCounts[b] - categoryCounts[a]; })
+        .slice(0, 5)
+        .map(function (key) { return key + " (" + categoryCounts[key] + ")"; })
+        .join("<br>");
+
+      wrap.innerHTML =
+        "<strong>Local Dashboard</strong><br>" +
+        "Saved customer records on this device: " + records.length + "<br>" +
+        "Saved draft quotes: " + drafts.length + "<br>" +
+        "Local revenue tracked: " + formatCurrency(totalRevenue) + "<br>" +
+        "Average ticket: " + formatCurrency(avgTicket) + "<br><br>" +
+        "<strong>Top local categories:</strong><br>" +
+        (topCategories || "No data yet");
+    }
+
+
     function generateQuote() {
       calculateEstimate();
 
@@ -2675,7 +3108,8 @@
         "Phone: " + customerPhone + "\n" +
         "Email: " + customerEmail + "\n\n" +
         "Estimated Total: " + total + "\n" +
-        noteBlock + "\n\n" +
+        noteBlock +
+        getPhotoQuoteNote() + "\n\n" +
         "Final pricing may be adjusted on-site based on conditions, access, or additional work requested.\n\n" +
         "Thanks,\nTim\nMobile Onsite Handyman\n951-388-4744";
 
@@ -2704,7 +3138,8 @@
         (quoteItems.length ? multiItemText + "\n\n" : "") +
         "Service: " + (quoteItems.length ? "Multiple Repairs" : (selectedCategory || "Not selected")) + "\n" +
         "Type: " + (quoteItems.length ? getQuoteItemsTypeText() : (typeof getDisplayServiceType === "function" ? getDisplayServiceType() : (selectedSubcategory || "Not selected"))) + "\n\n" +
-        "Amount Due: " + total + "\n\n" +
+        "Amount Due: " + total + "\n" +
+        getPhotoQuoteNote() + "\n\n" +
         "Accepted Payment Methods:\n" +
         "- Cash\n" +
         "- Zelle\n" +
@@ -2776,6 +3211,12 @@
 
   document.getElementById("copyStatus").textContent =
     "Invoice sent to database. Check Google Sheets.";
+
+  saveLocalCustomerRecord(
+    quoteItems.length ? formatCurrency(getQuoteItemsTotal()) : (document.getElementById("totalPrice").textContent || ""),
+    quoteItems.length ? "Multiple Repairs" : (selectedCategory || ""),
+    quoteItems.length ? getQuoteItemsText() : (selectedSubcategory || "")
+  );
 
 } catch (error) {
   console.error(error);
