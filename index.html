@@ -1004,6 +1004,35 @@
         </div>
       </div>
 
+      <div class="note-box">
+        <div class="pill">Dump Fee Calculator</div>
+        <div class="grid-2">
+          <div>
+            <label>Dump Fee Base Rate</label>
+            <input id="dumpFeeBaseRate" type="number" min="0" step="0.01" value="25" oninput="calculateDumpFeeFromLoad()" />
+          </div>
+          <div>
+            <label>Trailer Load Multiplier</label>
+            <input id="dumpLoadMultiplier" type="number" min="0" step="0.25" value="0" oninput="calculateDumpFeeFromLoad()" />
+          </div>
+        </div>
+
+        <div class="grid-3">
+          <button class="secondary-btn small-btn" type="button" onclick="setDumpLoadMultiplier(0.25)">1/4 Load</button>
+          <button class="secondary-btn small-btn" type="button" onclick="setDumpLoadMultiplier(0.5)">1/2 Load</button>
+          <button class="secondary-btn small-btn" type="button" onclick="setDumpLoadMultiplier(1)">Full Load</button>
+        </div>
+
+        <div class="grid-2">
+          <button class="secondary-btn small-btn" type="button" onclick="setDumpLoadMultiplier(1.5)">1.5 Loads</button>
+          <button class="secondary-btn small-btn" type="button" onclick="setDumpLoadMultiplier(2)">2 Loads</button>
+        </div>
+
+        <div id="dumpFeeCalcStatus" class="note-box">
+          Dump fee calculator: $25 base × selected load multiplier.
+        </div>
+      </div>
+
       <div class="grid-2">
         <div>
           <label>Permit Fee</label>
@@ -3286,6 +3315,36 @@
       return Number(field.value || 0) || 0;
     }
 
+
+    function calculateDumpFeeFromLoad() {
+      const baseRate = getNumberFieldValue("dumpFeeBaseRate") || 25;
+      const multiplier = getNumberFieldValue("dumpLoadMultiplier");
+      const dumpFee = baseRate * multiplier;
+      const dumpFeeField = document.getElementById("dumpFee");
+      const status = document.getElementById("dumpFeeCalcStatus");
+
+      if (dumpFeeField) {
+        dumpFeeField.value = dumpFee.toFixed(2);
+      }
+
+      if (status) {
+        status.textContent = "Dump fee calculated: " + formatCurrency(baseRate) + " x " + multiplier + " load(s) = " + formatCurrency(dumpFee);
+      }
+
+      calculateJobCosting();
+    }
+
+    function setDumpLoadMultiplier(value) {
+      const field = document.getElementById("dumpLoadMultiplier");
+
+      if (field) {
+        field.value = value;
+      }
+
+      calculateDumpFeeFromLoad();
+    }
+
+
     function calculateJobCosting() {
       const baseCustomerTotal = getCurrentCustomerTotalAmount();
       const materialCost = getNumberFieldValue("materialCost");
@@ -3340,6 +3399,8 @@
       return {
         materialCost: formatCurrency(costing.materialCost),
         dumpFee: formatCurrency(costing.dumpFee),
+        dumpFeeBaseRate: formatCurrency(getNumberFieldValue("dumpFeeBaseRate") || 25),
+        dumpLoadMultiplier: getNumberFieldValue("dumpLoadMultiplier"),
         permitFee: formatCurrency(costing.permitFee),
         additionalLaborHours: costing.additionalLaborHours,
         taxRate: costing.taxRate,
