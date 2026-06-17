@@ -760,6 +760,14 @@
         <div class="note-box">Flooring install, repair, vinyl plank, transition strip, and base shoe are quoted items.</div>
       </div>
 
+      <div id="propertyManagerFields" class="hidden">
+        <div class="pill">Property Manager / Realtor</div>
+        <div class="note-box">
+          Use this section for turnover work, pre-listing repairs, inspection repair lists, realtor requests, and property management maintenance items.
+          Quoted repair lists can be entered using the on-site quoted price box in Section 5.
+        </div>
+      </div>
+
       <div id="exteriorFields" class="hidden">
         <div class="pill">Exterior</div>
 
@@ -1026,6 +1034,22 @@
         "Fencing / Post Repair / Replacement",
         "Pressure Washing (Quoted)",
         "Junk Removal (Quoted)"
+      ],
+
+      propertymanager: [
+        "Move-Out Punch List (Quoted)",
+        "Rental Turnover Repairs (Quoted)",
+        "Realtor Repair List (Quoted)",
+        "Inspection Repair List (Quoted)",
+        "Smoke Detector Compliance Check",
+        "Lockset Replacement",
+        "Deadbolt Replacement",
+        "Rekey Coordination (Quoted)",
+        "Mailbox Replacement",
+        "House Number Install",
+        "Address Plaque Install",
+        "Appliance Removal / Haul Away (Quoted)",
+        "Tenant Damage Repair (Quoted)"
       ]
     };
 
@@ -1329,6 +1353,7 @@
         "doorsFields",
         "carpentryFields",
         "flooringFields",
+        "propertyManagerFields",
         "exteriorFields",
         "manualFields",
         "doorInstallAddons",
@@ -1579,6 +1604,8 @@
       }
 
       if (selectedCategory === "propertymanager") {
+        document.getElementById("propertyManagerFields").classList.remove("hidden");
+
         if (selectedSubcategory.includes("(Quoted)")) {
           document.getElementById("manualFields").classList.remove("hidden");
         }
