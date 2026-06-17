@@ -277,10 +277,12 @@
       <button class="service-btn" id="btn-drywall" onclick="selectCategory('drywall')">Drywall</button>
       <button class="service-btn" id="btn-plumbing" onclick="selectCategory('plumbing')">Plumbing</button>
       <button class="service-btn" id="btn-electrical" onclick="selectCategory('electrical')">Electrical</button>
+      <button class="service-btn" id="btn-appliances" onclick="selectCategory('appliances')">Appliance Installation</button>
       <button class="service-btn" id="btn-doors" onclick="selectCategory('doors')">Doors / Windows</button>
       <button class="service-btn" id="btn-carpentry" onclick="selectCategory('carpentry')">Carpentry / Repairs</button>
       <button class="service-btn" id="btn-flooring" onclick="selectCategory('flooring')">Flooring</button>
       <button class="service-btn" id="btn-exterior" onclick="selectCategory('exterior')">Exterior</button>
+      <button class="service-btn" id="btn-propertymanager" onclick="selectCategory('propertymanager')">Property Manager / Realtor</button>
     </div>
 
     <div id="subcategoryCard" class="card hidden">
@@ -469,7 +471,7 @@
         <div class="note-box">
           <label>
             <input id="textureMatch" class="inline-check" type="checkbox" onchange="calculateEstimate()" />
-            Texture match (+$75)
+            Texture match (+$50)
           </label>
 
           <label>
@@ -618,7 +620,7 @@
         <div class="pill">Electrical</div>
 
         <div id="outletQtyWrap" class="hidden">
-          <label>Total outlets / switches</label>
+          <label>Quantity</label>
           <input id="outletQty" type="number" min="1" value="1" oninput="calculateEstimate()" />
         </div>
 
@@ -630,6 +632,55 @@
         <div id="floodQtyWrap" class="hidden">
           <label>Total Ring flood light cameras</label>
           <input id="floodQty" type="number" min="1" value="1" oninput="calculateEstimate()" />
+        </div>
+      </div>
+
+      <div id="applianceFields" class="hidden">
+        <div class="pill">Appliance Installation</div>
+
+        <div class="note-box">
+          Appliance installation pricing assumes standard replacement conditions, accessible connections, and customer-supplied appliance.
+          Modifications to plumbing, electrical, cabinetry, countertops, venting, flooring, wall openings, or gas lines are quoted separately.
+        </div>
+
+        <div id="dishwasherFields" class="hidden">
+          <div class="note-box">
+            <label>
+              <input id="dishwasherSupplyLine" class="inline-check" type="checkbox" onchange="calculateEstimate()" />
+              New dishwasher supply line (+$35)
+            </label>
+            <label>
+              <input id="dishwasherPowerCord" class="inline-check" type="checkbox" onchange="calculateEstimate()" />
+              New dishwasher power cord (+$25)
+            </label>
+            <label>
+              <input id="dishwasherDrainHose" class="inline-check" type="checkbox" onchange="calculateEstimate()" />
+              New dishwasher drain hose (+$25)
+            </label>
+            <label>
+              <input id="disposalKnockoutRemoval" class="inline-check" type="checkbox" onchange="calculateEstimate()" />
+              Disposal knockout removal (+$25)
+            </label>
+          </div>
+
+          <div class="note-box">
+            Dishwasher installation includes standard removal/replacement connection to existing water supply, drain, and electrical connection where accessible.
+            New supply line, drain hose, air gap, disposal knockout, shut-off valve, or cabinet modification may be additional.
+          </div>
+        </div>
+
+        <div id="rangeHoodFields" class="hidden">
+          <div class="note-box">
+            Range hood installation assumes standard replacement using existing cabinet/wall opening and existing electrical connection.
+            New venting, duct changes, cabinet modification, or electrical work is quoted separately.
+          </div>
+        </div>
+
+        <div id="microwaveFields" class="hidden">
+          <div class="note-box">
+            Over-the-range microwave installation assumes standard replacement using existing mounting location, outlet, bracket conditions, and vent setup.
+            Cabinet modification, tile drilling, new outlet, or vent changes are quoted separately.
+          </div>
         </div>
       </div>
 
@@ -657,6 +708,24 @@
 
       <div id="carpentryFields" class="hidden">
         <div class="pill">Carpentry / Repairs</div>
+
+        <div id="grabBarQtyWrap" class="hidden">
+          <label>Grab Bar Quantity</label>
+          <input id="grabBarQty" type="number" min="1" value="1" oninput="calculateEstimate()" />
+          <div class="note-box">Grab bar installation is $95 each for standard customer-supplied grab bars.</div>
+        </div>
+
+        <div id="cabinetHardwareQtyWrap" class="hidden">
+          <label>Cabinet Hardware Quantity</label>
+          <input id="cabinetHardwareQty" type="number" min="1" value="1" oninput="calculateEstimate()" />
+          <div class="note-box">Cabinet hardware install is priced at $45 each. Hardware supplied by customer.</div>
+        </div>
+
+        <div id="shelfQtyWrap" class="hidden">
+          <label>Shelf Quantity</label>
+          <input id="shelfQty" type="number" min="1" value="1" oninput="calculateEstimate()" />
+          <div class="note-box">Shelf installation is priced at $85 each for standard customer-supplied shelves.</div>
+        </div>
 
         <div id="doorJambFields" class="hidden">
           <div class="note-box">
@@ -821,6 +890,9 @@
       ],
 
       drywall: [
+        "Drywall Patch Under 6 Inches",
+        "Drywall Patch 6-12 Inches",
+        "Drywall Patch 12-24 Inches",
         "Small Drywall Repair",
         "Medium Drywall Repair",
         "Large Drywall Repair",
@@ -831,8 +903,15 @@
       ],
 
       plumbing: [
-        "Faucet Installation",
-        "Faucet Installation w/ Disposal or Drainpipe Removal",
+        "Kitchen Faucet Installation",
+        "Kitchen Faucet Installation w/ Disposal or Drainpipe Removal",
+        "Bathroom Faucet Installation",
+        "Widespread Bathroom Faucet Installation",
+        "Bathroom Faucet Drain Assembly",
+        "Toilet Supply Line Replacement",
+        "Ice Maker Supply Line Replacement",
+        "Refrigerator Water Line Install",
+        "Garbage Disposal Replacement",
         "Toilet Replacement",
         "Toilet Repair",
         "Angle Stop Replacement",
@@ -843,11 +922,19 @@
         "Basket Strainer Replacement (Kitchen Sink)",
         "Garbage Disposal Removal Only",
         "Toilet Wax Ring Replacement",
+        "Toilet Rebuild Kit Install",
+        "Flush Valve Replacement",
+        "Toilet Handle Replacement",
+        "Toilet Seat Replacement",
+        "Bidet Seat Install",
         "Fill Valve Replacement",
         "Flapper Replacement",
         "Tub Spout Replacement",
         "Shower Head Replacement",
         "Dishwasher Supply Line Replacement",
+        "Reverse Osmosis Faucet Install",
+        "Water Filtration System Install (Quoted)",
+        "Instant Hot Water Faucet Install (Quoted)",
         "Pedestal Sink Install",
         "Vanity Install 24-36",
         "Vanity Install 37-48",
@@ -859,22 +946,67 @@
 
       electrical: [
         "Outlet / Switch Replace",
+        "GFCI Replacement",
+        "Light Fixture Replacement",
         "Light Fixture Install",
+        "Ceiling Fan Replacement",
         "Ceiling Fan Install",
+        "Exhaust Fan Replacement",
+        "Smoke Detector Replacement",
+        "Carbon Monoxide Detector Replacement",
+        "Bathroom Vanity Light Replacement",
+        "Security Camera Install",
+        "Floodlight Camera Install",
         "Ring Flood Light Camera Install",
         "Ring Doorbell Install"
       ],
 
+      appliances: [
+        "Dishwasher Installation",
+        "Dishwasher Removal Only",
+        "Freestanding Stove / Range Installation",
+        "Range Removal Only",
+        "Wall Oven Installation (Quoted)",
+        "Cooktop Installation (Quoted)",
+        "Built-In Microwave Installation (Quoted)",
+        "Over-the-Range Microwave Installation",
+        "Range Hood Installation",
+        "Refrigerator Installation",
+        "Washer Installation",
+        "Dryer Installation",
+        "Washer / Dryer Set Installation"
+      ],
+
       doors: [
+        "Door Adjustment",
+        "Door Sweep Replacement",
+        "Door Closer Adjustment",
+        "Lockset Replacement",
+        "Deadbolt Replacement",
         "Interior Door Install",
+        "Interior Door Replacement (Quoted)",
+        "Exterior Door Replacement (Quoted)",
         "Pre-Hung Door Install",
-        "Window Caulking"
+        "Window Caulking",
+        "Window Screen Replacement (Quoted)",
+        "Sliding Screen Door Roller Replacement"
       ],
 
       carpentry: [
         "Closet Rack / Shelving Repair or Install (Quoted)",
         "Baseboard Install (Quoted)",
+        "Baseboard Repair (Quoted)",
         "Cabinet Repair (Quoted)",
+        "Cabinet Door Repair",
+        "Cabinet Hinge Adjustment",
+        "Cabinet Hardware Install",
+        "Shelf Installation",
+        "Grab Bar Installation",
+        "Towel Bar Install",
+        "Toilet Paper Holder Install",
+        "Medicine Cabinet Install",
+        "Sound Bar Mount Install",
+        "Floating Shelf Install",
         "Door Jamb Repair (Quoted)",
         "TV Mounting"
       ],
@@ -887,6 +1019,10 @@
       ],
 
       exterior: [
+        "House Number Install",
+        "Mailbox Replacement",
+        "Gate Latch Replacement",
+        "Weather Stripping Install",
         "Fencing / Post Repair / Replacement",
         "Pressure Washing (Quoted)",
         "Junk Removal (Quoted)"
@@ -1160,6 +1296,10 @@
         notes.innerHTML = "Drywall repairs — IAC2 Certified (Certification #IAC2-94278)";
       } else if (category === "plumbing") {
         notes.innerHTML = "Plumbing pricing is labor only unless noted otherwise.";
+      } else if (category === "appliances") {
+        notes.innerHTML = "Appliance installation pricing assumes standard replacement conditions. Modifications are quoted separately.";
+      } else if (category === "propertymanager") {
+        notes.innerHTML = "Property manager and realtor services are designed for turnovers, repair lists, inspection responses, and pre-listing preparation.";
       } else {
         notes.classList.add("hidden");
         notes.innerHTML = "";
@@ -1182,6 +1322,10 @@
         "drywallFields",
         "plumbingFields",
         "electricalFields",
+        "applianceFields",
+        "dishwasherFields",
+        "rangeHoodFields",
+        "microwaveFields",
         "doorsFields",
         "carpentryFields",
         "flooringFields",
@@ -1203,6 +1347,9 @@
         "outletQtyWrap",
         "fanQtyWrap",
         "floodQtyWrap",
+        "grabBarQtyWrap",
+        "cabinetHardwareQtyWrap",
+        "shelfQtyWrap",
         "doorJambFields",
         "tvQtyWrap",
         "tvAddonWrap",
@@ -1286,6 +1433,8 @@
         if (
           selectedSubcategory === "Garbage Disposal Removal Only" ||
           selectedSubcategory === "Toilet Wax Ring Replacement" ||
+          selectedSubcategory === "Toilet Rebuild Kit Install" ||
+          selectedSubcategory === "Flush Valve Replacement" ||
           selectedSubcategory === "Fill Valve Replacement" ||
           selectedSubcategory === "Flapper Replacement" ||
           selectedSubcategory === "Tub Spout Replacement" ||
@@ -1297,6 +1446,8 @@
 
         if (
           selectedSubcategory === "Toilet Wax Ring Replacement" ||
+          selectedSubcategory === "Toilet Rebuild Kit Install" ||
+          selectedSubcategory === "Flush Valve Replacement" ||
           selectedSubcategory === "Fill Valve Replacement" ||
           selectedSubcategory === "Flapper Replacement" ||
           selectedSubcategory === "Tub Spout Replacement" ||
@@ -1332,16 +1483,46 @@
       if (selectedCategory === "electrical") {
         document.getElementById("electricalFields").classList.remove("hidden");
 
-        if (selectedSubcategory === "Outlet / Switch Replace") {
+        if (
+          selectedSubcategory === "Outlet / Switch Replace" ||
+          selectedSubcategory === "GFCI Replacement" ||
+          selectedSubcategory === "Light Fixture Replacement" ||
+          selectedSubcategory === "Light Fixture Install"
+        ) {
           document.getElementById("outletQtyWrap").classList.remove("hidden");
         }
 
-        if (selectedSubcategory === "Ceiling Fan Install") {
+        if (
+          selectedSubcategory === "Ceiling Fan Install" ||
+          selectedSubcategory === "Ceiling Fan Replacement"
+        ) {
           document.getElementById("fanQtyWrap").classList.remove("hidden");
         }
 
         if (selectedSubcategory === "Ring Flood Light Camera Install") {
           document.getElementById("floodQtyWrap").classList.remove("hidden");
+        }
+
+        return;
+      }
+
+      if (selectedCategory === "appliances") {
+        document.getElementById("applianceFields").classList.remove("hidden");
+
+        if (selectedSubcategory === "Dishwasher Installation") {
+          document.getElementById("dishwasherFields").classList.remove("hidden");
+        }
+
+        if (selectedSubcategory === "Range Hood Installation") {
+          document.getElementById("rangeHoodFields").classList.remove("hidden");
+        }
+
+        if (selectedSubcategory === "Over-the-Range Microwave Installation") {
+          document.getElementById("microwaveFields").classList.remove("hidden");
+        }
+
+        if (selectedSubcategory.includes("(Quoted)")) {
+          document.getElementById("manualFields").classList.remove("hidden");
         }
 
         return;
@@ -1373,7 +1554,18 @@
         } else if (selectedSubcategory === "Door Jamb Repair (Quoted)") {
           document.getElementById("doorJambFields").classList.remove("hidden");
           document.getElementById("manualFields").classList.remove("hidden");
-        } else {
+        } else if (selectedSubcategory === "Grab Bar Installation") {
+          document.getElementById("grabBarQtyWrap").classList.remove("hidden");
+        } else if (selectedSubcategory === "Cabinet Hardware Install") {
+          document.getElementById("cabinetHardwareQtyWrap").classList.remove("hidden");
+        } else if (selectedSubcategory === "Shelf Installation" || selectedSubcategory === "Floating Shelf Install") {
+          document.getElementById("shelfQtyWrap").classList.remove("hidden");
+        } else if (
+          selectedSubcategory === "Closet Rack / Shelving Repair or Install (Quoted)" ||
+          selectedSubcategory === "Baseboard Install (Quoted)" ||
+          selectedSubcategory === "Baseboard Repair (Quoted)" ||
+          selectedSubcategory === "Cabinet Repair (Quoted)"
+        ) {
           document.getElementById("manualFields").classList.remove("hidden");
         }
 
@@ -1383,6 +1575,14 @@
       if (selectedCategory === "flooring") {
         document.getElementById("flooringFields").classList.remove("hidden");
         document.getElementById("manualFields").classList.remove("hidden");
+        return;
+      }
+
+      if (selectedCategory === "propertymanager") {
+        if (selectedSubcategory.includes("(Quoted)")) {
+          document.getElementById("manualFields").classList.remove("hidden");
+        }
+
         return;
       }
 
@@ -1701,6 +1901,21 @@
       }
 
       if (selectedCategory === "drywall") {
+        if (selectedSubcategory === "Drywall Patch Under 6 Inches") {
+          base = 125 * zoneMultiplier;
+          detail = "Drywall patch under 6 inches. Texture match and paint matching may be additional.";
+        }
+
+        if (selectedSubcategory === "Drywall Patch 6-12 Inches") {
+          base = 175 * zoneMultiplier;
+          detail = "Drywall patch 6 to 12 inches. Texture match and paint matching may be additional.";
+        }
+
+        if (selectedSubcategory === "Drywall Patch 12-24 Inches") {
+          base = 250 * zoneMultiplier;
+          detail = "Drywall patch 12 to 24 inches. Texture match and paint matching may be additional.";
+        }
+
         if (selectedSubcategory === "Small Drywall Repair") base = 150 * zoneMultiplier;
         if (selectedSubcategory === "Medium Drywall Repair") base = 300 * zoneMultiplier;
         if (selectedSubcategory === "Large Drywall Repair") base = 700 * zoneMultiplier;
@@ -1719,7 +1934,7 @@
         const drywallModerateTreatment = document.getElementById("drywallModerateTreatment").checked;
         const drywallHeavyContainment = document.getElementById("drywallHeavyContainment").checked;
 
-        addOns += textureMatch ? 75 : 0;
+        addOns += textureMatch ? 50 : 0;
         addOns += drywallPaintMatch ? 65 : 0;
         addOns += drywallLightTreatment ? 95 : 0;
         addOns += drywallModerateTreatment ? 210 : 0;
@@ -1736,8 +1951,50 @@
       }
 
       if (selectedCategory === "plumbing") {
-        if (selectedSubcategory === "Faucet Installation") base = 150 * zoneMultiplier;
-        if (selectedSubcategory === "Faucet Installation w/ Disposal or Drainpipe Removal") base = 235 * zoneMultiplier;
+        if (selectedSubcategory === "Kitchen Faucet Installation") {
+          base = 150 * zoneMultiplier;
+          detail = "Kitchen faucet installation - labor only. Customer supplied faucet. Parts, supply lines, angle stops, disposal removal, or drain modifications are additional unless selected separately.";
+        }
+
+        if (selectedSubcategory === "Kitchen Faucet Installation w/ Disposal or Drainpipe Removal") {
+          base = 235 * zoneMultiplier;
+          detail = "Kitchen faucet installation with disposal or drainpipe removal - labor only. Customer supplied faucet. Parts, supply lines, angle stops, or additional plumbing modifications are not included.";
+        }
+
+        if (selectedSubcategory === "Bathroom Faucet Installation") {
+          base = 125 * zoneMultiplier;
+          detail = "Bathroom faucet installation - labor only. Standard customer supplied bathroom faucet. New supply lines, angle stops, drain assembly replacement, or plumbing modifications are not included.";
+        }
+
+        if (selectedSubcategory === "Widespread Bathroom Faucet Installation") {
+          base = 150 * zoneMultiplier;
+          detail = "Widespread bathroom faucet installation - labor only. Standard 8-inch widespread customer supplied faucet. New supply lines, angle stops, drain assembly replacement, or plumbing modifications are not included.";
+        }
+
+        if (selectedSubcategory === "Bathroom Faucet Drain Assembly") {
+          base = 95 * zoneMultiplier;
+          detail = "Bathroom faucet drain assembly replacement - labor only. Parts additional if supplied.";
+        }
+
+        if (selectedSubcategory === "Toilet Supply Line Replacement") {
+          base = 75 * zoneMultiplier;
+          detail = "Toilet supply line replacement - labor only. Parts additional if supplied.";
+        }
+
+        if (selectedSubcategory === "Ice Maker Supply Line Replacement") {
+          base = 95 * zoneMultiplier;
+          detail = "Ice maker supply line replacement - labor only. Parts additional if supplied.";
+        }
+
+        if (selectedSubcategory === "Refrigerator Water Line Install") {
+          base = 125 * zoneMultiplier;
+          detail = "Refrigerator water line install - labor only. Parts and access conditions may affect final price.";
+        }
+
+        if (selectedSubcategory === "Garbage Disposal Replacement") {
+          base = 225 * zoneMultiplier;
+          detail = "Garbage disposal replacement - labor only. Customer supplied disposal. Plumbing modifications or electrical issues not included.";
+        }
         if (selectedSubcategory === "Toilet Replacement") base = 150 * zoneMultiplier;
         if (selectedSubcategory === "Toilet Repair") base = 150 * zoneMultiplier;
         if (selectedSubcategory === "Garbage Disposal Install") base = 160 * zoneMultiplier;
@@ -1802,6 +2059,35 @@
           detail = "Toilet wax ring replacement - labor only, parts additional";
         }
 
+        if (selectedSubcategory === "Toilet Rebuild Kit Install") {
+          const qty = Number(document.getElementById("simplePlumbingQty").value || 1);
+          base = multiFixturePrice(qty, 185, 135, 95) * zoneMultiplier;
+          base = applyPlumbingFixtureDiscount(base);
+          detail = "Toilet rebuild kit installation - labor only. Parts additional if supplied.";
+        }
+
+        if (selectedSubcategory === "Flush Valve Replacement") {
+          const qty = Number(document.getElementById("simplePlumbingQty").value || 1);
+          base = multiFixturePrice(qty, 185, 135, 95) * zoneMultiplier;
+          base = applyPlumbingFixtureDiscount(base);
+          detail = "Flush valve replacement - labor only. Parts additional if supplied.";
+        }
+
+        if (selectedSubcategory === "Toilet Handle Replacement") {
+          base = 65 * zoneMultiplier;
+          detail = "Toilet handle replacement - labor only. Parts additional if supplied.";
+        }
+
+        if (selectedSubcategory === "Toilet Seat Replacement") {
+          base = 45 * zoneMultiplier;
+          detail = "Toilet seat replacement - labor only. Parts additional if supplied.";
+        }
+
+        if (selectedSubcategory === "Bidet Seat Install") {
+          base = 75 * zoneMultiplier;
+          detail = "Bidet seat installation - labor only. Customer supplied bidet seat. Electrical outlet, angle stop, or plumbing modifications not included.";
+        }
+
         if (selectedSubcategory === "Fill Valve Replacement") {
           const qty = Number(document.getElementById("simplePlumbingQty").value || 1);
           base = multiFixturePrice(qty, 125, 85, 65) * zoneMultiplier;
@@ -1837,6 +2123,19 @@
           detail = "Dishwasher supply line replacement - labor only, parts additional";
         }
 
+        if (selectedSubcategory === "Reverse Osmosis Faucet Install") {
+          base = 125 * zoneMultiplier;
+          detail = "Reverse osmosis faucet installation - labor only. Customer supplied RO faucet. Filter system installation or countertop drilling may be additional.";
+        }
+
+        if (
+          selectedSubcategory === "Water Filtration System Install (Quoted)" ||
+          selectedSubcategory === "Instant Hot Water Faucet Install (Quoted)"
+        ) {
+          isQuoted = true;
+          detail = selectedSubcategory;
+        }
+
         if (selectedSubcategory.includes("(Quoted)")) {
           isQuoted = true;
         }
@@ -1856,19 +2155,68 @@
       }
 
       if (selectedCategory === "electrical") {
-        if (selectedSubcategory === "Light Fixture Install") base = 150 * zoneMultiplier;
+        if (selectedSubcategory === "Light Fixture Replacement" || selectedSubcategory === "Light Fixture Install") {
+          const qty = Number(document.getElementById("outletQty").value || 1);
+          base = (qty <= 1 ? 135 : 135 + ((qty - 1) * 95)) * zoneMultiplier;
+          detail = "Light fixture installation/replacement - labor only. Customer supplied fixture. Pricing does not apply to vaulted/high ceilings over 9 ft or chandeliers; those are quoted.";
+        }
+
+        if (selectedSubcategory === "Ceiling Fan Replacement") {
+          const qty = Number(document.getElementById("fanQty").value || 1);
+          base = (qty <= 1 ? 150 : 150 + ((qty - 1) * 135)) * zoneMultiplier;
+          detail = "Ceiling fan replacement - labor only. Customer supplied fan. Pricing does not apply to vaulted/high ceilings over 9 ft; those are quoted.";
+        }
+
+        if (selectedSubcategory === "Exhaust Fan Replacement") {
+          base = 185 * zoneMultiplier;
+          detail = "Bathroom exhaust fan replacement - labor only. Customer supplied fan. Ducting or electrical modifications not included.";
+        }
+
+        if (selectedSubcategory === "GFCI Replacement") {
+          const qty = Number(document.getElementById("outletQty").value || 1);
+          base = (qty <= 1 ? 125 : 125 + ((qty - 1) * 85)) * zoneMultiplier;
+          detail = "GFCI outlet replacement - labor only. GFCI device supplied by Mobile Onsite Handyman or billed separately.";
+        }
+
+        if (selectedSubcategory === "Smoke Detector Replacement") {
+          base = 65 * zoneMultiplier;
+          detail = "Smoke detector replacement - labor only. Device supplied by customer or billed separately.";
+        }
+
+        if (selectedSubcategory === "Carbon Monoxide Detector Replacement") {
+          base = 65 * zoneMultiplier;
+          detail = "Carbon monoxide detector replacement - labor only. Device supplied by customer or billed separately.";
+        }
+
+        if (selectedSubcategory === "Bathroom Vanity Light Replacement") {
+          base = 125 * zoneMultiplier;
+          detail = "Bathroom vanity light replacement - labor only. Customer supplied fixture. Electrical box or wall repairs not included.";
+        }
+
+        if (selectedSubcategory === "Security Camera Install") {
+          base = 125 * zoneMultiplier;
+          detail = "Security camera installation - labor only. Customer supplied camera. Wiring, subscription setup, or network troubleshooting not included.";
+        }
+
+        if (selectedSubcategory === "Floodlight Camera Install") {
+          base = 165 * zoneMultiplier;
+          detail = "Floodlight camera installation - labor only. Customer supplied camera. Wiring or electrical modifications not included.";
+        }
+
         if (selectedSubcategory === "Ring Doorbell Install") base = 115 * zoneMultiplier;
 
         if (selectedSubcategory === "Outlet / Switch Replace") {
           const qty = Number(document.getElementById("outletQty").value || 1);
 
-          base = (qty <= 1 ? 150 : 150 + ((qty - 1) * 50)) * zoneMultiplier;
+          base = (qty <= 1 ? 125 : 125 + ((qty - 1) * 50)) * zoneMultiplier;
+          detail = "Outlet or switch replacement - labor only. Device supplied by customer or billed separately.";
         }
 
         if (selectedSubcategory === "Ceiling Fan Install") {
           const qty = Number(document.getElementById("fanQty").value || 1);
 
           base = (qty <= 1 ? 150 : 150 + ((qty - 1) * 135)) * zoneMultiplier;
+          detail = "Ceiling fan installation - labor only. Customer supplied fan. Pricing does not apply to vaulted/high ceilings over 9 ft; those are quoted.";
         }
 
         if (selectedSubcategory === "Ring Flood Light Camera Install") {
@@ -1880,7 +2228,139 @@
         detail = selectedSubcategory;
       }
 
+      if (selectedCategory === "appliances") {
+        if (selectedSubcategory === "Dishwasher Installation") {
+          base = 225 * zoneMultiplier;
+          detail = "Dishwasher installation - labor only. Standard replacement using existing connections. New supply line, drain hose, air gap, disposal knockout, shut-off valve, cabinet modification, electrical, or plumbing repairs may be additional.";
+        }
+
+        if (selectedSubcategory === "Freestanding Stove / Range Installation") {
+          base = 125 * zoneMultiplier;
+          detail = "Freestanding stove/range installation - labor only. Standard slide-in/standalone appliance connection. Electrical, gas, anti-tip bracket, or fitment modifications are not included.";
+        }
+
+        if (selectedSubcategory === "Wall Oven Installation (Quoted)") {
+          isQuoted = true;
+          detail = "Wall oven installation is quoted based on size, cabinet opening, electrical connection, removal requirements, and appliance weight.";
+        }
+
+        if (selectedSubcategory === "Over-the-Range Microwave Installation") {
+          base = 225 * zoneMultiplier;
+          detail = "Over-the-range microwave installation - labor only. Standard replacement using existing mounting location, outlet, bracket conditions, and vent setup.";
+        }
+
+        if (selectedSubcategory === "Range Hood Installation") {
+          base = 185 * zoneMultiplier;
+          detail = "Range hood installation - labor only. Standard replacement using existing opening and connection. Venting, duct changes, cabinet modifications, or electrical work are quoted separately.";
+        }
+      }
+
+      if (selectedCategory === "appliances") {
+        if (selectedSubcategory === "Dishwasher Installation") {
+          base = 150 * zoneMultiplier;
+          addOns += document.getElementById("dishwasherSupplyLine").checked ? 35 : 0;
+          addOns += document.getElementById("dishwasherPowerCord").checked ? 25 : 0;
+          addOns += document.getElementById("dishwasherDrainHose").checked ? 25 : 0;
+          addOns += document.getElementById("disposalKnockoutRemoval").checked ? 25 : 0;
+          detail = "Dishwasher installation - labor only. Standard replacement using existing connections. New supply line, power cord, drain hose, disposal knockout, shut-off valve, cabinet modification, electrical, or plumbing repairs may be additional.";
+        }
+
+        if (selectedSubcategory === "Dishwasher Removal Only") {
+          base = 75 * zoneMultiplier;
+          detail = "Dishwasher removal only. Haul away or disposal may be additional if required.";
+        }
+
+        if (selectedSubcategory === "Freestanding Stove / Range Installation") {
+          base = 125 * zoneMultiplier;
+          addOns += document.getElementById("newGasConnector").checked ? 45 : 0;
+          addOns += document.getElementById("antiTipBracket").checked ? 25 : 0;
+          detail = "Freestanding stove/range installation - labor only. Standard replacement using existing utility connections. Gas line modifications, shutoff valve replacement, electrical circuit work, cabinetry modification, or conversion kits are not included.";
+        }
+
+        if (selectedSubcategory === "Range Removal Only") {
+          base = 75 * zoneMultiplier;
+          detail = "Range removal only. Haul away or disposal may be additional if required.";
+        }
+
+        if (
+          selectedSubcategory === "Wall Oven Installation (Quoted)" ||
+          selectedSubcategory === "Cooktop Installation (Quoted)" ||
+          selectedSubcategory === "Built-In Microwave Installation (Quoted)"
+        ) {
+          isQuoted = true;
+          detail = selectedSubcategory + " is quoted based on size, opening, electrical/gas connection, removal requirements, and appliance weight.";
+        }
+
+        if (selectedSubcategory === "Over-the-Range Microwave Installation") {
+          base = 225 * zoneMultiplier;
+          detail = "Over-the-range microwave installation - labor only. Standard replacement using existing mounting location, outlet, bracket conditions, and vent setup.";
+        }
+
+        if (selectedSubcategory === "Range Hood Installation") {
+          base = 185 * zoneMultiplier;
+          detail = "Range hood installation - labor only. Standard replacement using existing opening and connection. Venting, duct changes, cabinet modifications, or electrical work are quoted separately.";
+        }
+
+        if (selectedSubcategory === "Refrigerator Installation") {
+          base = 95 * zoneMultiplier;
+          detail = "Refrigerator installation - labor only. Water line connection or modifications are not included unless selected separately.";
+        }
+
+        if (selectedSubcategory === "Washer Installation") {
+          base = 125 * zoneMultiplier;
+          detail = "Washer installation - labor only. Standard connection to existing water supply and drain.";
+        }
+
+        if (selectedSubcategory === "Dryer Installation") {
+          base = 125 * zoneMultiplier;
+          detail = "Dryer installation - labor only. Standard connection to existing power/gas and vent.";
+        }
+
+        if (selectedSubcategory === "Washer / Dryer Set Installation") {
+          base = 225 * zoneMultiplier;
+          detail = "Washer/dryer set installation - labor only. Standard connections to existing utilities.";
+        }
+      }
+
       if (selectedCategory === "doors") {
+        if (selectedSubcategory === "Door Adjustment") {
+          base = 95 * zoneMultiplier;
+          detail = "Door adjustment for rubbing, sticking, hinge alignment, or strike plate alignment.";
+        }
+
+        if (selectedSubcategory === "Door Sweep Replacement") {
+          base = 65 * zoneMultiplier;
+          detail = "Door sweep replacement - labor only. Parts additional if supplied.";
+        }
+
+        if (selectedSubcategory === "Door Closer Adjustment") {
+          base = 65 * zoneMultiplier;
+          detail = "Door closer adjustment for speed, latch, and closing action.";
+        }
+
+        if (selectedSubcategory === "Lockset Replacement") {
+          base = 95 * zoneMultiplier;
+          detail = "Lockset replacement - labor only. Customer supplied lockset.";
+        }
+
+        if (selectedSubcategory === "Deadbolt Replacement") {
+          base = 85 * zoneMultiplier;
+          detail = "Deadbolt replacement - labor only. Customer supplied deadbolt.";
+        }
+
+        if (selectedSubcategory === "Sliding Screen Door Roller Replacement") {
+          base = 95 * zoneMultiplier;
+          detail = "Sliding screen door roller replacement - labor only. Parts additional if supplied.";
+        }
+
+        if (
+          selectedSubcategory === "Interior Door Replacement (Quoted)" ||
+          selectedSubcategory === "Exterior Door Replacement (Quoted)" ||
+          selectedSubcategory === "Window Screen Replacement (Quoted)"
+        ) {
+          isQuoted = true;
+        }
+
         if (selectedSubcategory === "Interior Door Install") base = 150 * zoneMultiplier;
         if (selectedSubcategory === "Pre-Hung Door Install") base = 495 * zoneMultiplier;
         if (selectedSubcategory === "Window Caulking") base = 125 * zoneMultiplier;
@@ -1906,11 +2386,27 @@
         } else if (selectedSubcategory === "Door Jamb Repair (Quoted)") {
           isQuoted = true;
           addOns += document.getElementById("weatherStripInstall").checked ? 52 : 0;
+        } else if (selectedSubcategory === "Cabinet Hinge Adjustment") {
+          base = 65 * zoneMultiplier;
+          detail = "Cabinet hinge adjustment.";
+        } else if (selectedSubcategory === "Cabinet Door Repair") {
+          base = 95 * zoneMultiplier;
+          detail = "Cabinet door repair - labor only. Parts additional if supplied.";
+        } else if (selectedSubcategory === "Cabinet Hardware Install") {
+          const qty = Number(document.getElementById("cabinetHardwareQty").value || 1);
+          base = qty * 45 * zoneMultiplier;
+          detail = "Cabinet hardware installation - customer supplied hardware.";
+        } else if (selectedSubcategory === "Shelf Installation") {
+          const qty = Number(document.getElementById("shelfQty").value || 1);
+          base = qty * 85 * zoneMultiplier;
+          detail = "Shelf installation - standard customer supplied shelf.";
         } else {
           isQuoted = true;
         }
 
-        detail = selectedSubcategory;
+        if (!detail) {
+          detail = selectedSubcategory;
+        }
       }
 
       if (selectedCategory === "flooring") {
@@ -1918,7 +2414,77 @@
         detail = selectedSubcategory;
       }
 
+      if (selectedCategory === "propertymanager") {
+        if (selectedSubcategory === "Smoke Detector Compliance Check") {
+          base = 65 * zoneMultiplier;
+          detail = "Smoke detector compliance check - visual and functional check of accessible smoke/CO detectors. Replacement devices or repairs are additional.";
+        }
+
+        if (selectedSubcategory === "Lockset Replacement") {
+          base = 95 * zoneMultiplier;
+          detail = "Lockset replacement - labor only. Customer supplied lockset.";
+        }
+
+        if (selectedSubcategory === "Deadbolt Replacement") {
+          base = 85 * zoneMultiplier;
+          detail = "Deadbolt replacement - labor only. Customer supplied deadbolt.";
+        }
+
+        if (selectedSubcategory === "Mailbox Replacement") {
+          base = 125 * zoneMultiplier;
+          detail = "Mailbox replacement - labor only. Customer supplied mailbox. Post or concrete work not included unless quoted.";
+        }
+
+        if (selectedSubcategory === "House Number Install") {
+          base = 65 * zoneMultiplier;
+          detail = "House number installation - labor only. Customer supplied numbers.";
+        }
+
+        if (selectedSubcategory === "Address Plaque Install") {
+          base = 65 * zoneMultiplier;
+          detail = "Address plaque installation - labor only. Customer supplied plaque.";
+        }
+
+        if (
+          selectedSubcategory === "Move-Out Punch List (Quoted)" ||
+          selectedSubcategory === "Rental Turnover Repairs (Quoted)" ||
+          selectedSubcategory === "Realtor Repair List (Quoted)" ||
+          selectedSubcategory === "Inspection Repair List (Quoted)" ||
+          selectedSubcategory === "Rekey Coordination (Quoted)" ||
+          selectedSubcategory === "Appliance Removal / Haul Away (Quoted)" ||
+          selectedSubcategory === "Tenant Damage Repair (Quoted)"
+        ) {
+          isQuoted = true;
+          detail = selectedSubcategory;
+        }
+      }
+
       if (selectedCategory === "exterior") {
+        if (selectedSubcategory === "House Number Install") {
+          base = 65 * zoneMultiplier;
+          detail = "House number installation - labor only. Customer supplied numbers.";
+        }
+
+        if (selectedSubcategory === "Address Plaque Install") {
+          base = 65 * zoneMultiplier;
+          detail = "Address plaque installation - labor only. Customer supplied plaque.";
+        }
+
+        if (selectedSubcategory === "Mailbox Replacement") {
+          base = 125 * zoneMultiplier;
+          detail = "Mailbox replacement - labor only. Customer supplied mailbox. Post or concrete work not included unless quoted.";
+        }
+
+        if (selectedSubcategory === "Gate Latch Replacement") {
+          base = 95 * zoneMultiplier;
+          detail = "Gate latch replacement - labor only. Parts additional if supplied.";
+        }
+
+        if (selectedSubcategory === "Weather Stripping Install") {
+          base = 52 * zoneMultiplier;
+          detail = "Weather stripping installation - labor only. Parts additional if supplied.";
+        }
+
         if (selectedSubcategory === "Fencing / Post Repair / Replacement") {
           const extraPosts = Number(document.getElementById("extraPosts").value || 0);
 
@@ -1996,15 +2562,38 @@
         noteBlock += "\nPlumbing pricing is labor only unless noted otherwise.";
       }
 
+      if (selectedCategory === "electrical") {
+        noteBlock += "\nElectrical pricing assumes standard ceiling height and accessible existing wiring. Vaulted/high ceilings over 9 ft and chandeliers are quoted.";
+      }
+
+      if (selectedCategory === "appliances") {
+        noteBlock += "\nAppliance installation pricing assumes standard replacement conditions and accessible existing connections. Modifications are quoted separately.";
+      }
+
+      if (selectedCategory === "propertymanager") {
+        noteBlock += "\nProperty manager / realtor pricing is based on accessible standard repairs. Larger repair lists, tenant damage, and inspection response repairs may be quoted as a package.";
+      }
+
       if (
         selectedCategory === "plumbing" &&
         (
+          selectedSubcategory === "Kitchen Faucet Installation" ||
+          selectedSubcategory === "Kitchen Faucet Installation w/ Disposal or Drainpipe Removal" ||
+          selectedSubcategory === "Bathroom Faucet Installation" ||
+          selectedSubcategory === "Widespread Bathroom Faucet Installation" ||
+          selectedSubcategory === "Bathroom Faucet Drain Assembly" ||
+          selectedSubcategory === "Toilet Supply Line Replacement" ||
+          selectedSubcategory === "Ice Maker Supply Line Replacement" ||
+          selectedSubcategory === "Refrigerator Water Line Install" ||
+          selectedSubcategory === "Garbage Disposal Replacement" ||
           selectedSubcategory === "Bathroom Sink Pop-Up Strainer Replacement" ||
           selectedSubcategory === "P-Trap Replacement (Labor Only)" ||
           selectedSubcategory === "Lavatory Drain Assembly Replacement" ||
           selectedSubcategory === "Basket Strainer Replacement (Kitchen Sink)" ||
           selectedSubcategory === "Garbage Disposal Removal Only" ||
           selectedSubcategory === "Toilet Wax Ring Replacement" ||
+          selectedSubcategory === "Toilet Rebuild Kit Install" ||
+          selectedSubcategory === "Flush Valve Replacement" ||
           selectedSubcategory === "Fill Valve Replacement" ||
           selectedSubcategory === "Flapper Replacement" ||
           selectedSubcategory === "Tub Spout Replacement" ||
