@@ -257,6 +257,13 @@
         grid-template-columns: 1fr;
       }
     }
+  
+    .owner-dashboard { border:2px solid #f59e0b; background:#fffbeb; border-radius:18px; padding:16px; margin-top:16px; }
+    .owner-warning { background:#fef3c7; border:1px solid #f59e0b; border-radius:12px; padding:12px; font-size:14px; color:#92400e; line-height:1.45; margin-bottom:12px; }
+    .profit-good { color:#047857; font-weight:700; }
+    .profit-watch { color:#b45309; font-weight:700; }
+    .profit-low { color:#b91c1c; font-weight:700; }
+
   </style>
 </head>
 
@@ -791,6 +798,19 @@
           Use this section for turnover work, pre-listing repairs, inspection repair lists, realtor requests, and property management maintenance items.
           Quoted repair lists can be entered using the on-site quoted price box in Section 5.
         </div>
+
+        <div id="turnoverExplanationBox" class="note-box">
+          <strong>Small Turnover Package - $295 Labor Only</strong><br>
+          Typical scope: smoke detector compliance check, outlet/switch cover replacement, minor door adjustments, minor hardware adjustments, minor caulking touch-ups, light bulb replacement, and small punch-list items.<br>
+          Typical labor time: 1-2 hours.<br><br>
+          <strong>Standard Turnover Package - $595 Labor Only</strong><br>
+          Typical scope: multiple door adjustments, minor drywall repairs, minor plumbing repairs, minor electrical repairs, minor carpentry repairs, lock replacement labor, smoke detector compliance check, and turnover punch-list completion.<br>
+          Typical labor time: 3-5 hours.<br><br>
+          <strong>Labor-Only Disclaimer:</strong><br>
+          Property Manager and Realtor package pricing is labor only unless specifically stated otherwise.
+          Replacement parts, fixtures, appliances, paint, drywall materials, electrical devices, plumbing parts, locks, smoke detectors, haul-away fees, dump fees, and disposal charges are additional unless included in the written quote.
+        </div>
+
       </div>
 
       <div id="exteriorFields" class="hidden">
@@ -968,6 +988,75 @@
       <div id="copyStatus" style="margin-top:8px; font-size:14px; font-weight:700; color:#1d4ed8;"></div>
     </div>
   </div>
+
+    <div id="ownerDashboardCard" class="card owner-dashboard">
+      <h2>Owner Dashboard</h2>
+      <div class="owner-warning">
+        <strong>Internal Use Only:</strong> This job costing and profit section is not included in customer quotes, invoices, emails, copied quote text, or downloaded invoice text. It is only saved to the internal Job Costing sheet when you save the invoice to the database.
+      </div>
+
+      <div class="grid-2">
+        <div>
+          <label>Material Cost</label>
+          <input id="materialCost" type="number" min="0" step="0.01" value="0" oninput="calculateJobCosting()" />
+        </div>
+        <div>
+          <label>Dump Fee</label>
+          <input id="dumpFee" type="number" min="0" step="0.01" value="0" oninput="calculateJobCosting()" />
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div>
+          <label>Permit Fee</label>
+          <input id="permitFee" type="number" min="0" step="0.01" value="0" oninput="calculateJobCosting()" />
+        </div>
+        <div>
+          <label>Additional Labor Hours</label>
+          <input id="additionalLaborHours" type="number" min="0" step="0.25" value="0" oninput="calculateJobCosting()" />
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div>
+          <label>Tax Rate %</label>
+          <input id="taxRate" type="number" min="0" step="0.01" value="8.5" oninput="calculateJobCosting()" />
+        </div>
+        <div>
+          <label><input id="applyTax" class="inline-check" type="checkbox" onchange="calculateJobCosting()" /> Apply Tax</label>
+          <div class="note-box">Default tax rate is 8.5%. Use only when appropriate. Tax can be changed or turned off before saving.</div>
+        </div>
+      </div>
+
+      <label>Internal Job Notes</label>
+      <textarea id="internalJobNotes" rows="4" placeholder="Private notes: materials, dump run, risk, access issues, job limit concerns, etc."></textarea>
+
+      <div class="summary-box">
+        <div class="muted">Customer Total</div>
+        <div class="big" id="costCustomerTotal">$0.00</div>
+      </div>
+
+      <div class="grid-3">
+        <div class="summary-box">
+          <div class="muted">Tax Collected</div>
+          <div class="big" id="taxCollected">$0.00</div>
+        </div>
+        <div class="summary-box">
+          <div class="muted">Estimated Job Cost</div>
+          <div class="big" id="estimatedJobCost">$0.00</div>
+        </div>
+        <div class="summary-box summary-total">
+          <div class="muted">Estimated Gross Profit</div>
+          <div class="big" id="estimatedGrossProfit">$0.00</div>
+        </div>
+      </div>
+
+      <div class="summary-box">
+        <div class="muted">Profit Margin</div>
+        <div class="big" id="profitMargin">0%</div>
+        <div id="profitStatus" class="note-box">Profit status will appear here.</div>
+      </div>
+    </div>
 
   <script>
     let selectedCategory = "";
@@ -2646,6 +2735,10 @@
         document.getElementById("totalPrice").textContent = formatCurrency(getQuoteItemsTotal());
       }
 
+      if (typeof calculateJobCosting === "function") {
+        calculateJobCosting();
+      }
+
       let detailsText =
         "Service: " + (selectedCategory || "Not selected") +
         "<br>Type: " + (selectedSubcategory || "Not selected");
@@ -3107,7 +3200,7 @@
         "Property: " + customerAddress + "\n" +
         "Phone: " + customerPhone + "\n" +
         "Email: " + customerEmail + "\n\n" +
-        "Estimated Total: " + total + "\n" +
+        "Estimated Total: " + total + getCustomerTaxLineText() + "\n" +
         noteBlock +
         getPhotoQuoteNote() + "\n\n" +
         "Final pricing may be adjusted on-site based on conditions, access, or additional work requested.\n\n" +
@@ -3138,7 +3231,7 @@
         (quoteItems.length ? multiItemText + "\n\n" : "") +
         "Service: " + (quoteItems.length ? "Multiple Repairs" : (selectedCategory || "Not selected")) + "\n" +
         "Type: " + (quoteItems.length ? getQuoteItemsTypeText() : (typeof getDisplayServiceType === "function" ? getDisplayServiceType() : (selectedSubcategory || "Not selected"))) + "\n\n" +
-        "Amount Due: " + total + "\n" +
+        "Amount Due: " + total + getCustomerTaxLineText() + "\n" +
         getPhotoQuoteNote() + "\n\n" +
         "Accepted Payment Methods:\n" +
         "- Cash\n" +
@@ -3180,6 +3273,93 @@
       document.getElementById("copyStatus").textContent = "Invoice downloaded.";
     }
 
+
+    function getCurrentCustomerTotalAmount() {
+      const totalText = quoteItems.length ? formatCurrency(getQuoteItemsTotal()) : (document.getElementById("totalPrice").textContent || "$0.00");
+      return parseCurrencyValue(totalText);
+    }
+
+    function getNumberFieldValue(id) {
+      const field = document.getElementById(id);
+      if (!field) return 0;
+      return Number(field.value || 0) || 0;
+    }
+
+    function calculateJobCosting() {
+      const baseCustomerTotal = getCurrentCustomerTotalAmount();
+      const materialCost = getNumberFieldValue("materialCost");
+      const dumpFee = getNumberFieldValue("dumpFee");
+      const permitFee = getNumberFieldValue("permitFee");
+      const additionalLaborHours = getNumberFieldValue("additionalLaborHours");
+      const taxRate = getNumberFieldValue("taxRate");
+      const applyTax = document.getElementById("applyTax") ? document.getElementById("applyTax").checked : false;
+
+      const taxCollected = applyTax ? baseCustomerTotal * (taxRate / 100) : 0;
+      const customerTotalWithTax = baseCustomerTotal + taxCollected;
+      const estimatedJobCost = materialCost + dumpFee + permitFee;
+      const estimatedGrossProfit = customerTotalWithTax - estimatedJobCost;
+      const profitMargin = customerTotalWithTax > 0 ? (estimatedGrossProfit / customerTotalWithTax) * 100 : 0;
+
+      if (document.getElementById("costCustomerTotal")) {
+        document.getElementById("costCustomerTotal").textContent = formatCurrency(customerTotalWithTax);
+        document.getElementById("taxCollected").textContent = formatCurrency(taxCollected);
+        document.getElementById("estimatedJobCost").textContent = formatCurrency(estimatedJobCost);
+        document.getElementById("estimatedGrossProfit").textContent = formatCurrency(estimatedGrossProfit);
+        document.getElementById("profitMargin").textContent = profitMargin.toFixed(1) + "%";
+
+        const status = document.getElementById("profitStatus");
+        if (profitMargin >= 70) {
+          status.innerHTML = "<span class='profit-good'>Good profit range.</span> Strong job based on entered cost.";
+        } else if (profitMargin >= 50) {
+          status.innerHTML = "<span class='profit-watch'>Watch margin.</span> Job may still be acceptable depending on labor time and customer value.";
+        } else {
+          status.innerHTML = "<span class='profit-low'>Low margin.</span> Review pricing, materials, scope, or risk before approving.";
+        }
+      }
+
+      return {
+        baseCustomerTotal,
+        customerTotalWithTax,
+        materialCost,
+        dumpFee,
+        permitFee,
+        additionalLaborHours,
+        taxRate,
+        applyTax,
+        taxCollected,
+        estimatedJobCost,
+        estimatedGrossProfit,
+        profitMargin
+      };
+    }
+
+    function getJobCostingData() {
+      const costing = calculateJobCosting();
+      const notes = document.getElementById("internalJobNotes");
+      return {
+        materialCost: formatCurrency(costing.materialCost),
+        dumpFee: formatCurrency(costing.dumpFee),
+        permitFee: formatCurrency(costing.permitFee),
+        additionalLaborHours: costing.additionalLaborHours,
+        taxRate: costing.taxRate,
+        applyTax: costing.applyTax ? "Yes" : "No",
+        taxCollected: formatCurrency(costing.taxCollected),
+        customerTotalWithTax: formatCurrency(costing.customerTotalWithTax),
+        estimatedJobCost: formatCurrency(costing.estimatedJobCost),
+        estimatedGrossProfit: formatCurrency(costing.estimatedGrossProfit),
+        profitMargin: costing.profitMargin.toFixed(1) + "%",
+        internalNotes: notes ? notes.value || "" : ""
+      };
+    }
+
+    function getCustomerTaxLineText() {
+      const costing = calculateJobCosting();
+      if (!costing.applyTax || costing.taxCollected <= 0) return "";
+      return "\nTax (" + costing.taxRate + "%): " + formatCurrency(costing.taxCollected) +
+             "\nTotal Due: " + formatCurrency(costing.customerTotalWithTax);
+    }
+
+
     async function saveInvoice() {
       calculateEstimate();
 
@@ -3195,7 +3375,8 @@
         total: quoteItems.length ? formatCurrency(getQuoteItemsTotal()) : (document.getElementById("totalPrice").textContent || ""),
        paymentStatus: document.getElementById("paymentStatus").value || "Due upon completion",
        paymentMethod: document.getElementById("paymentMethod").value || "",
-       notes: quoteItems.length ? getQuoteItemsText() : getDisplayServiceType()
+       notes: quoteItems.length ? getQuoteItemsText() : getDisplayServiceType(),
+        jobCosting: getJobCostingData()
       };
 
    try {
