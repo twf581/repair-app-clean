@@ -231,7 +231,8 @@
       <h2>How This Estimate Works</h2>
       <div class="note-box">
         This tool provides a preliminary estimate based on the service selected and property ZIP code.
-        Final pricing may be adjusted after review of photos, property conditions, access, materials, and full scope of work.
+        Final pricing may be adjusted after review of photos, property conditions, access, materials, and full scope of work.<br><br>
+        <strong>Property managers and realtors are welcome.</strong>
       </div>
     </div>
 
@@ -272,7 +273,9 @@
       <button class="service-btn" id="btn-doors" onclick="selectCategory('doors')">Doors / Windows</button>
       <button class="service-btn" id="btn-carpentry" onclick="selectCategory('carpentry')">Carpentry / Repairs</button>
       <button class="service-btn" id="btn-flooring" onclick="selectCategory('flooring')">Flooring</button>
-      <button class="service-btn" id="btn-exterior" onclick="selectCategory('exterior')">Exterior</button>
+      <button class="service-btn" id="btn-maintenance" onclick="selectCategory('maintenance')">Property Maintenance</button>
+      <button class="service-btn" id="btn-landscape" onclick="selectCategory('landscape')">Landscape & Irrigation</button>
+      <button class="service-btn" id="btn-exterior" onclick="selectCategory('exterior')">Fence • Gate • Exterior</button>
     </div>
 
     <div id="subcategoryCard" class="card hidden">
@@ -674,16 +677,45 @@
         <div class="pill">Exterior</div>
 
         <div id="fencingFields" class="hidden">
-          <div class="note-box">1 post and reattached = $150</div>
+          <div class="note-box">Fence post replacement starts at $145 for the first post. Additional posts on the same project are $125 each.</div>
 
           <label>Extra Posts</label>
           <input id="extraPosts" type="number" min="0" value="0" oninput="calculateEstimate()" />
 
-          <div class="note-box">Extra posts = $100 each. Other fencing requests will be quoted.</div>
+          <div class="note-box">Additional fence posts installed during the same project are $125 each. Gate hardware or hinge replacement may be additional.</div>
         </div>
 
         <div id="exteriorQuoteNote" class="note-box hidden">
           This exterior service is quote-required.
+        </div>
+      </div>
+
+
+      <div id="maintenanceFields" class="hidden">
+        <div class="pill">Property Maintenance</div>
+        <div class="note-box">Standalone maintenance requests for homeowners and property managers.</div>
+        <div id="maintenanceQtyWrap">
+          <label>Quantity</label>
+          <input id="maintenanceQty" type="number" min="1" value="1" oninput="calculateEstimate()" />
+        </div>
+        <div id="hvacFilterFields" class="hidden">
+          <label>Filter Type</label>
+          <select id="hvacFilterType" onchange="calculateEstimate()">
+            <option value="customer">Customer-supplied filter</option>
+            <option value="standard">Standard 1-inch filter supplied</option>
+            <option value="large">Large filter supplied</option>
+            <option value="media">4-inch / media filter supplied</option>
+          </select>
+          <div class="note-box">Some filter sizes may require special ordering or quoted pricing.</div>
+        </div>
+      </div>
+
+      <div id="landscapeFields" class="hidden">
+        <div class="pill">Landscape & Irrigation</div>
+        <div class="note-box">Landscape and irrigation requests may require photos or site review before final pricing.</div>
+        <div id="irrigationQtyWrap">
+          <label>Quantity / Zones / Heads</label>
+          <input id="irrigationQty" type="number" min="1" value="1" oninput="calculateEstimate()" />
         </div>
       </div>
 
@@ -833,8 +865,37 @@
         "Transition Strip / Base Shoe Install (Quoted)"
       ],
 
+      maintenance: [
+        "HVAC Filter Replacement",
+        "Smoke Detector Testing",
+        "Smoke Detector Battery Replacement",
+        "Smoke Detector Replacement",
+        "CO Detector Testing",
+        "CO Detector Battery Replacement",
+        "CO Detector Replacement"
+      ],
+
+      landscape: [
+        "Sprinkler System Check",
+        "Sprinkler Head Adjustment",
+        "Sprinkler Head Replacement",
+        "Irrigation Controller Programming",
+        "Irrigation Troubleshooting (Quoted)",
+        "Drip Irrigation Repair (Quoted)",
+        "Valve Replacement (Quoted)",
+        "Landscape Cleanup (Quoted)",
+        "Mulch Installation (Quoted)",
+        "Decorative Rock Installation (Quoted)",
+        "DG Installation (Quoted)",
+        "Landscape Fabric Installation (Quoted)"
+      ],
+
       exterior: [
-        "Fencing / Post Repair / Replacement",
+        "Fence Repair (Quoted)",
+        "Fence Post Replacement",
+        "Gate Repair (Quoted)",
+        "Gate Adjustment",
+        "Fence Replacement (Quoted)",
         "Pressure Washing (Quoted)",
         "Junk Removal (Quoted)"
       ]
@@ -1107,6 +1168,12 @@
         notes.innerHTML = "Drywall repairs — IAC2 Certified (Certification #IAC2-94278)";
       } else if (category === "plumbing") {
         notes.innerHTML = "Plumbing pricing is labor only unless noted otherwise.";
+      } else if (category === "maintenance") {
+        notes.innerHTML = "Property maintenance services can be requested as standalone service calls without purchasing a full annual maintenance plan.";
+      } else if (category === "landscape") {
+        notes.innerHTML = "Landscape and irrigation pricing may require photos, site access review, or final field confirmation.";
+      } else if (category === "exterior") {
+        notes.innerHTML = "Fence, gate, pressure washing, and exterior repair requests may require photos or site review before final pricing.";
       } else {
         notes.classList.add("hidden");
         notes.innerHTML = "";
@@ -1132,6 +1199,9 @@
         "doorsFields",
         "carpentryFields",
         "flooringFields",
+        "maintenanceFields",
+        "hvacFilterFields",
+        "landscapeFields",
         "exteriorFields",
         "manualFields",
         "doorInstallAddons",
@@ -1329,10 +1399,26 @@
         return;
       }
 
+      if (selectedCategory === "maintenance") {
+        document.getElementById("maintenanceFields").classList.remove("hidden");
+        if (selectedSubcategory === "HVAC Filter Replacement") {
+          document.getElementById("hvacFilterFields").classList.remove("hidden");
+        }
+        return;
+      }
+
+      if (selectedCategory === "landscape") {
+        document.getElementById("landscapeFields").classList.remove("hidden");
+        if (selectedSubcategory.includes("(Quoted)")) {
+          document.getElementById("manualFields").classList.remove("hidden");
+        }
+        return;
+      }
+
       if (selectedCategory === "exterior") {
         document.getElementById("exteriorFields").classList.remove("hidden");
 
-        if (selectedSubcategory === "Fencing / Post Repair / Replacement") {
+        if (selectedSubcategory === "Fence Post Replacement") {
           document.getElementById("fencingFields").classList.remove("hidden");
         }
 
@@ -1671,16 +1757,52 @@
         detail = selectedSubcategory;
       }
 
+      if (selectedCategory === "maintenance") {
+        const qty = Number(document.getElementById("maintenanceQty").value || 1);
+        if (selectedSubcategory === "HVAC Filter Replacement") {
+          const type = document.getElementById("hvacFilterType") ? document.getElementById("hvacFilterType").value : "customer";
+          let each = 45;
+          if (type === "standard") each = 70;
+          if (type === "large") each = 80;
+          if (type === "media") each = 110;
+          base = qty * each * zoneMultiplier;
+          detail = "HVAC filter replacement. Some filter sizes may require special ordering or quoted pricing.";
+        }
+        if (selectedSubcategory === "Smoke Detector Testing") { base = qty * 35 * zoneMultiplier; detail = "Smoke detector testing."; }
+        if (selectedSubcategory === "Smoke Detector Battery Replacement") { base = qty * 45 * zoneMultiplier; detail = "Smoke detector battery replacement."; }
+        if (selectedSubcategory === "Smoke Detector Replacement") { base = qty * 95 * zoneMultiplier; detail = "Smoke detector replacement."; }
+        if (selectedSubcategory === "CO Detector Testing") { base = qty * 35 * zoneMultiplier; detail = "Carbon monoxide detector testing."; }
+        if (selectedSubcategory === "CO Detector Battery Replacement") { base = qty * 45 * zoneMultiplier; detail = "Carbon monoxide detector battery replacement."; }
+        if (selectedSubcategory === "CO Detector Replacement") { base = qty * 95 * zoneMultiplier; detail = "Carbon monoxide detector replacement."; }
+      }
+
+      if (selectedCategory === "landscape") {
+        const qty = Number(document.getElementById("irrigationQty").value || 1);
+        if (selectedSubcategory === "Sprinkler System Check") { base = 125 * zoneMultiplier; detail = "Sprinkler system check and visual operation review."; }
+        if (selectedSubcategory === "Sprinkler Head Adjustment") { base = (qty <= 1 ? 85 : 85 + ((qty - 1) * 20)) * zoneMultiplier; detail = "Sprinkler head adjustment."; }
+        if (selectedSubcategory === "Sprinkler Head Replacement") { base = (qty <= 1 ? 95 : 95 + ((qty - 1) * 45)) * zoneMultiplier; detail = "Sprinkler head replacement. Parts may be additional depending on head type."; }
+        if (selectedSubcategory === "Irrigation Controller Programming") { base = 95 * zoneMultiplier; detail = "Irrigation controller programming."; }
+        if (selectedSubcategory.includes("(Quoted)")) { isQuoted = true; detail = selectedSubcategory; }
+      }
+
       if (selectedCategory === "exterior") {
-        if (selectedSubcategory === "Fencing / Post Repair / Replacement") {
+        if (selectedSubcategory === "Fence Post Replacement") {
           const extraPosts = Number(document.getElementById("extraPosts").value || 0);
 
-          base = 150 * zoneMultiplier;
-          addOns += extraPosts * 100;
-          detail = "1 post and reattached";
+          base = 145 * zoneMultiplier;
+          addOns += extraPosts * 125;
+          detail = "Fence post replacement. Detach existing fence rails, remove existing post and concrete encasement, set new redwood post approximately 18 inches deep if conditions allow, concrete post, and reattach existing fence rails. Solid attachment depends on the condition of existing fence materials.";
+        }
+
+        if (selectedSubcategory === "Gate Adjustment") {
+          base = 95 * zoneMultiplier;
+          detail = "Gate adjustment. Hinges, latch, or hardware replacement may be additional.";
         }
 
         if (
+          selectedSubcategory === "Fence Repair (Quoted)" ||
+          selectedSubcategory === "Gate Repair (Quoted)" ||
+          selectedSubcategory === "Fence Replacement (Quoted)" ||
           selectedSubcategory === "Pressure Washing (Quoted)" ||
           selectedSubcategory === "Junk Removal (Quoted)"
         ) {
@@ -1701,6 +1823,8 @@
       if (selectedCategory === "painting") detailsText += "<br>Furniture moving required to complete painting may incur additional charges.";
       if (selectedCategory === "drywall") detailsText += "<br>IAC2 Certified (Certification #IAC2-94278)";
       if (selectedCategory === "plumbing") detailsText += "<br>Plumbing pricing is labor only unless noted otherwise.";
+      if (selectedCategory === "maintenance") detailsText += "<br>Standalone property maintenance request.";
+      if (selectedCategory === "landscape") detailsText += "<br>Landscape and irrigation requests may require photos or site review.";
 
       document.getElementById("summaryDetails").innerHTML = detailsText;
     }
@@ -1777,6 +1901,8 @@
         "Estimated Total: " + total + "\n" +
         noteBlock + "\n\n" +
         "Final pricing may be adjusted after review of photos, site conditions, access, materials, or additional work requested.\n\n" +
+        "Payment Options: Apple Pay / Apple Cash, Zelle, and Venmo.\n" +
+        "Google Review: https://g.page/r/CcwImdWU9j9ZEBM/review\n\n" +
         "Thanks,\nTim\nMobile Onsite Handyman\n951-388-4744";
 
       document.getElementById("quoteOutput").value = text;
@@ -1801,12 +1927,12 @@
         "Service: " + (selectedCategory || "Not selected") + "\n" +
         "Type: " + (selectedSubcategory || "Not selected") + "\n\n" +
         "Estimated Total: " + total + "\n\n" +
-        "Accepted Payment Methods:\n" +
-        "- Cash\n" +
-        "- Zelle\n" +
-        "- Venmo\n" +
-        "- Cash App\n" +
-        "- Credit / Debit Card\n\n" +
+        "Payment Options:\n" +
+        "- Apple Pay / Apple Cash: 951-388-4744\n" +
+        "- Zelle: 951-388-4744\n" +
+        "- Venmo: @timothy-fant-1\n\n" +
+        "Leave a Google Review:\n" +
+        "https://g.page/r/CcwImdWU9j9ZEBM/review\n\n" +
         "Estimate status: Pending final review\n\n" +
         "Thank you,\n" +
         "Tim\n" +
