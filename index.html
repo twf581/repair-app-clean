@@ -835,70 +835,6 @@
       </div>
     </div>
 
-    <div id="businessToolsCard" class="card hidden">
-      <h2>5. Field Tools</h2>
-
-      <div class="feature-panel">
-        <div class="pill">Saved Draft Quotes</div>
-        <label>Draft Name</label>
-        <input id="draftName" placeholder="Example: Smith kitchen and door repairs" />
-        <div class="grid-3">
-          <button class="primary-btn" type="button" onclick="saveDraftQuote()">Save Draft</button>
-          <button class="secondary-btn" type="button" onclick="loadSelectedDraft()">Load Draft</button>
-          <button class="dark-btn" type="button" onclick="deleteSelectedDraft()">Delete Draft</button>
-        </div>
-        <label>Saved Drafts</label>
-        <select id="draftList"></select>
-        <div id="draftStatus" class="mini-result">Drafts are saved on this device/browser.</div>
-      </div>
-
-      <div class="feature-panel">
-        <div class="pill">Customer Search</div>
-        <label>Search Customer History</label>
-        <input id="customerSearchInput" placeholder="Search name, phone, email, or address" oninput="searchLocalCustomers()" />
-        <div id="customerSearchResults" class="mini-result">
-          Customer history saved from this device will appear here. Google Sheets lookup can be added later with a CRM search API.
-        </div>
-      </div>
-
-      <div class="feature-panel">
-        <div class="pill">Property Manager / Realtor Packages</div>
-        <div class="grid-3">
-          <button class="primary-btn" type="button" onclick="applyPropertyPackage('small')">Small Turnover</button>
-          <button class="primary-btn" type="button" onclick="applyPropertyPackage('standard')">Standard Turnover</button>
-          <button class="primary-btn" type="button" onclick="applyPropertyPackage('heavy')">Heavy Turnover</button>
-        </div>
-        <div id="packageStatus" class="mini-result">
-          Packages add common turnover work as multi-item quote lines. Adjust or clear items before sending.
-        </div>
-      </div>
-
-      <div class="feature-panel">
-        <div class="pill">Photo Notes</div>
-        <label>Attach / Reference Job Photos</label>
-        <input id="photoInput" type="file" accept="image/*" multiple onchange="handlePhotoSelection()" />
-        <textarea id="photoNotes" rows="4" placeholder="Photo notes: front door damage, under sink leak, drywall patch location, etc."></textarea>
-        <div id="photoList" class="photo-list">No photos selected. Email buttons cannot attach photos automatically, but the names/notes can be included in the quote.</div>
-      </div>
-
-      <div class="feature-panel">
-        <div class="pill">Inspection-to-Repair Import</div>
-        <label>Paste Inspection Repair List</label>
-        <textarea id="inspectionImportText" rows="5" placeholder="Paste inspection findings or repair list here"></textarea>
-        <div class="grid-2">
-          <button class="primary-btn" type="button" onclick="importInspectionRepairList()">Import as Quoted Repair List</button>
-          <button class="secondary-btn" type="button" onclick="clearInspectionImport()">Clear Import</button>
-        </div>
-        <div id="inspectionImportStatus" class="mini-result">Imported inspection items will be added as a quoted multi-item line.</div>
-      </div>
-
-      <div class="feature-panel">
-        <div class="pill">Local Profit Dashboard</div>
-        <div id="localDashboard" class="mini-result">Dashboard will update from quotes saved on this device.</div>
-        <button class="secondary-btn" type="button" onclick="refreshLocalDashboard()">Refresh Dashboard</button>
-      </div>
-    </div>
-
     <div id="summaryCard" class="card hidden">
       <h2>5. Estimate</h2>
 
@@ -1367,15 +1303,11 @@
       if (currentZone) {
         document.getElementById("serviceCard").classList.remove("hidden");
         document.getElementById("summaryCard").classList.remove("hidden");
-        const businessToolsCard = document.getElementById("businessToolsCard");
-        if (businessToolsCard) businessToolsCard.classList.remove("hidden");
       } else {
         document.getElementById("serviceCard").classList.add("hidden");
         document.getElementById("subcategoryCard").classList.add("hidden");
         document.getElementById("detailsCard").classList.add("hidden");
         document.getElementById("summaryCard").classList.add("hidden");
-        const businessToolsCard = document.getElementById("businessToolsCard");
-        if (businessToolsCard) businessToolsCard.classList.add("hidden");
       }
 
       calculateEstimate();
