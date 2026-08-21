@@ -295,6 +295,7 @@
     <div class="card">
       <h2>1. Property ZIP Code</h2>
       <input id="zip" name="moh_fld_e" placeholder="Enter property ZIP code for pricing" oninput="handleZipInput()" autocomplete="off" readonly onfocus="this.removeAttribute('readonly')" />
+      <div id="zoneStatus" style="font-size:13px; margin-top:8px;"></div>
     </div>
 
     <div id="serviceCard" class="card hidden">
@@ -1261,6 +1262,40 @@
       ]
     };
 
+    // Zone multipliers + per-ZIP fine adjustments, matching the scheme used in
+    // the Impact Property Inspections app (zone multiplier x per-ZIP override,
+    // instead of one flat multiplier per zone).
+    const zoneMeta = {
+      1: { multiplier: 1.00 },
+      2: { multiplier: 1.12 },
+      3: { multiplier: 1.28 },
+      4: { multiplier: 1.45 }
+    };
+
+    const zipAdjustments = {
+      "92657": 1.12,
+      "92660": 1.10,
+      "92662": 1.10,
+      "92661": 1.10,
+      "92037": 1.10,
+      "92014": 1.08,
+      "92651": 1.08,
+      "92663": 1.08,
+      "92592": 1.05,
+      "92591": 1.05,
+      "92562": 1.04,
+      "91709": 1.04,
+      "92883": 1.04,
+      "92078": 1.05,
+      "92553": 0.95,
+      "92557": 0.96,
+      "92335": 0.94,
+      "92404": 0.95,
+      "92336": 0.96,
+      "92234": 0.95,
+      "92345": 0.95
+    };
+
     function zipToZone(zip) {
       const digits = (zip || "").replace(/\D/g, "");
 
@@ -1268,29 +1303,43 @@
         return null;
       }
 
+      const zipAdj = zipAdjustments[digits] || 1;
+
       for (const zone in zoneExactZips) {
         if (zoneExactZips[zone].includes(digits)) {
-          if (zone === "1") return { multiplier: 1.00 };
-          if (zone === "2") return { multiplier: 1.10 };
-          if (zone === "3") return { multiplier: 1.20 };
-          if (zone === "4") return { multiplier: 1.30 };
+          return { zoneNumber: zone, multiplier: zoneMeta[zone].multiplier * zipAdj };
         }
       }
 
       for (const zone in zonePrefixRanges) {
         for (const prefix of zonePrefixRanges[zone]) {
           if (digits.startsWith(prefix)) {
-            if (zone === "4") return { multiplier: 1.30 };
+            return { zoneNumber: zone, multiplier: zoneMeta[zone].multiplier * zipAdj };
           }
         }
       }
 
-      return { multiplier: 1.00 };
+      // This is the public customer-facing app, so a ZIP outside the mapped
+      // service area should not silently price at Zone 1 - return null so
+      // handleZipInput() blocks the quote and tells the customer to call.
+      return null;
     }
 
     function handleZipInput() {
       const zip = document.getElementById("zip").value.trim();
       currentZone = zipToZone(zip);
+
+      const zoneStatus = document.getElementById("zoneStatus");
+      if (zoneStatus) {
+        if (currentZone) {
+          zoneStatus.textContent = "";
+        } else if (zip) {
+          zoneStatus.textContent = "This ZIP code is outside our current service area. Please call 951-388-4744 for a custom quote.";
+          zoneStatus.style.color = "#b91c1c";
+        } else {
+          zoneStatus.textContent = "";
+        }
+      }
 
       if (currentZone) {
         document.getElementById("serviceCard").classList.remove("hidden");
