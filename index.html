@@ -276,25 +276,25 @@
       <div class="grid-2">
         <div>
           <label>Customer Name</label>
-          <input id="customerName" placeholder="Enter customer name" autocomplete="off" />
+          <input id="customerName" name="moh_fld_a" placeholder="Enter customer name" autocomplete="off" readonly onfocus="this.removeAttribute('readonly')" />
         </div>
 
         <div>
           <label>Phone Number</label>
-          <input id="customerPhone" placeholder="Enter phone number" autocomplete="off" />
+          <input id="customerPhone" name="moh_fld_b" placeholder="Enter phone number" autocomplete="off" readonly onfocus="this.removeAttribute('readonly')" />
         </div>
       </div>
 
       <label>Email Address</label>
-      <input id="customerEmail" type="email" placeholder="Enter customer email" autocomplete="off" />
+      <input id="customerEmail" name="moh_fld_c" type="email" placeholder="Enter customer email" autocomplete="off" readonly onfocus="this.removeAttribute('readonly')" />
 
       <label>Property Address</label>
-      <input id="customerAddress" placeholder="Enter property address" autocomplete="off" />
+      <input id="customerAddress" name="moh_fld_d" placeholder="Enter property address" autocomplete="off" readonly onfocus="this.removeAttribute('readonly')" />
     </div>
 
     <div class="card">
       <h2>1. Property ZIP Code</h2>
-      <input id="zip" placeholder="Enter property ZIP code for pricing" oninput="handleZipInput()" autocomplete="off" />
+      <input id="zip" name="moh_fld_e" placeholder="Enter property ZIP code for pricing" oninput="handleZipInput()" autocomplete="off" readonly onfocus="this.removeAttribute('readonly')" />
     </div>
 
     <div id="serviceCard" class="card hidden">
