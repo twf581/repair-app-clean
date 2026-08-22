@@ -328,19 +328,19 @@
         <label>Room Size</label>
         <select id="roomSize" onchange="calculateEstimate()">
           <option value="">Choose room size</option>
-          <option value="390">8x8</option>
-          <option value="420">8x10</option>
-          <option value="470">10x10</option>
-          <option value="540">10x12</option>
-          <option value="600">12x12</option>
-          <option value="640">12x14</option>
-          <option value="690">14x14</option>
-          <option value="730">14x16</option>
-          <option value="790">16x16</option>
-          <option value="820">16x18</option>
-          <option value="910">18x18</option>
-          <option value="960">18x20</option>
-          <option value="1010">20x20</option>
+          <option value="410">8x8</option>
+          <option value="445">8x10</option>
+          <option value="500">10x10</option>
+          <option value="575">10x12</option>
+          <option value="645">12x12</option>
+          <option value="690">12x14</option>
+          <option value="750">14x14</option>
+          <option value="795">14x16</option>
+          <option value="865">16x16</option>
+          <option value="905">16x18</option>
+          <option value="1005">18x18</option>
+          <option value="1070">18x20</option>
+          <option value="1130">20x20</option>
         </select>
 
         <div class="grid-2">
@@ -458,11 +458,6 @@
             <input id="smokeStain" class="inline-check" type="checkbox" onchange="calculateEstimate()" />
             Smoke / nicotine staining (+$0.15 / sf)
           </label>
-
-          <label>
-            <input id="premiumPaint" class="inline-check" type="checkbox" onchange="calculateEstimate()" />
-            Premium paint upgrade (+$0.10 / sf)
-          </label>
         </div>
 
         <label>Wall Height</label>
@@ -483,7 +478,7 @@
         <label>Standalone Door Painting Quantity</label>
         <input id="standaloneDoorQty" type="number" min="1" value="1" oninput="calculateEstimate()" />
 
-        <div class="note-box">Standalone door painting = $145 each.</div>
+        <div class="note-box">Standalone door painting = $155 each.</div>
       </div>
 
       <div id="paintingTouchupFields" class="hidden">
@@ -1955,7 +1950,7 @@
 
           document.getElementById("wallSfDisplay").textContent = Math.round(wallSf);
 
-          base = wallSf * 1.25 * zoneMultiplier;
+          base = wallSf * 1.55 * zoneMultiplier;
           addOns += wallPaintMatch ? 75 : 0;
 
           detail = "Wall painting " + Math.round(wallSf) + " sf";
@@ -1965,7 +1960,7 @@
           const ceilingSf = Number(document.getElementById("ceilingSf").value || 0);
           const standalone = document.getElementById("ceilingStandalone").checked;
 
-          base = ceilingSf * (standalone ? 4.5 : 2.2) * zoneMultiplier;
+          base = ceilingSf * (standalone ? 4.8 : 2.5) * zoneMultiplier;
           detail = standalone ? "Stand-alone ceiling" : "Ceiling add-on";
         }
 
@@ -1976,17 +1971,15 @@
           const darkToLight = document.getElementById("darkToLight").checked;
           const occupiedHome = document.getElementById("occupiedHome").checked;
           const smokeStain = document.getElementById("smokeStain").checked;
-          const premiumPaint = document.getElementById("premiumPaint").checked;
           const wallHeightWhole = Number(document.getElementById("wallHeightWhole").value || 0);
 
-          let perSfRate = 1.50;
+          let perSfRate = 1.80;
           const ceilingRate = 0.70;
 
           if (heavyPrep) perSfRate += 0.15;
           if (darkToLight) perSfRate += 0.10;
           if (occupiedHome) perSfRate += 0.08;
           if (smokeStain) perSfRate += 0.15;
-          if (premiumPaint) perSfRate += 0.10;
 
           perSfRate += wallHeightWhole;
           base = houseSf * perSfRate * zoneMultiplier;
@@ -2001,7 +1994,7 @@
         if (selectedSubcategory === "Door Painting") {
           const qty = Number(document.getElementById("standaloneDoorQty").value || 0);
 
-          base = qty * 145 * zoneMultiplier;
+          base = qty * 155 * zoneMultiplier;
           detail = "Standalone door painting";
         }
 
