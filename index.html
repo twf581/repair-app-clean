@@ -702,6 +702,24 @@
           </div>
         </div>
 
+        <div id="stoveFields" class="hidden">
+          <div class="note-box">
+            <label>
+              <input id="newGasConnector" class="inline-check" type="checkbox" onchange="calculateEstimate()" />
+              New gas connector (+$45)
+            </label>
+            <label>
+              <input id="antiTipBracket" class="inline-check" type="checkbox" onchange="calculateEstimate()" />
+              Anti-tip bracket install (+$25)
+            </label>
+          </div>
+
+          <div class="note-box">
+            Freestanding stove/range installation includes standard slide-in/standalone appliance connection using existing utility connections.
+            New gas connector, anti-tip bracket, electrical circuit work, or cabinetry modification may be additional.
+          </div>
+        </div>
+
         <div id="microwaveFields" class="hidden">
           <div class="note-box">
             Over-the-range microwave installation assumes standard replacement using existing mounting location, outlet, bracket conditions, and vent setup.
@@ -1074,6 +1092,8 @@
       ],
 
       propertymanager: [
+        "Small Turnover Package",
+        "Standard Turnover Package",
         "Move-Out Punch List (Quoted)",
         "Rental Turnover Repairs (Quoted)",
         "Realtor Repair List (Quoted)",
@@ -1300,7 +1320,7 @@
     };
 
     function zipToZone(zip) {
-      const digits = (zip || "").replace(/\D/g, "");
+      const digits = (zip || "").replace(/\D/g, "").slice(0, 5);
 
       if (digits.length < 5) {
         return null;
@@ -1439,6 +1459,7 @@
         "applianceFields",
         "dishwasherFields",
         "rangeHoodFields",
+        "stoveFields",
         "microwaveFields",
         "doorsFields",
         "carpentryFields",
@@ -1630,6 +1651,10 @@
 
         if (selectedSubcategory === "Range Hood Installation") {
           document.getElementById("rangeHoodFields").classList.remove("hidden");
+        }
+
+        if (selectedSubcategory === "Freestanding Stove / Range Installation") {
+          document.getElementById("stoveFields").classList.remove("hidden");
         }
 
         if (selectedSubcategory === "Over-the-Range Microwave Installation") {
@@ -1968,7 +1993,7 @@
           const ceilingSf = Number(document.getElementById("ceilingSf").value || 0);
           const standalone = document.getElementById("ceilingStandalone").checked;
 
-          base = ceilingSf * (standalone ? 4.8 : 2.5) * zoneMultiplier;
+          base = ceilingSf * (standalone ? 4.5 : 2.2) * zoneMultiplier;
           detail = standalone ? "Stand-alone ceiling" : "Ceiling add-on";
         }
 
@@ -2017,23 +2042,23 @@
 
       if (selectedCategory === "drywall") {
         if (selectedSubcategory === "Drywall Patch Under 6 Inches") {
-          base = 125 * zoneMultiplier;
+          base = 175 * zoneMultiplier;
           detail = "Drywall patch under 6 inches. Texture match and paint matching may be additional.";
         }
 
         if (selectedSubcategory === "Drywall Patch 6-12 Inches") {
-          base = 175 * zoneMultiplier;
+          base = 245 * zoneMultiplier;
           detail = "Drywall patch 6 to 12 inches. Texture match and paint matching may be additional.";
         }
 
         if (selectedSubcategory === "Drywall Patch 12-24 Inches") {
-          base = 250 * zoneMultiplier;
+          base = 350 * zoneMultiplier;
           detail = "Drywall patch 12 to 24 inches. Texture match and paint matching may be additional.";
         }
 
-        if (selectedSubcategory === "Small Drywall Repair") base = 150 * zoneMultiplier;
-        if (selectedSubcategory === "Medium Drywall Repair") base = 300 * zoneMultiplier;
-        if (selectedSubcategory === "Large Drywall Repair") base = 700 * zoneMultiplier;
+        if (selectedSubcategory === "Small Drywall Repair") base = 195 * zoneMultiplier;
+        if (selectedSubcategory === "Medium Drywall Repair") base = 425 * zoneMultiplier;
+        if (selectedSubcategory === "Large Drywall Repair") base = 850 * zoneMultiplier;
 
         if (
           selectedSubcategory === "Multiple Small Holes (Quoted)" ||
@@ -2110,7 +2135,7 @@
           base = 225 * zoneMultiplier;
           detail = "Garbage disposal replacement - labor only. Customer supplied disposal. Plumbing modifications or electrical issues not included.";
         }
-        if (selectedSubcategory === "Toilet Replacement") base = 150 * zoneMultiplier;
+        if (selectedSubcategory === "Toilet Replacement") base = 185 * zoneMultiplier;
         if (selectedSubcategory === "Toilet Repair") base = 150 * zoneMultiplier;
         if (selectedSubcategory === "Garbage Disposal Install") base = 160 * zoneMultiplier;
         if (selectedSubcategory === "Garbage Disposal Install w/ 1 1/3 HP Disposal") base = 285 * zoneMultiplier;
@@ -2345,33 +2370,6 @@
 
       if (selectedCategory === "appliances") {
         if (selectedSubcategory === "Dishwasher Installation") {
-          base = 225 * zoneMultiplier;
-          detail = "Dishwasher installation - labor only. Standard replacement using existing connections. New supply line, drain hose, air gap, disposal knockout, shut-off valve, cabinet modification, electrical, or plumbing repairs may be additional.";
-        }
-
-        if (selectedSubcategory === "Freestanding Stove / Range Installation") {
-          base = 125 * zoneMultiplier;
-          detail = "Freestanding stove/range installation - labor only. Standard slide-in/standalone appliance connection. Electrical, gas, anti-tip bracket, or fitment modifications are not included.";
-        }
-
-        if (selectedSubcategory === "Wall Oven Installation (Quoted)") {
-          isQuoted = true;
-          detail = "Wall oven installation is quoted based on size, cabinet opening, electrical connection, removal requirements, and appliance weight.";
-        }
-
-        if (selectedSubcategory === "Over-the-Range Microwave Installation") {
-          base = 225 * zoneMultiplier;
-          detail = "Over-the-range microwave installation - labor only. Standard replacement using existing mounting location, outlet, bracket conditions, and vent setup.";
-        }
-
-        if (selectedSubcategory === "Range Hood Installation") {
-          base = 185 * zoneMultiplier;
-          detail = "Range hood installation - labor only. Standard replacement using existing opening and connection. Venting, duct changes, cabinet modifications, or electrical work are quoted separately.";
-        }
-      }
-
-      if (selectedCategory === "appliances") {
-        if (selectedSubcategory === "Dishwasher Installation") {
           base = 150 * zoneMultiplier;
           addOns += document.getElementById("dishwasherSupplyLine").checked ? 35 : 0;
           addOns += document.getElementById("dishwasherPowerCord").checked ? 25 : 0;
@@ -2511,7 +2509,11 @@
           const qty = Number(document.getElementById("cabinetHardwareQty").value || 1);
           base = qty * 45 * zoneMultiplier;
           detail = "Cabinet hardware installation - customer supplied hardware.";
-        } else if (selectedSubcategory === "Shelf Installation") {
+        } else if (selectedSubcategory === "Grab Bar Installation") {
+          const qty = Number(document.getElementById("grabBarQty").value || 1);
+          base = qty * 95 * zoneMultiplier;
+          detail = "Grab bar installation - labor only. Customer supplied grab bar; wall must have adequate blocking/backing.";
+        } else if (selectedSubcategory === "Shelf Installation" || selectedSubcategory === "Floating Shelf Install") {
           const qty = Number(document.getElementById("shelfQty").value || 1);
           base = qty * 85 * zoneMultiplier;
           detail = "Shelf installation - standard customer supplied shelf.";
@@ -2530,6 +2532,16 @@
       }
 
       if (selectedCategory === "propertymanager") {
+        if (selectedSubcategory === "Small Turnover Package") {
+          base = 295 * zoneMultiplier;
+          detail = "Small Turnover Package - labor only. Typical scope: smoke detector compliance check, outlet/switch cover replacement, minor door adjustments, minor hardware adjustments, minor caulking touch-ups, light bulb replacement, and small punch-list items (typical labor time 1-2 hours). Additional repairs beyond this scope are quoted separately.";
+        }
+
+        if (selectedSubcategory === "Standard Turnover Package") {
+          base = 595 * zoneMultiplier;
+          detail = "Standard Turnover Package - labor only. Typical scope: multiple door adjustments, minor drywall repairs, minor plumbing repairs, minor electrical repairs, minor carpentry repairs, lock replacement labor, smoke detector compliance check, and turnover punch-list completion (typical labor time 3-5 hours). Additional repairs beyond this scope are quoted separately.";
+        }
+
         if (selectedSubcategory === "Smoke Detector Compliance Check") {
           base = 65 * zoneMultiplier;
           detail = "Smoke detector compliance check - visual and functional check of accessible smoke/CO detectors. Replacement devices or repairs are additional.";
